@@ -1,0 +1,143 @@
+/*
+Color Pallette
+#d9eeec - soft white
+#5ca4bd - light blue
+#3c70a4 - 'stronger' blue
+#da9833  - 'orange/beige (?)
+*/
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    box-sizing: border-box;
+    font-size: 1.6rem;
+    color: #111;
+    background-color: #d9eeec;
+    font-family: 'Raleway', sans-serif;
+}
+
+.navbar {
+    text-transform: uppercase;
+    font-family: 'Dosis', sans-serif;
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #3c70a4;
+}
+
+.navbar li {
+    float: left;
+    transition: all 300ms;
+}
+
+.navbar li:hover {
+    background-color: #da9833;
+}
+
+.navbar li a {
+    display: block;
+    color: #d9eeec;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.banner {
+    width: 100%;
+    background-color: #5ca4bd;
+    height: 320px;
+    font-family: 'Dosis', sans-serif;
+    color: #d9eeec;
+    text-align: right;
+    padding: 150px 30px 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    white-space: nowrap;
+}
+
+.banner-title {
+    font-size: 6.5rem;
+    margin: 20px;
+    z-index: 2;
+    position: relative;
+}
+
+.banner-description {
+    font-size: 3rem;
+    z-index: 2;
+    position: relative;
+    margin-bottom: 60px;
+}
+
+.banner-dog {
+    height: auto;
+    max-width: 400px;
+    min-width: 300px;
+    width: 100%;
+    position: relative;
+    transform: translateY(15%);
+}
+
+.promo {
+    background-color: #da9833;
+    padding: 30px 10%;
+}
+
+.promo-title {
+    color: #d9eeec;
+    font-family: 'Dosis', sans-serif;
+    font-size: 4.5rem;
+    margin-bottom: 40px;
+}
+
+.promo-list {
+    display: flex;
+    justify-content: space-around;
+}
+
+.promo-card {
+    margin: 20px;
+    width: 250px;
+    height: 300px;
+    background-color: #d9eeec;
+    display: grid;
+    grid-template-rows: 4fr 1fr;
+    grid-row-gap: 35px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0px 3px 2px 1px rgba(0, 0, 0, 0.3);
+}
+
+.product-price {
+    /* padding-top: 20px; */
+}
+
+.promo-product {
+    font-size: 2.5rem;
+}
+
+.promo-price {
+    font-size: 2rem;
+    color: #e61010;
+    font-weight: 900;
+}
+
+.promo-card-img {
+    height: 100%;
+    justify-self: center;
+}
