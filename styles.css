@@ -9,172 +9,170 @@ Color Pallette
 *,
 *::before,
 *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
 }
 
 html {
-  font-size: 62.5%;
+    font-size: 62.5%;
 }
 
 body {
-  box-sizing: border-box;
-  font-size: 1.6rem;
-  color: #303030;
-  background-color: #d9eeec;
-  font-family: "Raleway", sans-serif;
+    box-sizing: border-box;
+    font-size: 1.6rem;
+    color: #303030;
+    background-color: #d9eeec;
+    font-family: "Raleway", sans-serif;
 }
 
 .navbar {
-  text-transform: uppercase;
-  font-family: "Dosis", sans-serif;
-  position: fixed;
-  width: 100%;
-  z-index: 1000;
-  box-shadow: 0px 2px 8px 1px rgba(0, 0, 0, 0.3);
+    text-transform: uppercase;
+    font-family: "Dosis", sans-serif;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0px 2px 8px 1px rgba(0, 0, 0, 0.3);
 }
 
 .navbar ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #3c70a4;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #3c70a4;
 }
 
 .navbar li {
-  float: left;
-  transition: all 300ms;
+    float: left;
+    transition: all 300ms;
 }
 
 .navbar li:hover {
-  background-color: #da9833;
+    background-color: #da9833;
 }
 
 .navbar li a {
-  display: block;
-  color: #d9eeec;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
+    display: block;
+    color: #d9eeec;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
 }
 
 .banner {
-  width: 100%;
-  background-color: #5ca4bd;
-  height: 320px;
-  font-family: "Dosis", sans-serif;
-  color: #d9eeec;
-  text-align: right;
-  padding: 150px 30px 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-around;
-  white-space: nowrap;
+    width: 100%;
+    background-color: #5ca4bd;
+    height: 320px;
+    font-family: "Dosis", sans-serif;
+    color: #d9eeec;
+    text-align: right;
+    padding: 150px 30px 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    white-space: nowrap;
 }
 
 .banner-title {
-  font-size: 6.5rem;
-  margin: 20px;
-  z-index: 2;
-  position: relative;
+    font-size: 6.5rem;
+    margin: 20px;
+    z-index: 2;
+    position: relative;
 }
 
 .banner-description {
-  font-size: 3rem;
-  z-index: 2;
-  position: relative;
-  margin-bottom: 60px;
+    font-size: 3rem;
+    z-index: 2;
+    position: relative;
+    margin-bottom: 60px;
 }
 
 .banner-dog {
-  height: auto;
-  max-width: 400px;
-  min-width: 300px;
-  width: 100%;
-  position: relative;
-  transform: translateY(15%);
+    height: auto;
+    max-width: 400px;
+    min-width: 300px;
+    width: 100%;
+    position: relative;
+    transform: translateY(15%);
 }
 
 .section {
-  padding: 30px 10%;
+    padding: 30px 10%;
 }
 
 .section h2 {
-  font-family: "Dosis", sans-serif;
-  font-size: 4.5rem;
-  margin-bottom: 40px;
+    font-family: "Dosis", sans-serif;
+    font-size: 4.5rem;
+    margin-bottom: 40px;
 }
 
 .card {
-  background-color: #f8f8f8;
-  margin: 20px;
-  display: grid;
-  grid-template-rows: 4fr 1fr;
-  grid-row-gap: 35px;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0px 3px 2px 1px rgba(0, 0, 0, 0.3);
-  width: 200px;
-  height: 250px;
+    background-color: #f8f8f8;
+    margin: 20px;
+    display: grid;
+    grid-template-rows: 4fr 1fr;
+    grid-row-gap: 35px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0px 3px 2px 1px rgba(0, 0, 0, 0.3);
+    width: 200px;
+    height: 250px;
+    text-decoration: none;
+    color: #303030;
 }
 
 .card-product {
-  font-size: 2.2rem;
+    font-size: 2.2rem;
 }
 
 .card-price {
-  font-size: 1.8rem;
-  color: #616161;
+    font-size: 1.8rem;
+    color: #616161;
 }
 
 .promo {
-  background-color: #da9833;
+    background-color: #da9833;
 }
 
 .promo h2 {
-  color: #d9eeec;
+    color: #d9eeec;
 }
 
 .promo-list {
-  display: flex;
-  justify-content: space-around;
+    display: flex;
+    justify-content: space-around;
 }
 
 .promo .card {
-  width: 250px;
-  height: 300px;
-}
-
-.product-price {
-  /* padding-top: 20px; */
+    width: 250px;
+    height: 300px;
 }
 
 .promo .card-product {
-  font-size: 2.5rem;
+    font-size: 2.5rem;
 }
 
 .promo .card-price {
-  font-size: 2rem;
-  color: #e61010;
+    font-size: 2rem;
+    color: #e61010;
 }
 
 .promo-card-img {
-  height: 100%;
-  justify-self: center;
+    height: 100%;
+    justify-self: center;
 }
 
 .products {
-  padding: 30px 15px;
+    padding: 30px 15px;
 }
 
 .products h2 {
-  margin-left: calc(10% - 15px);
+    margin-left: calc(10% - 15px);
 }
 
 .product-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
