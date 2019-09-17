@@ -27,7 +27,6 @@ body {
 }
 
 .navbar {
-    text-transform: uppercase;
     font-family: "Dosis", sans-serif;
     position: fixed;
     width: 100%;
@@ -72,6 +71,7 @@ body {
     align-items: flex-end;
     justify-content: space-around;
     white-space: nowrap;
+
 }
 
 .banner-title {
@@ -92,7 +92,6 @@ body {
     height: auto;
     max-width: 400px;
     min-width: 300px;
-    width: 100%;
     position: relative;
     transform: translateY(15%);
 }
@@ -110,19 +109,20 @@ body {
 .card {
     background-color: #f8f8f8;
     margin: 20px;
-    display: grid;
-    grid-template-rows: 4fr 1fr;
-    grid-row-gap: 35px;
+    display: flex;
+    flex-direction: column;
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0px 3px 2px 1px rgba(0, 0, 0, 0.3);
     width: 200px;
-    height: 250px;
+    height: auto;
     text-decoration: none;
     color: #303030;
+    white-space: nowrap;
 }
 
 .card-product {
+    margin-top: 15px;
     font-size: 2.2rem;
 }
 
@@ -145,8 +145,8 @@ body {
 }
 
 .promo .card {
-    width: 250px;
-    height: 300px;
+    max-width: 250px;
+    height: auto;
 }
 
 .promo .card-product {
@@ -159,7 +159,8 @@ body {
 }
 
 .promo-card-img {
-    height: 100%;
+    width: 100%;
+    height: auto;
     justify-self: center;
 }
 
@@ -175,4 +176,62 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+}
+
+
+
+@media only screen and (max-width: 840px) {
+    .banner {
+        text-align: center;
+        justify-content: center;
+        text-shadow: 3px 2px rgba(0, 0, 0, 0.397);
+    }
+
+    .banner-dog {
+        position: absolute;
+        left: 10px;
+        transform: translateY(-75%) scale(.7);
+        filter: opacity(.9);
+    }
+}
+
+@media only screen and (max-width: 620px) {
+    .banner {
+        text-shadow: 2px 1px rgba(0, 0, 0, 0.397);
+    }
+
+    .banner-title {
+        font-size: 4rem;
+    }
+
+    .banner-description {
+        white-space: normal;
+        font-size: 2.2rem;
+    }
+
+    .card {
+        margin: 10px;
+        padding: 20px;
+        width: 120px;
+    }
+
+    .card-product {
+        font-size: 1.4rem;
+    }
+
+    .card-price {
+        font-size: 1.2rem;
+    }
+
+    .promo .card-product {
+        font-size: 1.7rem;
+    }
+
+    .promo .card-price {
+        font-size: 1.2rem;
+    }
+
+    .section h2 {
+        font-size: 3.5rem;
+    }
 }
