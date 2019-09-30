@@ -9,256 +9,282 @@ Color Pallette
 *,
 *::before,
 *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
 }
 
 html {
-    font-size: 62.5%;
+  font-size: 62.5%;
 }
 
 body {
-    box-sizing: border-box;
-    font-size: 1.6rem;
-    color: #303030;
-    background-color: #d9eeec;
-    font-family: "Raleway", sans-serif;
+  box-sizing: border-box;
+  font-size: 1.6rem;
+  color: #303030;
+  background-color: #d9eeec;
+  font-family: "Raleway", sans-serif;
 }
 
 .navbar {
-    font-family: "Dosis", sans-serif;
-    position: fixed;
-    width: 100%;
-    z-index: 1000;
-    box-shadow: 0px 2px 8px 1px rgba(0, 0, 0, 0.3);
+  font-family: "Dosis", sans-serif;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0px 2px 8px 1px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: space-between;
+  background-color: #3c70a4;
+  padding: 0;
 }
 
 .navbar ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #3c70a4;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #3c70a4;
 }
 
 .navbar li {
-    float: left;
-    transition: all 300ms;
+  float: left;
+  transition: all 300ms;
 }
 
 .navbar li:hover {
-    background-color: #da9833;
+  background-color: #da9833;
 }
 
 .navbar li a {
-    display: block;
-    color: #d9eeec;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
+  display: block;
+  color: #d9eeec;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.login-form {
+  padding: 20px;
+  font-size: 2rem;
+  border-radius: 8px;
+  margin: 10px !important;
+  box-shadow: 0px 2px 8px 1px rgba(0, 0, 0, 0.3);
+}
+
+.login-form-li {
+  padding: 20px;
+  width: 300px;
+}
+
+.login-form-li:hover {
+  background-color: #3c70a4 !important;
+}
+
+.login-btn {
+  font-size: 2rem;
+}
+
+.form-control {
+  font-size: 1.8rem;
 }
 
 .banner {
-    width: 100%;
-    background-color: #5ca4bd;
-    height: 320px;
-    font-family: "Dosis", sans-serif;
-    color: #d9eeec;
-    text-align: right;
-    padding: 150px 30px 0;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-around;
-    white-space: nowrap;
-
+  width: 100%;
+  background-color: #5ca4bd;
+  height: 320px;
+  font-family: "Dosis", sans-serif;
+  color: #d9eeec;
+  text-align: right;
+  padding: 150px 30px 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  white-space: nowrap;
 }
 
 .banner-title {
-    font-size: 6.5rem;
-    margin: 20px;
-    z-index: 2;
-    position: relative;
+  font-size: 6.5rem;
+  margin: 20px;
+  z-index: 2;
+  position: relative;
 }
 
 .banner-description {
-    font-size: 3rem;
-    z-index: 2;
-    position: relative;
-    margin-bottom: 60px;
+  font-size: 3rem;
+  z-index: 2;
+  position: relative;
+  margin-bottom: 60px;
 }
 
 .banner-dog {
-    height: auto;
-    max-width: 400px;
-    min-width: 300px;
-    position: relative;
-    transform: translateY(15%);
+  height: auto;
+  max-width: 400px;
+  min-width: 300px;
+  position: relative;
+  transform: translateY(15%);
 }
 
-.section {
-    padding: 30px 10%;
+.view-section {
+  padding: 30px 10%;
 }
 
-.section h2 {
-    font-family: "Dosis", sans-serif;
-    font-size: 4.5rem;
-    margin-bottom: 40px;
+.view-section h2 {
+  font-family: "Dosis", sans-serif;
+  font-size: 4.5rem;
+  margin-bottom: 40px;
 }
 
-.card {
-    background-color: #f8f8f8;
-    margin: 20px;
-    display: flex;
-    flex-direction: column;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0px 3px 2px 1px rgba(0, 0, 0, 0.3);
-    width: 200px;
-    height: auto;
-    text-decoration: none;
-    color: #303030;
-    white-space: nowrap;
+.cards {
+  background-color: #f8f8f8;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0px 3px 2px 1px rgba(0, 0, 0, 0.3);
+  width: 200px;
+  height: auto;
+  text-decoration: none;
+  color: #303030;
+  white-space: nowrap;
 }
 
 .card-product {
-    margin-top: 15px;
-    font-size: 2.2rem;
+  margin-top: 15px;
+  font-size: 2.2rem;
 }
 
 .card-price {
-    font-size: 1.8rem;
-    color: #616161;
+  font-size: 1.8rem;
+  color: #616161;
 }
 
 .promo {
-    background-color: #da9833;
+  background-color: #da9833;
 }
 
 .promo h2 {
-    color: #d9eeec;
+  color: #d9eeec;
 }
 
 .promo-list {
-    display: flex;
-    justify-content: space-around;
+  display: flex;
+  justify-content: space-around;
 }
 
 .promo .card {
-    max-width: 250px;
-    height: auto;
+  max-width: 250px;
+  height: auto;
 }
 
 .promo .card-product {
-    font-size: 2.5rem;
+  font-size: 2.5rem;
 }
 
 .promo .card-price {
-    font-size: 2rem;
-    color: #e61010;
+  font-size: 2rem;
+  color: #e61010;
 }
 
 .promo-card-img {
-    width: 100%;
-    height: auto;
-    justify-self: center;
+  width: 100%;
+  height: auto;
+  justify-self: center;
 }
 
 .products {
-    padding: 30px 15px;
+  padding: 30px 15px;
 }
 
 .products h2 {
-    margin-left: calc(10% - 15px);
+  margin-left: calc(10% - 15px);
 }
 
 .product-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-
-
 @media only screen and (max-width: 840px) {
-    .banner {
-        text-align: center;
-        justify-content: center;
-        text-shadow: 3px 2px rgba(0, 0, 0, 0.397);
-    }
+  .banner {
+    text-align: center;
+    justify-content: center;
+    text-shadow: 3px 2px rgba(0, 0, 0, 0.397);
+  }
 
-    .banner-dog {
-        position: absolute;
-        left: 10px;
-        transform: translateY(-75%) scale(.7);
-        filter: opacity(.9);
-    }
+  .banner-dog {
+    position: absolute;
+    left: 10px;
+    transform: translateY(-75%) scale(0.7);
+    filter: opacity(0.9);
+  }
 }
 
 @media only screen and (max-width: 620px) {
-    .banner {
-        text-shadow: 2px 1px rgba(0, 0, 0, 0.397);
-    }
+  .banner {
+    text-shadow: 2px 1px rgba(0, 0, 0, 0.397);
+  }
 
-    .banner-title {
-        font-size: 4rem;
-    }
+  .banner-title {
+    font-size: 4rem;
+  }
 
-    .banner-description {
-        white-space: normal;
-        font-size: 2.2rem;
-    }
+  .banner-description {
+    white-space: normal;
+    font-size: 2.2rem;
+  }
 
-    .card {
-        margin: 10px;
-        padding: 20px;
-        width: 120px;
-    }
+  .card {
+    margin: 10px;
+    padding: 20px;
+    width: 120px;
+  }
 
-    .card-product {
-        font-size: 1.4rem;
-    }
+  .card-product {
+    font-size: 1.4rem;
+  }
 
-    .card-price {
-        font-size: 1.2rem;
-    }
+  .card-price {
+    font-size: 1.2rem;
+  }
 
-    .promo .card-product {
-        font-size: 1.7rem;
-    }
+  .promo .card-product {
+    font-size: 1.7rem;
+  }
 
-    .promo .card-price {
-        font-size: 1.2rem;
-    }
+  .promo .card-price {
+    font-size: 1.2rem;
+  }
 
-    .section h2 {
-        font-size: 3.5rem;
-    }
+  .section h2 {
+    font-size: 3.5rem;
+  }
 }
 
 @media only screen and (max-width: 370px) {
-    .banner {
-        height: 300px;
-    }
+  .banner {
+    height: 300px;
+  }
 
-    .banner-dog {
-        transform: translateY(-68%) scale(.5);
-    }
+  .banner-dog {
+    transform: translateY(-68%) scale(0.5);
+  }
 
-    .banner-title {
-        font-size: 3rem;
-    }
+  .banner-title {
+    font-size: 3rem;
+  }
 
-    .banner-description {
-        white-space: normal;
-        font-size: 1.7rem;
-    }
+  .banner-description {
+    white-space: normal;
+    font-size: 1.7rem;
+  }
 
-    .promo-list {
-        flex-wrap: wrap;
-    }
+  .promo-list {
+    flex-wrap: wrap;
+  }
 
-    .promo .card {
-        width: 170px;
-    }
+  .promo .card {
+    width: 170px;
+  }
 }

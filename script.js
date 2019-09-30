@@ -12,7 +12,7 @@ for (let i = 0; i < 24; i++) products.push(testProduct);
 
 products.forEach(product => {
   productList.innerHTML += `
-    <a href="${product.href}" class="card">
+    <a href="${product.href}" class="cards">
       <img src="${product.img}" alt="dog food" class="promo-card-img" />
       <div class="product-price">
         <div class="card-product">${product.product}</div>
