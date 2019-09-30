@@ -242,6 +242,122 @@ body {
   /* margin-right: 20px; */
 }
 
+.time-select {
+  margin-top: 30px;
+}
+
+.time-select .custom-select {
+  font-size: 20px;
+}
+
+.schedule-button {
+  text-align: center;
+  margin-top: 20px;
+}
+.schedule-button button {
+  font-size: 20px;
+}
+
+.pet-container {
+  padding: 20px;
+  border: 1px solid #bebebe !important;
+}
+
+.pet-schedule {
+  list-style-type: initial;
+  margin-left: 40px;
+}
+
+/* Calendar */
+
+ul {
+  list-style-type: none;
+}
+
+/* Month header */
+.month {
+  padding: 20px 25px;
+  width: 100%;
+  background: #3c70a4;
+  text-align: center;
+}
+
+/* Month list */
+.month ul {
+  margin: 0;
+  padding: 0;
+}
+
+.month ul li {
+  color: white;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+/* Previous button inside month header */
+.month .prev {
+  float: left;
+  padding-top: 10px;
+}
+
+/* Next button */
+.month .next {
+  float: right;
+  padding-top: 10px;
+}
+
+/* Weekdays (Mon-Sun) */
+.weekdays {
+  margin: 0;
+  padding: 10px 0;
+  background-color: #5ca4bd;
+}
+
+.weekdays li {
+  display: inline-block;
+  width: 13.6%;
+  color: white;
+  text-align: center;
+}
+
+/* Days (1-31) */
+.days {
+  padding: 10px 0;
+  background: #eee;
+  margin: 0;
+}
+
+.days li {
+  list-style-type: none;
+  display: inline-block;
+  width: 13.6%;
+  text-align: center;
+  margin-bottom: 5px;
+  font-size: 15px;
+  color: #777;
+}
+
+.days li:hover {
+  cursor: pointer;
+}
+
+/* Highlight the "current" day */
+.days li .active {
+  padding: 5px;
+  background: #1abc9c;
+  color: white !important;
+}
+
+.days .full-day {
+  color: red !important;
+  font-weight: 900;
+}
+
+.days .full-day:hover {
+  cursor: default;
+}
+
 @media only screen and (max-width: 840px) {
   .banner {
     text-align: center;
