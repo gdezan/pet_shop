@@ -208,6 +208,40 @@ body {
   justify-content: center;
 }
 
+.admin-container {
+  margin-top: 100px;
+  border: 1px solid #bebebe;
+  border-radius: 8px;
+  padding: 30px 20px !important;
+}
+
+.admin-container .row {
+  margin: 0;
+}
+
+.admin-section-title {
+  margin: 20px 0;
+}
+
+.admin-section-option {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  transition: all 0.15s;
+}
+
+.admin-section-option:hover {
+  color: #5ca4bd;
+  border-color: #5ca4bd;
+}
+
+.divider {
+  background-color: grey;
+  height: 1px;
+  width: 100%;
+  /* margin-right: 20px; */
+}
+
 @media only screen and (max-width: 840px) {
   .banner {
     text-align: center;
