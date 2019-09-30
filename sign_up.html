@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Dosis:700|Raleway:600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="sign_up.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css"
+      integrity="sha256-piqEf7Ap7CMps8krDQsSOTZgF+MU/0MPyPW2enj5I40="
+      crossorigin="anonymous"
+    />
+    <title>Cadastre-se</title>
+
+    <script type="text/javascript">
+      function limpa_formulário_cep() {
+        //Limpa valores do formulário de cep.
+        document.getElementById("inputStreet").value = "";
+        document.getElementById("inputNBHood").value = "";
+        document.getElementById("inputCity").value = "";
+        document.getElementById("inputState").value = "";
+      }
+
+      function meu_callback(conteudo) {
+        if (!("erro" in conteudo)) {
+          //Atualiza os campos com os valores.
+          document.getElementById("inputStreet").value = conteudo.logradouro;
+          document.getElementById("inputNBHood").value = conteudo.bairro;
+          document.getElementById("inputCity").value = conteudo.localidade;
+          document.getElementById("inputState").value = conteudo.uf;
+        } //end if.
+        else {
+          //CEP não Encontrado.
+          limpa_formulário_cep();
+          alert("CEP não encontrado.");
+        }
+      }
+
+      function pesquisacep(valor) {
+        //Nova variável "cep" somente com dígitos.
+        var cep = valor.replace(/\D/g, "");
+
+        //Verifica se campo cep possui valor informado.
+        if (cep != "") {
+          //Expressão regular para validar o CEP.
+          var validacep = /^[0-9]{8}$/;
+
+          //Valida o formato do CEP.
+          if (validacep.test(cep)) {
+            //Preenche os campos com "..." enquanto consulta webservice.
+            document.getElementById("inputStreet").value = "...";
+            document.getElementById("inputNBHood").value = "...";
+            document.getElementById("inputCity").value = "...";
+            document.getElementById("inputState").value = "...";
+
+            //Cria um elemento javascript.
+            var script = document.createElement("script");
+
+            //Sincroniza com o callback.
+            script.src =
+              "https://viacep.com.br/ws/" +
+              cep +
+              "/json/?callback=meu_callback";
+
+            //Insere script no documento e carrega o conteúdo.
+            document.body.appendChild(script);
+          } //end if.
+          else {
+            //cep é inválido.
+            limpa_formulário_cep();
+            alert("Formato de CEP inválido.");
+          }
+        } //end if.
+        else {
+          //cep sem valor, limpa formulário.
+          limpa_formulário_cep();
+        }
+      }
+    </script>
+
+    <script type="text/javascript">
+      var loadFile = function(event) {
+        var output = document.getElementById("outputImg");
+        output.src = URL.createObjectURL(event.target.files[0]);
+      };
+    </script>
+  </head>
+  <body>
+    <nav class="navbar fixed-top">
+      <ul>
+        <li>
+          <a href="index.html"><i class="fas fa-paw"></i>Au Que Mia</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sign-up">
+      <h1>Cadastre-se</h1>
+      <img id="outputImg" src="img/profile.png" />
+      <input
+        id="inputImg"
+        type="file"
+        name="pic"
+        accept="image/*"
+        onchange="loadFile(event)"
+      />
+      <form class="form">
+        <div class="personalData">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="name">* Nome</label>
+              <input
+                id="name"
+                type="text"
+                class="form-control"
+                placeholder="Nome"
+                required
+              />
+            </div>
+            <div class="form-group col-md-6">
+              <label for="lastName">* Sobrenome</label>
+              <input
+                id="lastName"
+                type="text"
+                class="form-control"
+                placeholder="Sobrenome"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="user">* Username</label>
+              <input
+                id="user"
+                type="text"
+                class="form-control"
+                placeholder="Username"
+                required
+              />
+            </div>
+            <div class="form-group col-md-6">
+              <label for="phone">* Telefone</label>
+              <input
+                id="phone"
+                type="tel"
+                class="form-control"
+                placeholder="(00) 99123-4567"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputEmail4">* E-mail</label>
+              <input
+                type="email"
+                class="form-control"
+                id="inputEmail4"
+                placeholder="E-mail"
+                required
+              />
+            </div>
+            <div class="form-group col-md-6">
+              <label for="inputPassword4">* Senha</label>
+              <input
+                type="password"
+                class="form-control"
+                id="inputPassword4"
+                placeholder="Senha"
+                required
+              />
+            </div>
+          </div>
+        </div>
+        <div class="address">
+          <div class="form-group">
+            <label for="inputCEP">* CEP</label>
+            <input
+              type="text"
+              class="form-control"
+              value=""
+              id="inputCEP"
+              size="10"
+              maxlength="9"
+              onblur="pesquisacep(this.value);"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="inputStreet">Rua</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputStreet"
+              size="60"
+            />
+          </div>
+          <div class="form-group">
+            <label for="inputNum">* Número</label>
+            <input type="text" class="form-control" id="inputNum" required />
+          </div>
+          <div class="form-group">
+            <label for="inputNBHood">Bairro</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputNBHood"
+              size="40"
+            />
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputCity">Cidade</label>
+              <input
+                type="text"
+                class="form-control"
+                id="inputCity"
+                size="40"
+              />
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputState">Estado</label>
+              <input
+                type="text"
+                class="form-control"
+                id="inputState"
+                size="2"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" />
+            <label class="form-check-label">
+              Desejo receber ofertas e promoções especiais
+            </label>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Cadastrar</button>
+      </form>
+    </div>
+  </body>
+</html>
