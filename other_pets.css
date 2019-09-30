@@ -97,31 +97,23 @@ body {
   text-align: right;
   padding: 150px 30px 0;
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-around;
   white-space: nowrap;
 }
 
 .banner-title {
   font-size: 6.5rem;
-  margin: 20px;
   z-index: 2;
   position: relative;
 }
 
-.banner-description {
-  font-size: 3rem;
-  z-index: 2;
-  position: relative;
-  margin-bottom: 60px;
-}
-
-.banner-dog {
+.banner-pet {
   height: auto;
-  max-width: 400px;
-  min-width: 300px;
+  max-width: 200px;
+  min-width: 100px;
   position: relative;
-  transform: translateY(15%);
+  transform: translateY(-38%);
 }
 
 .view-section {
@@ -208,39 +200,35 @@ body {
   justify-content: center;
 }
 
-@media only screen and (max-width: 840px) {
+@media only screen and (max-width: 980px) {
   .banner {
     text-align: center;
     justify-content: center;
     text-shadow: 3px 2px rgba(0, 0, 0, 0.397);
   }
 
-  .banner-dog {
+  .banner-right {
     position: absolute;
-    left: 10px;
-    transform: translateY(-75%) scale(0.7);
-    filter: opacity(0.9);
   }
 }
 
-@media only screen and (max-width: 620px) {
+@media only screen and (max-width: 720px) {
   .banner {
     text-shadow: 2px 1px rgba(0, 0, 0, 0.397);
   }
 
   .banner-title {
-    font-size: 4rem;
+    font-size: 5rem;
   }
 
-  .banner-description {
-    white-space: normal;
-    font-size: 2.2rem;
+  .banner-pet {
+    transform: translateY(-34%) scale(0.9);
   }
 
-  .card {
+  .cards {
     margin: 10px;
     padding: 20px;
-    width: 120px;
+    width: 240px;
   }
 
   .card-product {
@@ -249,6 +237,10 @@ body {
 
   .card-price {
     font-size: 1.2rem;
+  }
+
+  .promo-list {
+    flex-wrap: wrap;
   }
 
   .promo .card-product {
@@ -264,29 +256,29 @@ body {
   }
 }
 
-@media only screen and (max-width: 370px) {
+@media only screen and (max-width: 560px) {
   .banner {
     height: 300px;
+    white-space: normal;
   }
 
-  .banner-dog {
-    transform: translateY(-68%) scale(0.5);
+  .banner-pet {
+    transform: translateY(-36%) scale(0.8);
   }
 
   .banner-title {
-    font-size: 3rem;
+    font-size: 4rem;
+    height: 100%;
   }
+}
 
-  .banner-description {
+@media only screen and (max-width: 375px) {
+  .banner {
+    height: 340px;
     white-space: normal;
-    font-size: 1.7rem;
   }
 
-  .promo-list {
-    flex-wrap: wrap;
-  }
-
-  .promo .card {
-    width: 170px;
+  .banner-pet {
+    transform: translateY(-22%) scale(0.8);
   }
 }
