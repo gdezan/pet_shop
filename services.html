@@ -21,7 +21,7 @@
       integrity="sha256-piqEf7Ap7CMps8krDQsSOTZgF+MU/0MPyPW2enj5I40="
       crossorigin="anonymous"
     />
-    <title>Au Que Mia</title>
+    <title>Au Que Mia - Serviços</title>
   </head>
   <body>
     <nav class="navbar fixed-top">
@@ -70,44 +70,56 @@
 
     <div class="banner">
       <div class="banner-left">
-        <img src="img/banner_dog.png" class="banner-dog" alt="banner dog" />
+        <img src="img/dog_bath.png" class="banner-dog banner-services" alt="banner dog" />
       </div>
 
       <div class="banner-right">
-        <h1 class="banner-title"><i class="fas fa-paw"></i>Au Que Mia</h1>
-        <h2 class="banner-description">Produtos mágicos para o seu melhor amigo!</h2>
+        <h1 class="banner-title"></i>Serviços</h1>
       </div>
     </div>
-    <div class="promo view-section">
-      <h2>Promoções!</h2>
-      <div class="promo-list">
-        <a href="#" class="cards">
-          <img src="img/dog_food.png" alt="dog food" class="promo-card-img" />
-          <div class="product-price">
-            <div class="card-product">Ração X</div>
-            <div class="card-price">R$ 99,99</div>
+
+
+    <div class="container admin-container shadow p-3 mb-5 bg-white">
+      <h1 class="admin-panel-title">Agende um serviço!</h1>
+
+      <form>
+          <div class="form-group">
+            <label for="service-type">Tipo de Serviço</label>
+            <select class="form-control" id="service-type">
+                <option selected>Escolher serviço</option>
+              <option>Banho</option>
+              <option>Tosa</option>
+              <option>Vacinação</option>
+              <option>Corte de Unhas</option>
+            </select>
           </div>
-        </a>
-        <a href="#" class="cards">
-          <img src="img/dog_food.png" alt="dog food" class="promo-card-img" />
-          <div class="product-price">
-            <div class="card-product">Ração Y</div>
-            <div class="card-price">R$ 99,99</div>
+          <div class="form-group">
+            <label for="obs">Observações</label>
+            <textarea class="form-control" id="obs" rows="3"></textarea>
           </div>
-        </a>
-        <a href="#" class="box cards">
-          <img src="img/dog_food.png" alt="dog food" class="promo-card-img" />
-          <div class="product-price">
-            <div class="card-product">Ração Z</div>
-            <div class="card-price">R$ 99,99</div>
+          <div class="form-group">
+            <label for="calendar">Data do serviço</label>
+            <input type="date" name="calendar" min="1000-01-01"
+            max="3000-12-31" class="form-control">
           </div>
-        </a>
-      </div>
+          <div class="form-group">
+              <label for="service-type">Horário do Serviço</label>
+              <select class="form-control" id="service-time">
+                  <option selected>Escolher horário</option>
+                  <option value="0800">08:00</option>
+                  <option value="0830">08:30</option>
+                  <option value="1030">10:30</option>
+                  <option value="1100">11:00</option>
+                  <option value="1130">11:30</option>
+                  <option value="1330">13:30</option>
+              </select>
+            </div>
+        </form>
+        <div class="text-center"><button type="button" class="btn btn-primary btn-lg">Agendar</button></div>
+
+
     </div>
-    <div class="products view-section">
-      <h2>Nossos Produtos</h2>
-      <div class="product-list"></div>
-    </div>
+
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
       integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
