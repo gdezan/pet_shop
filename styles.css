@@ -124,6 +124,10 @@ body {
   transform: translateY(15%);
 }
 
+.banner-services {
+  max-width: 300px;
+}
+
 .view-section {
   padding: 30px 10%;
 }
@@ -264,7 +268,7 @@ body {
 }
 
 .pet-schedule {
-  list-style-type: initial;
+  list-style-type: circle;
   margin-left: 40px;
 }
 
