@@ -46,6 +46,8 @@ O site pode ser visualizado [aqui](https://gdezan.github.io/pet_shop/index.html)
 
 **sign_up_pet.css**: arquivo CSS referente à página sign_up_pet.html.
 
+**script.js**: arquivo que reproduz várias cartas de produto.
+
 ## Descrições
 
 ### Funcionalidade
