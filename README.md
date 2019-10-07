@@ -1,65 +1,68 @@
-# Pet Shop
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-Projeto da disciplina SCC0219 - Introdução ao Desenvolvimento Web
+## Available Scripts
 
-Nome: Gabriel de Andrade Dezan
-N USP: 10525706
+In the project directory, you can run:
 
-Nome: Ivan Mateus de Lima Azevedo
-N USP: 10525602
+### `npm start`
 
-O site pode ser visualizado [aqui](https://gdezan.github.io/pet_shop/index.html).
+Runs the app in the development mode.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-## Arquivos
+The page will reload if you make edits.<br />
+You will also see any lint errors in the console.
 
-**index.html**: a landing page do site (ou seja, a primeira página visualizada pelo usuário quando ele entra no site).
+### `npm test`
 
-**dog.html**: a página que contém os produtos destinados à cachorros.
+Launches the test runner in the interactive watch mode.<br />
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-**cat.html**: a página que contém os produtos destinados à gatos.
+### `npm run build`
 
-**other_pets.html**: a página que contém os produtos destinados aos outros tipos de pet.
+Builds the app for production to the `build` folder.<br />
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-**services.html**: a página que contém os serviços que a loja possui e também permite fazer agendamentos.
+The build is minified and the filenames include the hashes.<br />
+Your app is ready to be deployed!
 
-**forgot_pw.html**: a página que aparece quando o usuário clica na opção "Esqueceu sua senha?" no menu de login dropdown.
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-**sign_up.html**: a página que aparece quando o usuário clica na opção "Cadastre-se" no menu de login dropdown.
+### `npm run eject`
 
-**admin.html**: a página da área do admin, um admnistrador loga no site. A opção de fazer o login ainda não está disponível, mas a página que o admin cai quando loga é essa.
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-**user.html**: a página da área do usuário, quando ele loga no site. A opção de fazer o login ainda não está disponível, mas a página que o usuário cai quando loga é essa.
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-**sign_up_pet.html**: a página que o usuário cai quando ele seleciona a opção "Adicionar pets" na área do usuário.
+Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-**styles.css**: arquivo CSS referente às páginas index.html, admin.html, user.html e services.html.
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-**dog.css**: arquivo CSS referente à página dog.html.
+## Learn More
 
-**cat.css**: arquivo CSS referente à página cat.html.
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-**other_pets.css**: arquivo CSS referente à página other_pets.html.
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-**forgot_pw.css**: arquivo CSS referente à página forgot_pw.html.
+### Code Splitting
 
-**sign_up.css**: arquivo CSS referente à página sign_up.html.
+This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
 
-**sign_up_pet.css**: arquivo CSS referente à página sign_up_pet.html.
+### Analyzing the Bundle Size
 
-**script.js**: arquivo que reproduz várias cartas de produto.
+This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
 
-## Descrições
+### Making a Progressive Web App
 
-### Funcionalidade
+This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
 
-A aplicação compreende a interface da loja, mas sem as funções que exigem um back-end ou um JavaScript mais robusto (como por exemplo, agendamento de serviços, sign ups, compras, etc).
+### Advanced Configuration
 
-Entretanto, a fim de demonstrar como a aplicação deveria funcionar, colocamos alguns valores *default*.
+This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
 
-### Informações armazenadas
+### Deployment
 
-As informações que deverão ser armazenadas serão, a princípio, os dados dos clientes e seus pets, dos administradores, dos serviços prestados pela pet shop e os produtos vendidos, dados das compras vendidos, datas/horários com serviços marcados.
+This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
 
-### Diagrama
+### `npm run build` fails to minify
 
-![Diagrama](https://raw.githubusercontent.com/gdezan/pet_shop/master/img/flowchart.png)
+This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
