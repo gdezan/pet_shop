@@ -1,19 +1,23 @@
 import React from "react";
-import { Link, Router } from "@reach/router";
+// import { Link, Router } from "@reach/router";
+import { ThemeProvider } from "styled-components";
 
-const Home = () => {
-  return <Link to="dashboard">Dashboard</Link>;
-};
-const Dashboard = () => {
-  return <Link to="/">Home</Link>;
+import Navbar from "components/Navbar";
+
+const mainTheme = {
+  bg: "#d9eeec",
+  light: "#5ca4bd",
+  strong: "#3c70a4",
+  accent: "#da9833",
 };
 
 function App() {
   return (
-    <Router>
-      <Home path="/" />
-      <Dashboard path="/dashboard" />
-    </Router>
+    <ThemeProvider theme={mainTheme}>
+      <Navbar />
+      {/* <Router><Home path="/" />
+        <Dashboard path="/dashboard" /></Router> */}
+    </ThemeProvider>
   );
 }
 
