@@ -17,6 +17,7 @@ const ButtonWrapper = styled.button`
   transition: 0.15s all;
   background-color: ${props => props.theme.accent};
   box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
 
   &:hover {
     filter: brightness(1.1);

@@ -3,6 +3,8 @@ import styled, { css } from "styled-components";
 import { Link } from "@reach/router";
 
 import { size } from "assets/device";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft, faBars } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "base-components/Button";
 import LoginModal from "components/LoginModal";
@@ -10,7 +12,7 @@ import LoginModal from "components/LoginModal";
 const Navbar = props => {
   const [isMobile, setMobile] = useState(window.innerWidth < parseInt(size.tablet));
   const [loginModalOpen, setLoginModalOpen] = useState(false);
-  const [sideMenuOpen, setSideMenu] = useState(false);
+  const [sideMenuOpen, setSideMenu] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -25,8 +27,13 @@ const Navbar = props => {
 
   const renderLinks = (pages, isMobile = false) => {
     const RenderedLink = isMobile ? MobileLink : StyledLink;
-    return pages.map(page => (
-      <RenderedLink key={page.name} to={page.path}>
+    return pages.map((page, index) => (
+      <RenderedLink
+        key={page.name}
+        onClick={() => setSideMenu(false)}
+        to={page.path}
+        first={index === 0 ? 1 : 0}
+      >
         {page.name}
       </RenderedLink>
     ));
@@ -36,14 +43,20 @@ const Navbar = props => {
     return (
       <>
         <Nav>
-          <Button onClick={() => setSideMenu(true)}>=</Button>
+          <MenuButton onClick={() => setSideMenu(true)}>
+            <FontAwesomeIcon icon={faBars} />
+          </MenuButton>
         </Nav>
         <SideMenu isOpen={sideMenuOpen}>
-          <Button onClick={() => setSideMenu(false)}>{"<-"}</Button>
+          <MenuButton onClick={() => setSideMenu(false)} sideMenu>
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </MenuButton>
           <LinksWrapper>
             <PageLinks isMobile>{renderLinks(props.pages, true)}</PageLinks>
             <UserLinks>
-              <LoginButton onClick={() => setLoginModalOpen(!loginModalOpen)}>Login</LoginButton>
+              <MenuButton onClick={() => setLoginModalOpen(!loginModalOpen)} sideMenu>
+                Login
+              </MenuButton>
             </UserLinks>
           </LinksWrapper>
         </SideMenu>
@@ -75,12 +88,13 @@ const Nav = styled.nav`
   top: 0;
   width: 100%;
   z-index: 1000;
-  box-shadow: 0px 2px 8px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.6);
   background-color: ${props => props.theme.strong};
   padding: 0;
   color: white;
   display: flex;
   justify-content: space-between;
+  font-size: 20px;
 `;
 
 const Pusher = styled.div`
@@ -100,9 +114,14 @@ const StyledLink = styled(Link)`
 `;
 
 const MobileLink = styled(StyledLink)`
-  padding: 20px 70px 20px 20px;
+  padding: 20px 100px 20px 20px;
   font-family: "Raleway", sans-serif;
   border-bottom: 1px solid ${props => props.theme.light};
+  ${props =>
+    props.first === 1 &&
+    css`
+      border-top: 1px solid ${props => props.theme.light};
+    `}
 `;
 
 const PageLinks = styled.div`
@@ -136,6 +155,7 @@ const SideMenu = styled.div`
   transform: translateX(-120%);
   display: flex;
   flex-direction: column;
+  font-size: 20px;
 
   ${props =>
     props.isOpen &&
@@ -148,6 +168,20 @@ const LinksWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
   flex-grow: 1;
+  padding-bottom: 20px;
+`;
+
+const MenuButton = styled(Button)`
+  background-color: rgba(0, 0, 0, 0);
+  font-size: 20px;
+  &:hover {
+    box-shadow: none;
+    transform: scale(1.1);
+  }
+  ${props =>
+    props.sideMenu &&
+    css`
+      text-align: left;
+    `}
 `;

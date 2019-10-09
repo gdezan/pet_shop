@@ -20,7 +20,8 @@ const MainBanner = ({ img, title = "", description = "", ...props }) => {
 export default MainBanner;
 
 const BannerWrapper = styled.div`
-  width: 100vw;
+  width: 100%;
+  box-sizing: border-box;
   background-color: #5ca4bd;
   height: 320px;
   font-family: "Dosis", sans-serif;
@@ -62,6 +63,7 @@ const Title = styled.h1`
   margin: 20px;
   z-index: 2;
   position: relative;
+  white-space: normal;
 
   @media ${device.tablet} {
     font-size: 3.5rem;
