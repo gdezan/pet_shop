@@ -1,33 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "@reach/router";
 
-import TextField from "base-components/TextField";
-
-const LoginModal = ({ isOpen }) => {
-  return (
-    <LoginWrapper>
-      <TextField label={"foo"} id="1" />
-    </LoginWrapper>
-  );
-};
+import Button from "base-components/Button";
+import LoginModal from "components/LoginModal";
 
 const Navbar = () => {
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+
   return (
     <>
       <Nav>
         <PageLinks>
-          <SLink to="/">Home</SLink>
-          <SLink to="dog">Cachorro</SLink>
-          <SLink to="cat">Gato</SLink>
-          <SLink to="other_pets">Outros Pets</SLink>
-          <SLink to="services">Serviços</SLink>
+          <StyledLink to="/">Home</StyledLink>
+          <StyledLink to="dog">Cachorro</StyledLink>
+          <StyledLink to="cat">Gato</StyledLink>
+          <StyledLink to="other_pets">Outros Pets</StyledLink>
+          <StyledLink to="services">Serviços</StyledLink>
         </PageLinks>
         <UserLinks>
-          <LoginButton>Login</LoginButton>
+          <LoginButton onClick={() => setLoginModalOpen(!loginModalOpen)}>Login</LoginButton>
         </UserLinks>
       </Nav>
-      <LoginModal />
+      <LoginModal isOpen={loginModalOpen} />
     </>
   );
 };
@@ -48,7 +43,7 @@ const Nav = styled.nav`
   margin-bottom: 50px;
 `;
 
-const SLink = styled(Link)`
+const StyledLink = styled(Link)`
   color: white;
   display: inline-block;
   text-decoration: none;
@@ -67,23 +62,7 @@ const UserLinks = styled.div`
   align-items: center;
 `;
 
-const LoginButton = styled.button`
-  cursor: pointer;
-  padding: 10px;
-  margin-right: 10px;
-  text-decoration: none;
-  color: white;
+const LoginButton = styled(Button)`
+  margin: 0 10px 0 0;
   font-family: "Dosis", sans-serif;
-  transition: 0.3s all;
-
-  &:hover {
-    background-color: ${props => props.theme.accent};
-  }
-`;
-
-const LoginWrapper = styled.div`
-  position: absolute;
-  top: 50px;
-  right: 40px;
-  background-color: red;
 `;

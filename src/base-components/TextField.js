@@ -14,21 +14,21 @@ const TextField = props => {
     return props.onChange(props.id, value);
   };
 
-  console.log(1, label);
+  const retActive = props.locked ? active : active || value;
 
   return (
-    <Field active={active} locked={props.locked}>
+    <Field active={retActive} locked={props.locked}>
       <Input
         id={props.id}
-        active={active}
-        type="text"
+        active={props.locked ? active : active || value}
+        type={props.type}
         value={value}
         placeholder={label}
         onChange={onChange}
         onFocus={() => !props.locked && setActive(true)}
         onBlur={() => !props.locked && setActive(false)}
       />
-      <Label htmlFor={props.id} error={error}>
+      <Label htmlFor={props.id} active={retActive} error={error}>
         {error || label}
       </Label>
     </Field>
@@ -41,6 +41,7 @@ TextField.defaultProps = {
   value: "",
   error: "",
   label: "",
+  type: "text",
   onChange: () => "",
 };
 
@@ -48,11 +49,14 @@ export default TextField;
 
 const Field = styled.div`
   width: 100%;
-  height: 56px;
+  height: 46px;
+  margin: 10px 0;
   border-radius: 4px;
   position: relative;
   background-color: rgba(255, 255, 255, 0.3);
   transition: 0.3s background-color ease-in-out, 0.3s box-shadow ease-in-out;
+  border-radius: 4px;
+  overflow: hidden;
 
   &:hover {
     ${props =>
@@ -63,7 +67,7 @@ const Field = styled.div`
       `}
   }
 
-  ${props => (props.locked ? "pointer-events: none;" : "")};
+  ${props => (props.locked && !props.active ? "pointer-events: none;" : "")};
   ${props =>
     props.active &&
     css`
@@ -72,16 +76,12 @@ const Field = styled.div`
     `};
 `;
 
-const Input = styled.input.attrs(props => ({
-  type: "text",
-}))`
-  width: 100%;
-  height: 56px;
+const Input = styled.input.attrs(props => ({ type: props.type }))`
+  height: 46px;
   position: relative;
   padding: 0px 16px;
   border: none;
   border-radius: 4px;
-  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-weight: 400;
   line-height: normal;
@@ -100,7 +100,7 @@ const Input = styled.input.attrs(props => ({
   ${props =>
     props.active &&
     css`
-      padding: 24px 16px 8px 16px;
+      padding: 5px 16px 8px 16px;
     `};
 `;
 
@@ -108,8 +108,7 @@ const Label = styled.label`
   position: absolute;
   top: 24px;
   left: 16px;
-  font-family: "Gotham SSm A", "Gotham SSm B", sans-serif;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 600;
   line-height: 24px;
   color: #ffffff;
@@ -122,8 +121,8 @@ const Label = styled.label`
   ${props =>
     props.active &&
     css`
-      top: 4px;
+      top: 0px;
       opacity: 1;
       color: #512da8;
-    `};
+    `}
 `;
