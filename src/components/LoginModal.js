@@ -22,20 +22,24 @@ export default LoginModal;
 
 const LoginWrapper = styled.div`
   position: absolute;
+  z-index: 2500;
   top: 60px;
   right: 20px;
-  background-color: ${props => props.theme.light};
+  background-color: ${props => props.theme.strong};
   padding: 5px 15px 15px;
   border-radius: 8px;
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.3);
   transition: 0.15s all;
   opacity: ${props => (props.isOpen ? 1 : 0)};
+  visibility: hidden;
   ${props =>
     !props.isOpen
       ? css`
           transform: translateY(-30%);
         `
-      : ""};
+      : css`
+          visibility: visible;
+        `};
 `;
 
 const Title = styled.h4`
@@ -59,6 +63,7 @@ const StyledLink = styled(Link)`
   padding: 10px;
 
   &:hover {
-    color: ${props => props.theme.strong};
+    color: ${props => props.theme.light};
+    text-decoration: underline;
   }
 `;

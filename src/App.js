@@ -1,8 +1,10 @@
 import React from "react";
-// import { Link, Router } from "@reach/router";
+import { Router } from "@reach/router";
 import { ThemeProvider } from "styled-components";
 
 import Navbar from "components/Navbar";
+
+import Home from "views/Home";
 
 const mainTheme = {
   bg: "#d9eeec",
@@ -11,12 +13,18 @@ const mainTheme = {
   accent: "#da9833",
 };
 
+const pages = [{ name: "Home", component: Home, path: "/" }];
+
 function App() {
   return (
     <ThemeProvider theme={mainTheme}>
-      <Navbar />
-      {/* <Router><Home path="/" />
-        <Dashboard path="/dashboard" /></Router> */}
+      <Navbar pages={pages} />
+      <Router>
+        {pages.map(page => {
+          const Page = page.component;
+          return <Page key={page.name} path={page.path} />;
+        })}
+      </Router>
     </ThemeProvider>
   );
 }
