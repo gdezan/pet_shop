@@ -1,82 +1,129 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useState } from "react";
+import styled, { css } from "styled-components";
 
-const TextField = () => {
+const TextField = props => {
+  const [active, setActive] = useState(props.locked && props.focused);
+  const [value, setValue] = useState(props.value);
+  const [error, setError] = useState(props.error);
+  const [label] = useState(props.label);
+
+  const onChange = event => {
+    const value = event.target.value;
+    setValue(value);
+    setError("");
+    return props.onChange(props.id, value);
+  };
+
+  console.log(1, label);
+
   return (
-    <Label>
-      <TextInput />
-      <TextLabel>Label</TextLabel>
-      <Border />
-    </Label>
+    <Field active={active} locked={props.locked}>
+      <Input
+        id={props.id}
+        active={active}
+        type="text"
+        value={value}
+        placeholder={label}
+        onChange={onChange}
+        onFocus={() => !props.locked && setActive(true)}
+        onBlur={() => !props.locked && setActive(false)}
+      />
+      <Label htmlFor={props.id} error={error}>
+        {error || label}
+      </Label>
+    </Field>
   );
+};
+
+TextField.defaultProps = {
+  locked: false,
+  focussed: false,
+  value: "",
+  error: "",
+  label: "",
+  onChange: () => "",
 };
 
 export default TextField;
 
-const Border = styled.span`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 2px;
+const Field = styled.div`
   width: 100%;
-  background #0077FF;
-  transform: scaleX(0);
-  transform-origin: 0 0;
-  transition: all .15s ease;
-`;
-
-const TextInput = styled.input.attrs({ type: "text" })`
-  -webkit-appearance: none;
-  width: 100%;
-  border: 0;
-  font-family: inherit;
-  padding: 12px 0;
-  height: 48px;
-  font-size: 16px;
-  font-weight: 500;
-  border-bottom: 2px solid #C8CCD4;
-  background: none;
-  border-radius: 0;
-  color: #223254;
-  transition: all .15s ease;
+  height: 56px;
+  border-radius: 4px;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.3);
+  transition: 0.3s background-color ease-in-out, 0.3s box-shadow ease-in-out;
 
   &:hover {
-    background: rgba(#223254,.03);
+    ${props =>
+      !props.active &&
+      css`
+        background-color: rgba(255, 255, 255, 0.45);
+        box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.05);
+      `}
   }
 
-  /* &:not(::placeholder-shown) {
-    + span {
-      color #5A667F;
-      transform: translateY(-26px) scale(.75);
-    }
-  } */
-
-  &:focus {
-    background: none;
-    outline: none;
-    + span {
-      color #0077FF;
-      transform: translateY(-26px) scale(.75);
-    }
-    + {Border}
-    transform: scaleX(1);
-  }
+  ${props => (props.locked ? "pointer-events: none;" : "")};
+  ${props =>
+    props.active &&
+    css`
+      background-color: #ffffff;
+      box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.2);
+    `};
 `;
 
-const TextLabel = styled.span`
-  position: absolute;
-  top: 16px;
-  left: 0;
+const Input = styled.input.attrs(props => ({
+  type: "text",
+}))`
+  width: 100%;
+  height: 56px;
+  position: relative;
+  padding: 0px 16px;
+  border: none;
+  border-radius: 4px;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
-  color: #9098a9;
-  font-weight: 500;
-  transform-origin: 0 0;
-  transition: all 0.2s ease;
+  font-weight: 400;
+  line-height: normal;
+  background-color: transparent;
+  color: #282828;
+  outline: none;
+  box-shadow: 0px 4px 20px 0px transparent;
+  transition: 0.3s background-color ease-in-out, 0.3s box-shadow ease-in-out,
+    0.1s padding ease-in-out;
+  -webkit-appearance: none;
+
+  ::placeholder {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  ${props =>
+    props.active &&
+    css`
+      padding: 24px 16px 8px 16px;
+    `};
 `;
 
 const Label = styled.label`
-  position: relative;
-  margin: auto;
-  width: 100%;
-  max-width: 280px;
+  position: absolute;
+  top: 24px;
+  left: 16px;
+  font-family: "Gotham SSm A", "Gotham SSm B", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 24px;
+  color: #ffffff;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.1s all ease-in-out;
+
+  ${props => (props.error ? "color: #ec392f;" : "")};
+
+  ${props =>
+    props.active &&
+    css`
+      top: 4px;
+      opacity: 1;
+      color: #512da8;
+    `};
 `;

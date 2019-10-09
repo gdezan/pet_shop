@@ -7,7 +7,7 @@ import TextField from "base-components/TextField";
 const LoginModal = ({ isOpen }) => {
   return (
     <LoginWrapper>
-      <TextField />
+      <TextField label={"foo"} id="1" />
     </LoginWrapper>
   );
 };
@@ -85,4 +85,5 @@ const LoginWrapper = styled.div`
   position: absolute;
   top: 50px;
   right: 40px;
+  background-color: red;
 `;
