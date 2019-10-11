@@ -48,6 +48,7 @@ TextField.defaultProps = {
 export default TextField;
 
 const Field = styled.div`
+  font-family: "Raleway";
   width: 100%;
   height: 46px;
   margin: 10px 0;
@@ -105,6 +106,7 @@ const Input = styled.input.attrs(props => ({ type: props.type }))`
 `;
 
 const Label = styled.label`
+  font-family: "Raleway";
   position: absolute;
   top: 24px;
   left: 16px;

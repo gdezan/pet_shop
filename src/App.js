@@ -6,6 +6,7 @@ import Navbar from "components/Navbar";
 
 import Home from "views/Home";
 import Dog from "views/Dog";
+import Login from "views/Login";
 
 const mainTheme = {
   bg: "#d9eeec",
@@ -28,7 +29,7 @@ function App() {
           const Page = page.component;
           return <Page key={page.name} path={page.path} />;
         })}
-        {/* <Dog path="dog_products" /> */}
+        <Login path="login" />
       </Router>
     </ThemeProvider>
   );

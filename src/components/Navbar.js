@@ -12,7 +12,7 @@ import LoginModal from "components/LoginModal";
 const Navbar = props => {
   const [isMobile, setMobile] = useState(window.innerWidth < parseInt(size.tablet));
   const [loginModalOpen, setLoginModalOpen] = useState(false);
-  const [sideMenuOpen, setSideMenu] = useState(true);
+  const [sideMenuOpen, setSideMenu] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -54,14 +54,13 @@ const Navbar = props => {
           <LinksWrapper>
             <PageLinks isMobile>{renderLinks(props.pages, true)}</PageLinks>
             <UserLinks>
-              <MenuButton onClick={() => setLoginModalOpen(!loginModalOpen)} sideMenu>
+              <UserLink onClick={() => setSideMenu(false)} to="login">
                 Login
-              </MenuButton>
+              </UserLink>
             </UserLinks>
           </LinksWrapper>
         </SideMenu>
         <Pusher />
-        <LoginModal isOpen={loginModalOpen} />
       </>
     );
   }
@@ -184,4 +183,11 @@ const MenuButton = styled(Button)`
     css`
       text-align: left;
     `}
+`;
+
+const UserLink = styled(Link)`
+  color: white;
+  text-decoration: none;
+  font-family: "Raleway", sans-serif;
+  padding: 20px 100px 20px 20px;
 `;
