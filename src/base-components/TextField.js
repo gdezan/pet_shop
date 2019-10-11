@@ -79,6 +79,8 @@ const Field = styled.div`
 
 const Input = styled.input.attrs(props => ({ type: props.type }))`
   height: 46px;
+  width: 100%;
+  box-sizing: border-box;
   position: relative;
   padding: 0px 16px;
   border: none;
@@ -101,7 +103,7 @@ const Input = styled.input.attrs(props => ({ type: props.type }))`
   ${props =>
     props.active &&
     css`
-      padding: 5px 16px 8px 16px;
+      padding: 23px 16px 7px 16px;
     `};
 `;
 

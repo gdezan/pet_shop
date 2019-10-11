@@ -4,6 +4,7 @@ import React from "react";
 
 // import Button from "base-components/Button";
 import MainBanner from "components/MainBanner";
+import Promotions from "components/Promotions";
 
 const Home = () => {
   return (
@@ -13,6 +14,7 @@ const Home = () => {
         title={"Au Que Mia"}
         description="Produtos mágicos para o seu melhor amigo!"
       />
+      <Promotions />
     </>
   );
 };

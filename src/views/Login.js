@@ -12,8 +12,8 @@ const Login = () => {
       <TextField label={"E-mail"} id="email" />
       <TextField label={"Senha"} type="password" id="password" />
       <StyledButton>Login</StyledButton>
-      <StyledLink to="forgot_password">Esqueceu sua senha?</StyledLink>
-      <StyledLink to="signup">Cadastre-se</StyledLink>
+      <StyledLink to="/forgot_password">Esqueceu sua senha?</StyledLink>
+      <StyledLink to="/signup">Cadastre-se</StyledLink>
     </LoginWrapper>
   );
 };
