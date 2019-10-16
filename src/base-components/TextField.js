@@ -17,8 +17,9 @@ const TextField = props => {
   const retActive = props.locked ? active : active || value;
 
   return (
-    <Field active={retActive} locked={props.locked}>
+    <Field active={retActive} locked={props.locked} lightBg={props.lightBg}>
       <Input
+        lightBg={props.lightBg}
         id={props.id}
         active={props.locked ? active : active || value}
         type={props.type}
@@ -28,7 +29,7 @@ const TextField = props => {
         onFocus={() => !props.locked && setActive(true)}
         onBlur={() => !props.locked && setActive(false)}
       />
-      <Label htmlFor={props.id} active={retActive} error={error}>
+      <Label htmlFor={props.id} active={retActive} error={error} lightBg={props.lightBg}>
         {error || label}
       </Label>
     </Field>
@@ -66,6 +67,12 @@ const Field = styled.div`
         background-color: rgba(255, 255, 255, 0.45);
         box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.05);
       `}
+    ${props =>
+      props.lightBg &&
+      css`
+        background-color: rgba(0, 0, 0, 0.02);
+        box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.1);
+      `};
   }
 
   ${props => (props.locked && !props.active ? "pointer-events: none;" : "")};
@@ -74,6 +81,11 @@ const Field = styled.div`
     css`
       background-color: #ffffff;
       box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.2);
+    `};
+  ${props =>
+    props.lightBg &&
+    css`
+      background-color: rgba(0, 0, 0, 0.05);
     `};
 `;
 
@@ -101,6 +113,12 @@ const Input = styled.input.attrs(props => ({ type: props.type }))`
   }
 
   ${props =>
+    props.lightBg &&
+    css`
+      color: ${props => props.theme.text.dark};
+    `};
+
+  ${props =>
     props.active &&
     css`
       padding: 23px 16px 7px 16px;
@@ -121,6 +139,12 @@ const Label = styled.label`
   transition: 0.1s all ease-in-out;
 
   ${props => (props.error ? "color: #ec392f;" : "")};
+
+  ${props =>
+    props.lightBg &&
+    css`
+      color: ${props => props.theme.text.dark};
+    `};
 
   ${props =>
     props.active &&

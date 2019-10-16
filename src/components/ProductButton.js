@@ -1,7 +1,18 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const ProductButton = ({ name, price, discountedPrice, img, ...props }) => {
+  if (discountedPrice) {
+    return (
+      <Wrapper discounted>
+        <Image src={img} alt={`{name} image`} />
+        <Name>{name}</Name>
+        <OldPrice>{price}</OldPrice>
+        <DiscountedPrice>{discountedPrice}</DiscountedPrice>
+      </Wrapper>
+    );
+  }
+
   return (
     <Wrapper>
       <Image src={img} alt={`{name} image`} />
@@ -29,6 +40,14 @@ const Wrapper = styled.div`
     transform: translateY(-3px);
     box-shadow: 0px 3px 5px 2px rgba(0, 0, 0, 0.4);
   }
+
+  ${props =>
+    !props.discounted &&
+    css`
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    `}
 `;
 
 const Image = styled.img`
@@ -43,6 +62,18 @@ const Name = styled.div`
 
 const Price = styled.div`
   font-weight: 600;
+  font-size: 21px;
+  color: #555;
+`;
+
+const DiscountedPrice = styled.div`
+  font-weight: 600;
   color: red;
   font-size: 23px;
+`;
+
+const OldPrice = styled.div`
+  font-size: 18px;
+  color: gray;
+  text-decoration: line-through;
 `;

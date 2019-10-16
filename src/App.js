@@ -13,6 +13,10 @@ const mainTheme = {
   light: "#5ca4bd",
   strong: "#3c70a4",
   accent: "#da9833",
+  text: {
+    dark: "#222",
+    light: "#d9eeec",
+  },
 };
 
 const pages = [

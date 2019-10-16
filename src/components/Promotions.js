@@ -3,12 +3,26 @@ import styled from "styled-components";
 
 import ProductButton from "components/ProductButton";
 
-const Promotions = () => {
+const Promotions = ({ productList }) => {
+  if (!productList) {
+    return null;
+  }
+
   return (
     <PromotionsWrapper>
-      <ProductButton img={require("assets/img/dog_food.png")} name="Ração XYZ" price="R$ 67.89" />
-      <ProductButton img={require("assets/img/dog_food.png")} name="Ração XYZ" price="R$ 67.89" />
-      <ProductButton img={require("assets/img/dog_food.png")} name="Ração XYZ" price="R$ 67.89" />
+      <Title>Promoções!</Title>
+      <ProductsWrapper>
+        {productList.map(product => {
+          return (
+            <ProductButton
+              img={product.img}
+              name={product.name}
+              price={product.price}
+              discountedPrice={product.discountedPrice}
+            />
+          );
+        })}
+      </ProductsWrapper>
     </PromotionsWrapper>
   );
 };
@@ -20,6 +34,16 @@ const PromotionsWrapper = styled.div`
   background-color: ${props => props.theme.accent};
   box-sizing: border-box;
   padding: 50px 10px;
+`;
+
+const ProductsWrapper = styled.div`
   display: flex;
   justify-content: space-around;
+`;
+
+const Title = styled.h2`
+  font-family: "Raleway", sans-serif;
+  color: white;
+  margin: 0 5% 40px;
+  font-size: 30px;
 `;

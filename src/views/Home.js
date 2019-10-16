@@ -6,6 +6,25 @@ import React from "react";
 import MainBanner from "components/MainBanner";
 import Promotions from "components/Promotions";
 
+const promotionList = [
+  {
+    img: require("assets/img/dog_food.png"),
+    name: "Ração XYZ",
+    price: "R$ 67.89",
+    discountedPrice: "R$ 29,99",
+  },
+  {
+    img: require("assets/img/dog_food.png"),
+    name: "Ração XYZ",
+    price: "R$ 67.89",
+  },
+  {
+    img: require("assets/img/dog_food.png"),
+    name: "Ração XYZ",
+    price: "R$ 67.89",
+  },
+];
+
 const Home = () => {
   return (
     <>
@@ -14,7 +33,7 @@ const Home = () => {
         title={"Au Que Mia"}
         description="Produtos mágicos para o seu melhor amigo!"
       />
-      <Promotions />
+      <Promotions productList={promotionList} />
     </>
   );
 };

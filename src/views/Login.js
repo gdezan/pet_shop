@@ -9,7 +9,7 @@ const Login = () => {
   return (
     <LoginWrapper>
       <Title>Faça seu login na nossa loja!</Title>
-      <TextField label={"E-mail"} id="email" />
+      <TextField label={"E-mail"} id="email" lightBg />
       <TextField label={"Senha"} type="password" id="password" />
       <StyledButton>Login</StyledButton>
       <StyledLink to="/forgot_password">Esqueceu sua senha?</StyledLink>
@@ -23,8 +23,9 @@ export default Login;
 const LoginWrapper = styled.div`
   width: 90%;
   background-color: ${props => props.theme.strong};
+  background-color: #fdfdfd;
   margin: 120px auto;
-  padding: 40px 20px;
+  padding: 40px 30px;
   box-sizing: border-box;
   border-radius: 8px;
   box-shadow: 0 4px 8px 1px rgba(0, 0, 0, 0.4);
@@ -42,13 +43,13 @@ const StyledButton = styled(Button)`
 
 const Title = styled.h1`
   font-family: "Raleway", sans-serif;
-  color: ${props => props.theme.bg};
+  color: ${props => props.theme.text.dark};
   margin-bottom: 35px;
   text-align: center;
 `;
 
 const StyledLink = styled(Link)`
-  color: ${props => props.theme.bg};
+  color: ${props => props.theme.text.dark};
   display: block;
   text-decoration: none;
   padding: 15px;
