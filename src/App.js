@@ -7,6 +7,7 @@ import Navbar from "components/Navbar";
 import Home from "views/Home";
 import Dog from "views/Dog";
 import Login from "views/Login";
+import UserDashboard from "views/UserDashboard";
 
 const mainTheme = {
   bg: "#d9eeec",
@@ -34,6 +35,7 @@ function App() {
           return <Page key={page.name} path={page.path} />;
         })}
         <Login path="login" />
+        <UserDashboard path="user" />
       </Router>
     </ThemeProvider>
   );

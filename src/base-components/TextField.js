@@ -65,13 +65,11 @@ const Field = styled.div`
       !props.active &&
       css`
         background-color: rgba(255, 255, 255, 0.45);
-        box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.05);
       `}
     ${props =>
       props.lightBg &&
       css`
         background-color: rgba(0, 0, 0, 0.02);
-        box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.1);
       `};
   }
 
@@ -80,7 +78,6 @@ const Field = styled.div`
     props.active &&
     css`
       background-color: #ffffff;
-      box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.2);
     `};
   ${props =>
     props.lightBg &&
@@ -103,7 +100,6 @@ const Input = styled.input.attrs(props => ({ type: props.type }))`
   background-color: transparent;
   color: #282828;
   outline: none;
-  box-shadow: 0px 4px 20px 0px transparent;
   transition: 0.3s background-color ease-in-out, 0.3s box-shadow ease-in-out,
     0.1s padding ease-in-out;
   -webkit-appearance: none;
@@ -115,13 +111,21 @@ const Input = styled.input.attrs(props => ({ type: props.type }))`
   ${props =>
     props.lightBg &&
     css`
+      ::placeholder {
+        color: ${props => props.theme.text.dark};
+      }
       color: ${props => props.theme.text.dark};
+      border-bottom: 1px solid #ddd;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.39), 0 -1px 1px #fff, 0 1px 0 #fff;
     `};
 
   ${props =>
     props.active &&
     css`
       padding: 23px 16px 7px 16px;
+      ::placeholder {
+        opacity: 0;
+      }
     `};
 `;
 
@@ -139,12 +143,6 @@ const Label = styled.label`
   transition: 0.1s all ease-in-out;
 
   ${props => (props.error ? "color: #ec392f;" : "")};
-
-  ${props =>
-    props.lightBg &&
-    css`
-      color: ${props => props.theme.text.dark};
-    `};
 
   ${props =>
     props.active &&

@@ -10,7 +10,7 @@ const Login = () => {
     <LoginWrapper>
       <Title>Faça seu login na nossa loja!</Title>
       <TextField label={"E-mail"} id="email" lightBg />
-      <TextField label={"Senha"} type="password" id="password" />
+      <TextField label={"Senha"} type="password" id="password" lightBg />
       <StyledButton>Login</StyledButton>
       <StyledLink to="/forgot_password">Esqueceu sua senha?</StyledLink>
       <StyledLink to="/signup">Cadastre-se</StyledLink>
@@ -22,8 +22,7 @@ export default Login;
 
 const LoginWrapper = styled.div`
   width: 90%;
-  background-color: ${props => props.theme.strong};
-  background-color: #fdfdfd;
+  background-color: white;
   margin: 120px auto;
   padding: 40px 30px;
   box-sizing: border-box;
