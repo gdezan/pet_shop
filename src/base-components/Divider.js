@@ -30,6 +30,7 @@ const DividerTitle = styled.div`
   width: fit-content;
   padding: 0px 10px;
   font-family: "Raleway";
+  font-weight: 600;
 `;
 
 export default Divider;

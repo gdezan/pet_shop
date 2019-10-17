@@ -1,6 +1,7 @@
 import React from "react";
-import { Router } from "@reach/router";
+import { Router, Location } from "@reach/router";
 import { ThemeProvider } from "styled-components";
+import posed, { PoseGroup } from "react-pose";
 
 import Navbar from "components/Navbar";
 
@@ -25,20 +26,37 @@ const pages = [
   { name: "Cachorro", component: Dog, path: "dog_products" },
 ];
 
+const PosedRouter = ({ children }) => (
+  <Location>
+    {({ location }) => (
+      <PoseGroup>
+        <RouteContainer key={location.key}>
+          <Router location={location}>{children}</Router>
+        </RouteContainer>
+      </PoseGroup>
+    )}
+  </Location>
+);
+
 function App() {
   return (
     <ThemeProvider theme={mainTheme}>
       <Navbar pages={pages} />
-      <Router>
+      <PosedRouter>
         {pages.map(page => {
           const Page = page.component;
           return <Page key={page.name} path={page.path} />;
         })}
         <Login path="login" />
         <UserDashboard path="user" />
-      </Router>
+      </PosedRouter>
     </ThemeProvider>
   );
 }
+
+const RouteContainer = posed.div({
+  enter: { opacity: 1, delay: 100 },
+  exit: { opacity: 0 },
+});
 
 export default App;
