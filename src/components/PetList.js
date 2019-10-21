@@ -17,7 +17,7 @@ const Pet = ({ name, img, breed, age, services }) => {
         </Text>
         <ServicesWrapper>
           {services.map(s => (
-            <Service>
+            <Service key={s.id}>
               {s.service} - {format(new Date(s.datetime), "dd/MM/yyyy - HH:mm")} ({s.price})
             </Service>
           ))}
@@ -32,6 +32,7 @@ const PetList = ({ pets }) => {
     <PetListWrapper>
       {pets.map(pet => (
         <Pet
+          key={pet.id}
           name={pet.name}
           img={pet.img}
           age={pet.age}
@@ -64,10 +65,6 @@ const Details = styled.div`
   margin-left: 30px;
 `;
 
-const PetName = styled.h2``;
-
-const Text = styled.p``;
-
 const Image = styled.img`
   height: 200px;
   width: 200px;
@@ -77,8 +74,10 @@ const Image = styled.img`
   padding: 5px;
 `;
 
-const ServicesWrapper = styled.ul``;
-
 const Service = styled.li`
   margin: 0 0 10px;
 `;
+
+const PetName = styled.h2``;
+const Text = styled.p``;
+const ServicesWrapper = styled.ul``;

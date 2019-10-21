@@ -8,7 +8,7 @@ import DashboardButton from "components/DashboardButton";
 const UserOptions = () => {
   return (
     <Wrapper>
-      <DashboardButton title="Agendar um horário" icon={faClock} href="#" />
+      <DashboardButton title="Agendar um serviço" icon={faClock} href="#" />
       <DashboardButton title="Editar Conta" icon={faEdit} href="#" />
       <DashboardButton title="Comprar produtos" icon={faShoppingCart} href="#" />
       <DashboardButton title="Adicionar pets" icon={faPlus} href="#" />

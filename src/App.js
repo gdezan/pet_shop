@@ -2,6 +2,7 @@ import React from "react";
 import { Router, Location } from "@reach/router";
 import { ThemeProvider } from "styled-components";
 import posed, { PoseGroup } from "react-pose";
+import "flatpickr/dist/themes/airbnb.css";
 
 import Navbar from "components/Navbar";
 
@@ -24,6 +25,7 @@ const mainTheme = {
 const pages = [
   { name: "Home", component: Home, path: "/" },
   { name: "Cachorro", component: Dog, path: "dog_products" },
+  { name: "Usuário", component: UserDashboard, path: "user" },
 ];
 
 const PosedRouter = ({ children }) => (
