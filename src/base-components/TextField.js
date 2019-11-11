@@ -11,21 +11,20 @@ const TextField = props => {
     const value = event.target.value;
     setValue(value);
     setError("");
-    return props.onChange(props.id, value);
   };
 
   const retActive = props.locked ? active : active || value;
-
   return (
     <Field active={retActive} locked={props.locked} lightBg={props.lightBg}>
       <Input
         lightBg={props.lightBg}
         id={props.id}
+        name={props.name}
         active={props.locked ? active : active || value}
         type={props.type}
-        value={value}
+        value={props.value || value}
         placeholder={label}
-        onChange={onChange}
+        onChange={props.onChange || onChange}
         onFocus={() => !props.locked && setActive(true)}
         onBlur={() => !props.locked && setActive(false)}
       />
@@ -43,7 +42,7 @@ TextField.defaultProps = {
   error: "",
   label: "",
   type: "text",
-  onChange: () => "",
+  onChange: null,
 };
 
 export default TextField;

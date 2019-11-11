@@ -1,26 +1,58 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "@reach/router";
+import useForm from "hooks/useForm";
 
 import Button from "base-components/Button";
 import TextField from "base-components/TextField";
 
 const Login = () => {
+  const submit = () => {
+    fetch("/api/users/login", {
+      method: "POST",
+      body: JSON.stringify(values),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then(res => res.json())
+      .then(data => {
+        window.localStorage.setItem("authToken", data.authToken.token);
+      })
+      .catch(err => console.error(err));
+  };
+
+  const { values, handleChange, handleSubmit } = useForm(submit);
+
   return (
-    <LoginWrapper>
+    <LoginForm id="login" onSubmit={handleSubmit}>
       <Title>Faça seu login na nossa loja!</Title>
-      <TextField label={"E-mail"} id="email" lightBg />
-      <TextField label={"Senha"} type="password" id="password" lightBg />
-      <StyledButton>Login</StyledButton>
+      <TextField
+        label={"E-mail"}
+        type="email"
+        name="email"
+        value={values.email}
+        onChange={handleChange}
+        lightBg
+      />
+      <TextField
+        label={"Senha"}
+        type="password"
+        name="password"
+        value={values.password}
+        onChange={handleChange}
+        lightBg
+      />
+      <StyledButton type="submit" form="login" disabled={!values.email || !values.password}>
+        Login
+      </StyledButton>
       <StyledLink to="/forgot_password">Esqueceu sua senha?</StyledLink>
       <StyledLink to="/signup">Cadastre-se</StyledLink>
-    </LoginWrapper>
+    </LoginForm>
   );
 };
 
 export default Login;
 
-const LoginWrapper = styled.div`
+const LoginForm = styled.form`
   width: 90%;
   background-color: white;
   margin: 120px auto;
