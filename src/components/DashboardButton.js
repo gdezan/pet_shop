@@ -1,11 +1,12 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "@reach/router";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const DashboardButton = ({ icon, title, href }) => {
+const DashboardButton = ({ icon, title, path }) => {
   return (
-    <Wrapper href={href}>
+    <Wrapper to={path}>
       {icon && <FontAwesomeIcon icon={icon} />} <Title>{title}</Title>
     </Wrapper>
   );
@@ -13,7 +14,7 @@ const DashboardButton = ({ icon, title, href }) => {
 
 export default DashboardButton;
 
-const Wrapper = styled.a`
+const Wrapper = styled(Link)`
   cursor: pointer;
   padding: 20px;
   text-align: left;

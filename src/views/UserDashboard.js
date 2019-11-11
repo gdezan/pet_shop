@@ -4,14 +4,30 @@ import styled from "styled-components";
 import Divider from "base-components/Divider";
 
 import UserOptions from "components/UserOptions";
+import PetList from "components/PetList";
+import Scheduler from "components/Scheduler";
 
 const test_client = {
   name: "João da Silva",
   email: "joaodasilva@gmail.com",
-  address: "Endereço: Rua das Flores, 123",
+  address: "Rua das Flores, 123",
   city: "São Carlos, São Paulo",
   profile_img: require("assets/img/default_profile.jpg"),
 };
+
+const pets = [
+  {
+    id: 0,
+    name: "Spike",
+    breed: "Golden Retriever",
+    age: 7,
+    scheduled_services: [
+      { id: 0, service: "Banho", datetime: "2019-10-21T13:00:00Z", price: "R$ 20,00" },
+      { id: 1, service: "Tosa", datetime: "2019-10-21T14:00:00Z", price: "R$ 15,00" },
+    ],
+    img: require("assets/img/golden.jpg"),
+  },
+];
 
 const Details = ({ client }) => {
   return (
@@ -35,8 +51,10 @@ const UserDashboard = () => {
       <Details client={test_client} />
       <Divider title="Opções" />
       <UserOptions />
-      <Divider title="Agendar um horário" />
+      <Divider title="Agendar um serviço" />
+      <Scheduler />
       <Divider title="Meus pets" />
+      <PetList pets={pets} />
     </Wrapper>
   );
 };

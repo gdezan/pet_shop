@@ -10,7 +10,11 @@ const Dog = () => {
   const img = require("assets/img/pug_photo.png");
   return (
     <>
-      <MainBanner img={img} title={"Produtos para Cachorro"} />
+      <MainBanner
+        imgStyle={{ transform: "translateY(16%)" }}
+        img={img}
+        title={"Produtos para Cachorro"}
+      />
       <Promotions />
     </>
   );
