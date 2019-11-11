@@ -3,11 +3,12 @@ import styled from "styled-components";
 
 import device from "assets/device";
 
-const MainBanner = ({ left = "0px", imgMaxWid = "400px", imgMinWid = "300px", translateY = "0%", img, title = "", description = "", ...props }) => {
+const MainBanner = ({ imgStyle = {}, img, title = "", description = "", ...props }) => {
+  console.log(imgStyle);
   return (
     <BannerWrapper>
       <BannerLeft>
-        <Image left={left} imgMaxWid={imgMaxWid} imgMinWid={imgMinWid} translateY={translateY} src={img} alt="BannerImage" />
+        <Image imgStyle={imgStyle} src={img} alt="BannerImage" />
       </BannerLeft>
       <BannerRight>
         <Title>{title}</Title>
@@ -91,11 +92,11 @@ const Description = styled.h2`
 
 const Image = styled.img`
   height: auto;
-  max-width: ${props => props.imgMaxWid};
-  min-width: ${props => props.imgMinWid};
+  max-width: ${props => props.imgStyle.maxWidth || "400px"};
+  min-width: ${props => props.imgStyle.minWidth || "300px"};
   position: relative;
-  transform: translateY(${props => props.translateY});
-  left: ${props => props.left};
+  transform: ${props => props.imgStyle.transform || "none"};
+  left: ${props => props.imgStyle.left || 0};
 
   @media ${device.laptop} {
     position: absolute;

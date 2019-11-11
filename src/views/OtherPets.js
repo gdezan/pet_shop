@@ -8,12 +8,15 @@ const OtherPets = ({ pages }) => {
   return (
     <>
       <MainBanner
-        left={"100px"}
-        imgMaxWid={"210px"} 
-        imgMinWid={"200px"} 
-        translateY={"3.5%"}
-        img={img} 
-        title={"Produtos para Outros Pets"} />
+        imgStyle={{
+          left: "100px",
+          maxWidth: "210px",
+          minWidth: "200px",
+          transform: "translateY(3.5%)",
+        }}
+        img={img}
+        title={"Produtos para Outros Pets"}
+      />
       <Promotions />
     </>
   );
