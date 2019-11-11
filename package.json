@@ -1,39 +1,55 @@
 {
-  "name": "pet_shop",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.25",
-    "@fortawesome/free-regular-svg-icons": "^5.11.2",
-    "@fortawesome/free-solid-svg-icons": "^5.11.2",
-    "@fortawesome/react-fontawesome": "^0.1.5",
-    "@reach/router": "^1.2.1",
-    "normalize.css": "^8.0.1",
-    "react": "^16.10.2",
-    "react-dom": "^16.10.2",
-    "react-pose": "^4.0.9",
-    "react-scripts": "3.2.0",
-    "styled-components": "^5.0.0-beta.9"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+    "name": "pet_shop",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^1.2.25",
+        "@fortawesome/free-regular-svg-icons": "^5.11.2",
+        "@fortawesome/free-solid-svg-icons": "^5.11.2",
+        "@fortawesome/react-fontawesome": "^0.1.5",
+        "@reach/router": "^1.2.1",
+        "body-parser": "^1.19.0",
+        "cors": "^2.8.5",
+        "express": "^4.17.1",
+        "express-handlebars": "^3.1.0",
+        "normalize.css": "^8.0.1",
+        "pg": "^7.12.1",
+        "pg-hstore": "^2.3.3",
+        "react": "^16.10.2",
+        "react-dom": "^16.10.2",
+        "react-pose": "^4.0.9",
+        "react-scripts": "3.2.0",
+        "sequelize": "^5.21.2",
+        "styled-components": "^5.0.0-beta.9",
+        "uuid": "^3.3.3"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "server": "nodemon --exec babel-node api/index.js",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
+    },
+    "eslintConfig": {
+        "extends": "react-app"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "@babel/core": "^7.7.2",
+        "@babel/node": "^7.7.0",
+        "@babel/preset-env": "^7.7.1",
+        "babel-register": "^6.26.0",
+        "nodemon": "^1.19.4"
+    }
 }
