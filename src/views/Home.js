@@ -29,6 +29,7 @@ const Home = () => {
   return (
     <>
       <MainBanner
+        translateY={"15%"}
         img={require("assets/img/banner_dog.png")}
         title={"Au Que Mia"}
         description="Produtos mágicos para o seu melhor amigo!"

@@ -10,7 +10,7 @@ import Scheduler from "components/Scheduler";
 const test_client = {
   name: "João da Silva",
   email: "joaodasilva@gmail.com",
-  address: "Endereço: Rua das Flores, 123",
+  address: "Rua das Flores, 123",
   city: "São Carlos, São Paulo",
   profile_img: require("assets/img/default_profile.jpg"),
 };

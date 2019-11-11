@@ -8,8 +8,15 @@ import Navbar from "components/Navbar";
 
 import Home from "views/Home";
 import Dog from "views/Dog";
+import Cat from "views/Cat";
+import OtherPets from "views/OtherPets";
 import Login from "views/Login";
 import UserDashboard from "views/UserDashboard";
+import AdminDashboard from "views/AdminDashboard";
+import SignUp from "views/SignUp";
+import SignUpPet from "views/SignUpPet";
+import EditAccount from "views/EditAccount";
+import ForgotPW from "views/ForgotPW";
 
 const mainTheme = {
   bg: "#d9eeec",
@@ -25,7 +32,8 @@ const mainTheme = {
 const pages = [
   { name: "Home", component: Home, path: "/" },
   { name: "Cachorro", component: Dog, path: "dog_products" },
-  { name: "Usuário", component: UserDashboard, path: "user" },
+  { name: "Gato", component: Cat, path: "cat_products" },
+  { name: "Outros Pets", component: OtherPets, path: "other_products" },
 ];
 
 const PosedRouter = ({ children }) => (
@@ -50,7 +58,12 @@ function App() {
           return <Page key={page.name} path={page.path} />;
         })}
         <Login path="login" />
+        <SignUp path="signup" />
+        <SignUpPet path="signup_pet" />
+        <EditAccount path="edit_account" />
         <UserDashboard path="user" />
+        <AdminDashboard path="admin" />
+        <ForgotPW path="forgot_password"/>
       </PosedRouter>
     </ThemeProvider>
   );

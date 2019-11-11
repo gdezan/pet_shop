@@ -1,17 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 
-import { faShoppingCart, faPlus, faClock, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 
 import DashboardButton from "components/DashboardButton";
 
 const UserOptions = () => {
   return (
     <Wrapper>
-      <DashboardButton title="Agendar um serviço" icon={faClock} href="#" />
-      <DashboardButton title="Editar Conta" icon={faEdit} href="#" />
-      <DashboardButton title="Comprar produtos" icon={faShoppingCart} href="#" />
-      <DashboardButton title="Adicionar pets" icon={faPlus} href="#" />
+      <DashboardButton title="Editar Conta" icon={faEdit} path="/edit_account" />
+      <DashboardButton title="Adicionar pets" icon={faPlus} path="/signup_pet" />
     </Wrapper>
   );
 };
