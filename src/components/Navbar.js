@@ -5,14 +5,17 @@ import { Link, navigate, globalHistory } from "@reach/router";
 import { size } from "assets/device";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faBars } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "base-components/Button";
 import LoginModal from "components/LoginModal";
+import ShoppingCartModal from "components/ShoppingCartModal";
 import { UserContext } from "components/UserContext";
 
 const Navbar = props => {
   const [isMobile, setMobile] = useState(window.innerWidth < parseInt(size.tablet));
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [shoppingCartOpen, setShoppingCartOpen] = useState(false);
   const [sideMenuOpen, setSideMenu] = useState(false);
   const { user, setUser } = useContext(UserContext);
 
@@ -124,6 +127,7 @@ const Navbar = props => {
           navigate("/");
         }}
       />
+      <ShoppingCartModal isOpen={shoppingCartOpen} />
     </>
   );
 };
@@ -194,6 +198,11 @@ const UserLinks = styled.div`
 
 const LoginButton = styled(Button)`
   margin: 0 10px;
+  font-family: "Dosis", sans-serif;
+`;
+
+const ShoppingCartButton = styled(Button)`
+  margin: 0 10px 0 0;
   font-family: "Dosis", sans-serif;
 `;
 

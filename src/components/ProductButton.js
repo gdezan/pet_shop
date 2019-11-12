@@ -1,10 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
 
-const ProductButton = ({ name, price, discountedPrice, img, ...props }) => {
+const ProductButton = ({ name, price, discountedPrice, img, cartItems, ...props }) => {
+  const [quantity, setQuantity] = useState(0);
+
+  const handleClick = () => {
+    let included = false;
+    let item;
+    setQuantity(quantity + 1);
+    for(let i = 0; i < cartItems.length && !included; ++i){
+      item = cartItems[i];
+      if(item.name === name){
+        item.quantity = quantity + 1;
+        included = true;
+      }
+    }
+    if(!included){
+      item = {name, price, discountedPrice, img, quantity};
+      item.quantity = quantity + 1;
+      cartItems.push(item);
+    }
+    localStorage.setItem('cartItems',JSON.stringify(cartItems));
+  };
+  
   if (discountedPrice) {
     return (
-      <Wrapper discounted>
+      <Wrapper onClick={handleClick} discounted>
         <Image src={img} alt={`{name} image`} />
         <Name>{name}</Name>
         <OldPrice>{price}</OldPrice>
@@ -14,7 +35,7 @@ const ProductButton = ({ name, price, discountedPrice, img, ...props }) => {
   }
 
   return (
-    <Wrapper>
+    <Wrapper onClick={handleClick}>
       <Image src={img} alt={`{name} image`} />
       <Name>{name}</Name>
       <Price>{price}</Price>

@@ -3,6 +3,8 @@ import styled from "styled-components";
 
 import ProductButton from "components/ProductButton";
 
+const cartItems = [];
+
 const Promotions = ({ productList }) => {
   if (!productList) {
     return null;
@@ -20,6 +22,7 @@ const Promotions = ({ productList }) => {
               name={product.name}
               price={product.price}
               discountedPrice={product.discountedPrice}
+              cartItems={cartItems}
             />
           );
         })}
