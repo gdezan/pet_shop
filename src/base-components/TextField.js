@@ -26,7 +26,10 @@ const TextField = props => {
         placeholder={label}
         onChange={props.onChange || onChange}
         onFocus={() => !props.locked && setActive(true)}
-        onBlur={() => !props.locked && setActive(false)}
+        onBlur={() => {
+          !props.locked && setActive(false);
+          props.onBlur();
+        }}
       />
       <Label htmlFor={props.id} active={retActive} error={error} lightBg={props.lightBg}>
         {error || label}
@@ -43,6 +46,7 @@ TextField.defaultProps = {
   label: "",
   type: "text",
   onChange: null,
+  onBlur: () => "",
 };
 
 export default TextField;
