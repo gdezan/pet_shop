@@ -6,10 +6,12 @@ import Button from "base-components/Button";
 
 const EditAccount = () => {
   const [image, setImage] = useState(require("assets/img/profile.png"));
+  const [value, setValue] = useState("");
 
-  function pesquisaCEP(value) {
-    let cep = document.getElementById(value).value;
-    cep = cep.replace(/\D/g, "");
+  function pesquisaCEP(e) {
+    setValue(e.target.value);
+    
+    let cep = e.target.value.replace(/\D/g, "");
     let cepPromise = require("cep-promise");
 
     if(cep.length === 8){
@@ -52,7 +54,8 @@ const EditAccount = () => {
             id="cep" 
             type="text" 
             size="10"
-            onChange={id => pesquisaCEP(id)}
+            value={value}
+            onChange={e => pesquisaCEP(e)}
             maxlength="9" lightBg>
           </TextField>
         </FormRow>

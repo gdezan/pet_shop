@@ -5,13 +5,16 @@ import { Link } from "@reach/router";
 import { size } from "assets/device";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faBars } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "base-components/Button";
 import LoginModal from "components/LoginModal";
+import ShoppingCartModal from "components/ShoppingCartModal";
 
 const Navbar = props => {
   const [isMobile, setMobile] = useState(window.innerWidth < parseInt(size.tablet));
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [shoppingCartOpen, setShoppingCartOpen] = useState(false);
   const [sideMenuOpen, setSideMenu] = useState(false);
 
   useEffect(() => {
@@ -71,10 +74,12 @@ const Navbar = props => {
         <PageLinks>{renderLinks(props.pages)}</PageLinks>
         <UserLinks>
           <LoginButton onClick={() => setLoginModalOpen(!loginModalOpen)}>Login</LoginButton>
+          <ShoppingCartButton onClick={() => setShoppingCartOpen(!shoppingCartOpen)}><FontAwesomeIcon icon={faShoppingCart}/></ShoppingCartButton>
         </UserLinks>
       </Nav>
       <Pusher />
       <LoginModal isOpen={loginModalOpen} />
+      <ShoppingCartModal isOpen={shoppingCartOpen} />
     </>
   );
 };
@@ -138,6 +143,11 @@ const UserLinks = styled.div`
 `;
 
 const LoginButton = styled(Button)`
+  margin: 0 10px 0 0;
+  font-family: "Dosis", sans-serif;
+`;
+
+const ShoppingCartButton = styled(Button)`
   margin: 0 10px 0 0;
   font-family: "Dosis", sans-serif;
 `;
