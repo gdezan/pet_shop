@@ -1,29 +1,33 @@
-"use strict";
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable("users", {
       id: {
-        type: Sequelize.DataTypes.UUID,
+        type: Sequelize.UUID,
         primaryKey: true,
-        defaultValue: Sequelize.DataTypes.UUIDV4,
-        allowNull: false,
+        defaultValue: Sequelize.UUIDV4,
+        allowNull: false
       },
-      name: Sequelize.DataTypes.STRING,
-      phone: Sequelize.DataTypes.STRING,
-      zip_code: { type: Sequelize.DataTypes.STRING },
-      address: Sequelize.DataTypes.STRING,
+      name: Sequelize.STRING,
+      phone: Sequelize.STRING,
+      zip_code: { type: Sequelize.STRING, underscored: true },
+      address: Sequelize.STRING,
       email: {
-        type: Sequelize.DataTypes.STRING,
+        type: Sequelize.STRING,
         required: true,
-        validate: { isEmail: true },
+        validate: { isEmail: true }
       },
-      password: { type: Sequelize.DataTypes.STRING, required: true },
-      is_admin: { type: Sequelize.DataTypes.BOOLEAN, defaultValue: false },
+      password: { type: Sequelize.STRING, required: true },
+      is_admin: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+        underscored: true
+      },
+      createdAt: { type: Sequelize.DATE, underscored: true },
+      updatedAt: { type: Sequelize.DATE, underscored: true },
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable("users");
-  },
+  }
 };

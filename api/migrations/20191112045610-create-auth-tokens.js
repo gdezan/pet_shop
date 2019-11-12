@@ -1,27 +1,28 @@
-"use strict";
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable(
       "auth_tokens",
       {
         id: {
-          type: Sequelize.DataTypes.UUID,
+          type: Sequelize.UUID,
           primaryKey: true,
-          defaultValue: Sequelize.DataTypes.UUIDV4,
+          defaultValue: Sequelize.UUIDV4,
           allowNull: false,
         },
         token: {
-          type: Sequelize.DataTypes.STRING,
+          type: Sequelize.STRING,
           allowNull: false,
         },
         user_id: {
-          type: Sequelize.DataTypes.UUID,
+          type: Sequelize.UUID,
           references: {
             model: "users",
             key: "id",
           },
         },
+
+      createdAt: { type: Sequelize.DATE, underscored: true },
+      updatedAt: { type: Sequelize.DATE, underscored: true },
       },
       { tableName: "auth_tokens" },
     );

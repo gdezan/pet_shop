@@ -19,7 +19,7 @@ app.use(authMiddleware);
 sequelize
   .authenticate()
   .then(() => console.log("Database connected..."))
-  .catch(err => console.err("Error", err));
+  .catch(err => console.log("Error", err));
 
 sequelize
   .sync()
