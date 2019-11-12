@@ -12,9 +12,10 @@ const Promotions = ({ productList }) => {
     <PromotionsWrapper>
       <Title>Promoções!</Title>
       <ProductsWrapper>
-        {productList.map(product => {
+        {productList.map((product, i) => {
           return (
             <ProductButton
+              key={i}
               img={product.img}
               name={product.name}
               price={product.price}

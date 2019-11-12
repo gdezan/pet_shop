@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 
 import Divider from "base-components/Divider";
@@ -6,14 +6,7 @@ import Divider from "base-components/Divider";
 import UserOptions from "components/UserOptions";
 import PetList from "components/PetList";
 import Scheduler from "components/Scheduler";
-
-const test_client = {
-  name: "João da Silva",
-  email: "joaodasilva@gmail.com",
-  address: "Rua das Flores, 123",
-  city: "São Carlos, São Paulo",
-  profile_img: require("assets/img/default_profile.jpg"),
-};
+import { UserContext } from "components/UserContext";
 
 const pets = [
   {
@@ -44,11 +37,23 @@ const Details = ({ client }) => {
 };
 
 const UserDashboard = () => {
+  const { user } = useContext(UserContext);
+
+  if (!user) return null;
+
+  const addressArr = user.address.split(", ");
+  const client = {
+    name: user.name,
+    email: user.email,
+    address: addressArr.slice(0, 3).join(", "),
+    city: addressArr.slice(3, 5).join(", "),
+  };
+
   return (
     <Wrapper>
       <Title>Minha Conta</Title>
       <Divider title="Detalhes" />
-      <Details client={test_client} />
+      <Details client={client} />
       <Divider title="Opções" />
       <UserOptions />
       <Divider title="Agendar um serviço" />

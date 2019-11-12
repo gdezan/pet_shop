@@ -8,28 +8,46 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
-        allowNull: false,
+        allowNull: false
       },
       name: DataTypes.STRING,
-      email: { type: DataTypes.STRING, required: true, validate: { isEmail: true } },
+      phone: DataTypes.STRING,
+      zip_code: { type: DataTypes.STRING },
+      address: DataTypes.STRING,
+      email: {
+        type: DataTypes.STRING,
+        required: true,
+        validate: { isEmail: true }
+      },
       password: { type: DataTypes.STRING, required: true },
-      is_admin: { type: DataTypes.BOOLEAN, defaultValue: false },
+      is_admin: { type: DataTypes.BOOLEAN, defaultValue: false }
     },
-    {},
+    {}
   );
   user.associate = function(models) {
     user.hasMany(models.pet, {
       as: "pets",
-      foreignKey: "user_id",
+      foreignKey: "user_id"
     });
     user.hasMany(models.AuthToken, {
       as: "tokens",
-      foreignKey: "user_id",
+      foreignKey: "user_id"
     });
   };
 
   user.findByEmail = email => {
     return user.findOne({ where: { email } });
+  };
+
+  user.findByAuthToken = async function(token) {
+    const { AuthToken } = sequelize.models;
+
+    const user = AuthToken.findOne({
+      where: { token },
+      include: [{ model: this, as: "user" }]
+    }).then(res => res.user);
+
+    return user;
   };
 
   // in order to define an instance method, we have to access

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled, { css } from "styled-components";
-import { Link } from "@reach/router";
+import { Link, navigate, globalHistory } from "@reach/router";
 
 import { size } from "assets/device";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,11 +8,13 @@ import { faArrowLeft, faBars } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "base-components/Button";
 import LoginModal from "components/LoginModal";
+import { UserContext } from "components/UserContext";
 
 const Navbar = props => {
   const [isMobile, setMobile] = useState(window.innerWidth < parseInt(size.tablet));
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [sideMenuOpen, setSideMenu] = useState(false);
+  const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
     const handleResize = () => {
@@ -23,7 +25,29 @@ const Navbar = props => {
       }
     };
     window.addEventListener("resize", handleResize);
+    globalHistory.listen(({ action }) => {
+      if (action === "PUSH") {
+        setLoginModalOpen(false);
+      }
+    });
   }, [isMobile]);
+
+  const logout = () => {
+    fetch("/api/users/logout", {
+      method: "DELETE",
+      body: JSON.stringify({ user, auth_token: window.localStorage.getItem("authToken") }),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then(res => {
+        console.log(res.status);
+        if (res.status === 204) {
+          window.localStorage.removeItem("authToken");
+          navigate("/");
+          setUser(null);
+        }
+      })
+      .catch(err => console.error(err));
+  };
 
   const renderLinks = (pages, isMobile = false) => {
     const RenderedLink = isMobile ? MobileLink : StyledLink;
@@ -53,11 +77,22 @@ const Navbar = props => {
           </MenuButton>
           <LinksWrapper>
             <PageLinks isMobile>{renderLinks(props.pages, true)}</PageLinks>
-            <UserLinks>
-              <UserLink onClick={() => setSideMenu(false)} to="login">
-                Login
-              </UserLink>
-            </UserLinks>
+            {user ? (
+              <MobileUserLinks>
+                <UserLink key="user" onClick={() => setSideMenu(false)} to="/user">
+                  Minha Conta
+                </UserLink>
+                <UserLink onClick={logout} to="/">
+                  Logout
+                </UserLink>
+              </MobileUserLinks>
+            ) : (
+              <MobileUserLinks>
+                <UserLink onClick={() => setSideMenu(false)} to="login">
+                  Login
+                </UserLink>
+              </MobileUserLinks>
+            )}
           </LinksWrapper>
         </SideMenu>
         <Pusher />
@@ -70,11 +105,25 @@ const Navbar = props => {
       <Nav>
         <PageLinks>{renderLinks(props.pages)}</PageLinks>
         <UserLinks>
-          <LoginButton onClick={() => setLoginModalOpen(!loginModalOpen)}>Login</LoginButton>
+          {user ? (
+            <>
+              <StyledLink key="user" onClick={() => setSideMenu(false)} to="/user">
+                Minha Conta
+              </StyledLink>
+              <LoginButton onClick={logout}>Logout</LoginButton>
+            </>
+          ) : (
+            <LoginButton onClick={() => setLoginModalOpen(!loginModalOpen)}>Login</LoginButton>
+          )}
         </UserLinks>
       </Nav>
       <Pusher />
-      <LoginModal isOpen={loginModalOpen} />
+      <LoginModal
+        isOpen={loginModalOpen}
+        onLogin={() => {
+          navigate("/");
+        }}
+      />
     </>
   );
 };
@@ -132,13 +181,19 @@ const PageLinks = styled.div`
     `}
 `;
 
+const MobileUserLinks = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+`;
+
 const UserLinks = styled.div`
   display: flex;
   align-items: center;
 `;
 
 const LoginButton = styled(Button)`
-  margin: 0 10px 0 0;
+  margin: 0 10px;
   font-family: "Dosis", sans-serif;
 `;
 

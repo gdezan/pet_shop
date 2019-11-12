@@ -1,14 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { navigate } from "@reach/router";
 import styled from "styled-components";
 import cepPromise from "cep-promise";
 import { useForm } from "hooks";
 
 import TextField from "base-components/TextField";
 import Button from "base-components/Button";
+import { UserContext } from "components/UserContext";
 
 const SignUp = () => {
   const [image, setImage] = useState(require("assets/img/profile.png"));
-  const submit = () => "";
+  const { setUser } = useContext(UserContext);
+
+  const submit = () => {
+    console.log(values);
+    const { email, password, phone } = values;
+
+    const body = {
+      name: `${values.name} ${values.surname}`,
+      email,
+      password,
+      phone,
+      zip_code: values.cep,
+      address: `${values.street}, ${values.addressnumber}, ${values.nbhood}, ${values.city}, ${values.state}`,
+    };
+
+    fetch("/api/users/signup", {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then(res => res.json())
+      .then(data => {
+        window.localStorage.setItem("authToken", data.authToken.token);
+        setUser(data.user);
+        navigate("/");
+      })
+      .catch(err => console.error(err));
+  };
+
   const { values, handleChange, handleSubmit, changeValues } = useForm(submit);
 
   const searchCep = () => {
@@ -138,7 +168,7 @@ const SignUp = () => {
             name="addressnumber"
             type="text"
             lightBg
-            value={values.adressnumber}
+            value={values.addressnumber}
             onChange={handleChange}
           />
         </FormRow>

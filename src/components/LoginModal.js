@@ -1,17 +1,51 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled, { css } from "styled-components";
 import { Link } from "@reach/router";
+import { useForm } from "hooks";
 
 import Button from "base-components/Button";
 import TextField from "base-components/TextField";
+import { UserContext } from "components/UserContext";
 
-const LoginModal = ({ isOpen }) => {
+const LoginModal = ({ isOpen, onLogin }) => {
+  const { setUser } = useContext(UserContext);
+
+  const submit = () => {
+    fetch("/api/users/login", {
+      method: "POST",
+      body: JSON.stringify(values),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then(res => res.json())
+      .then(data => {
+        window.localStorage.setItem("authToken", data.authToken.token);
+        setUser(data.user);
+        onLogin();
+      })
+      .catch(err => console.error(err));
+  };
+
+  const { values, handleChange, handleSubmit } = useForm(submit);
   return (
-    <LoginWrapper isOpen={isOpen}>
+    <LoginWrapper isOpen={isOpen} id="login" onSubmit={handleSubmit}>
       <Title>Faça aqui o seu login!</Title>
-      <TextField label="E-Mail" id="email" dense />
-      <TextField label="Password" type="password" id="password" dense />
-      <StyledButton>Login</StyledButton>
+      <TextField
+        label={"E-mail"}
+        type="email"
+        name="email"
+        value={values.email}
+        onChange={handleChange}
+      />
+      <TextField
+        label={"Senha"}
+        type="password"
+        name="password"
+        value={values.password}
+        onChange={handleChange}
+      />
+      <StyledButton type="submit" form="login" disabled={!values.email || !values.password}>
+        Login
+      </StyledButton>
       <StyledLink to="forgot_password">Esqueceu a senha?</StyledLink>
       <StyledLink to="signup">Cadastre-se</StyledLink>
     </LoginWrapper>
@@ -20,7 +54,7 @@ const LoginModal = ({ isOpen }) => {
 
 export default LoginModal;
 
-const LoginWrapper = styled.div`
+const LoginWrapper = styled.form`
   position: absolute;
   z-index: 2500;
   top: 60px;

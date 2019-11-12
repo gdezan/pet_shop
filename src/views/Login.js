@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
-import { Link } from "@reach/router";
-import useForm from "hooks/useForm";
+import { Link, navigate } from "@reach/router";
+import { useForm } from "hooks";
 
 import Button from "base-components/Button";
 import TextField from "base-components/TextField";
+import { UserContext } from "components/UserContext";
 
 const Login = () => {
+  const { setUser } = useContext(UserContext);
   const submit = () => {
     fetch("/api/users/login", {
       method: "POST",
@@ -16,6 +18,8 @@ const Login = () => {
       .then(res => res.json())
       .then(data => {
         window.localStorage.setItem("authToken", data.authToken.token);
+        setUser(data.user);
+        navigate("/");
       })
       .catch(err => console.error(err));
   };

@@ -4,7 +4,6 @@ import styled from "styled-components";
 import device from "assets/device";
 
 const MainBanner = ({ imgStyle = {}, img, title = "", description = "", ...props }) => {
-  console.log(imgStyle);
   return (
     <BannerWrapper>
       <BannerLeft>

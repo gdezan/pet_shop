@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Router, Location } from "@reach/router";
 import { ThemeProvider } from "styled-components";
 import posed, { PoseGroup } from "react-pose";
-import "flatpickr/dist/themes/airbnb.css";
+import withAuthentication from "hocs/withAuthentication";
 
 import Navbar from "components/Navbar";
+import { UserContext } from "components/UserContext";
+
+import "flatpickr/dist/themes/airbnb.css";
 
 import Home from "views/Home";
 import Dog from "views/Dog";
@@ -48,24 +51,47 @@ const PosedRouter = ({ children }) => (
   </Location>
 );
 
+const AdminDashboardWithAuth = withAuthentication(AdminDashboard);
+const UserDashboardWithAuth = withAuthentication(UserDashboard);
+
 function App() {
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    const authToken = window.localStorage.getItem("authToken");
+    if (authToken) {
+      fetch("/api/users/session", {
+        method: "POST",
+        body: JSON.stringify({ auth_token: authToken }),
+        headers: { "Content-Type": "application/json" },
+      })
+        .then(res => res.json())
+        .then(data => {
+          setUser(data);
+        })
+        .catch(err => console.error(err));
+    }
+  }, []);
+
   return (
-    <ThemeProvider theme={mainTheme}>
-      <Navbar pages={pages} />
-      <PosedRouter>
-        {pages.map(page => {
-          const Page = page.component;
-          return <Page key={page.name} path={page.path} />;
-        })}
-        <Login path="login" />
-        <SignUp path="signup" />
-        <SignUpPet path="signup_pet" />
-        <EditAccount path="edit_account" />
-        <UserDashboard path="user" />
-        <AdminDashboard path="admin" />
-        <ForgotPW path="forgot_password"/>
-      </PosedRouter>
-    </ThemeProvider>
+    <UserContext.Provider value={{ user, setUser }}>
+      <ThemeProvider theme={mainTheme}>
+        <Navbar pages={pages} />
+        <PosedRouter>
+          {pages.map(page => {
+            const Page = page.component;
+            return <Page key={page.name} path={page.path} />;
+          })}
+          <Login path="login" />
+          <SignUp path="signup" />
+          <SignUpPet path="signup_pet" />
+          <EditAccount path="edit_account" />
+          <UserDashboardWithAuth path="user" />
+          <AdminDashboardWithAuth path="admin" />
+          <ForgotPW path="forgot_password" />
+        </PosedRouter>
+      </ThemeProvider>
+    </UserContext.Provider>
   );
 }
 
