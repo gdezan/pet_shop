@@ -1,83 +1,185 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import cepPromise from "cep-promise";
+import { useForm } from "hooks";
 
 import TextField from "base-components/TextField";
 import Button from "base-components/Button";
 
 const SignUp = () => {
   const [image, setImage] = useState(require("assets/img/profile.png"));
+  const submit = () => "";
+  const { values, handleChange, handleSubmit, changeValues } = useForm(submit);
 
-  function pesquisaCEP(value) {
-    let cep = document.getElementById(value).value;
-    cep = cep.replace(/\D/g, "");
-    let cepPromise = require("cep-promise");
+  const searchCep = () => {
+    if (!values.cep) {
+      return;
+    }
 
-    if(cep.length === 8){
+    const cep = values.cep.replace(/\D/g, "");
+    if (cep.length === 8) {
       cepPromise(cep).then(data => {
-        document.getElementById("inputStreet").value = data.street;
-        document.getElementById("inputNBHood").value = data.neighborhood;
-        document.getElementById("inputCity").value = data.city;
-        document.getElementById("inputState").value = data.state;
+        const { street, neighborhood: nbhood, city, state } = data;
+        changeValues({
+          street,
+          nbhood,
+          city,
+          state,
+        });
       });
     }
-  }
+  };
 
   return (
-    <Wrapper>
+    <Wrapper id="signup" onSubmit={handleSubmit}>
       <Title>Cadastre-se</Title>
       <Img src={image} id="outputImg"></Img>
-      <ImageField 
-        label={"Image"} 
-        id="inputImg" 
-        type="file" 
+      <ImageField
+        label={"Image"}
+        id="inputImg"
+        type="file"
         accept="image/*"
-        onChange={event => setImage(URL.createObjectURL(event.target.files[0]))}>
-      </ImageField>
+        onChange={event => setImage(URL.createObjectURL(event.target.files[0]))}
+      ></ImageField>
       <Form>
         <FormRow>
-          <TextField label={"Nome"} id="name" type="text" lightBg></TextField>
+          <TextField
+            label={"Nome"}
+            id="name"
+            name="name"
+            type="text"
+            lightBg
+            value={values.name}
+            onChange={handleChange}
+          />
           <Pusher />
-          <TextField label={"Sobrenome"} id="surname" type="text" lightBg></TextField>
+          <TextField
+            label={"Sobrenome"}
+            id="surname"
+            name="surname"
+            type="text"
+            lightBg
+            value={values.surname}
+            onChange={handleChange}
+          />
         </FormRow>
         <FormRow>
-          <TextField label={"E-mail"} id="email" type="email" lightBg></TextField>
+          <TextField
+            label={"E-mail"}
+            id="email"
+            name="email"
+            type="email"
+            lightBg
+            value={values.email}
+            onChange={handleChange}
+          />
           <Pusher />
-          <TextField label={"Senha"} id="password" type="password" lightBg></TextField>
+          <TextField
+            label={"Senha"}
+            id="password"
+            name="password"
+            type="password"
+            lightBg
+            value={values.password}
+            onChange={handleChange}
+          />
         </FormRow>
         <FormRow>
-          <TextField label={"Telefone"} id="phone" type="phone" lightBg></TextField>
+          <TextField
+            label={"Telefone"}
+            id="phone"
+            name="phone"
+            type="phone"
+            lightBg
+            value={values.phone}
+            onChange={handleChange}
+          />
           <Pusher />
-          <TextField 
-            label={"CEP"} 
-            id="cep" 
-            type="text" 
+          <TextField
+            label={"CEP"}
+            id="cep"
+            name="cep"
+            type="text"
             size="10"
-            onChange={id => pesquisaCEP(id)}
-            maxlength="9" lightBg>
-          </TextField>
+            maxlength="9"
+            lightBg
+            value={values.cep}
+            onChange={handleChange}
+            onBlur={searchCep}
+          />
         </FormRow>
         <FormRow>
-          <TextField label={"Rua"} id="inputStreet" type="text" size="60" lightBg></TextField>
+          <TextField
+            label={"Rua"}
+            id="inputStreet"
+            name="street"
+            type="text"
+            size="60"
+            lightBg
+            value={values.street}
+            onChange={handleChange}
+          />
         </FormRow>
         <FormRow>
-          <TextField label={"Bairro"} id="inputNBHood" type="text" size="40" lightBg></TextField>
+          <TextField
+            label={"Bairro"}
+            id="inputNBHood"
+            name="nbhood"
+            type="text"
+            size="40"
+            lightBg
+            value={values.nbhood}
+            onChange={handleChange}
+          />
           <Pusher />
-          <TextField label={"Número"} id="inputNum" type="text" lightBg></TextField>
+          <TextField
+            label={"Número"}
+            id="inputNum"
+            name="addressnumber"
+            type="text"
+            lightBg
+            value={values.adressnumber}
+            onChange={handleChange}
+          />
         </FormRow>
         <FormRow>
-          <TextField label={"Cidade"} id="inputCity" type="text" size="40" lightBg></TextField>
+          <TextField
+            label={"Cidade"}
+            id="inputCity"
+            name="city"
+            type="text"
+            size="40"
+            lightBg
+            value={values.city}
+            onChange={handleChange}
+          />
           <Pusher />
-          <TextField label={"Estado"} id="inputState" type="text" size="2" lightBg></TextField>
+          <TextField
+            label={"Estado"}
+            id="inputState"
+            name="state"
+            type="text"
+            size="2"
+            lightBg
+            value={values.state}
+            onChange={handleChange}
+          />
         </FormRow>
       </Form>
-      <Button>CADASTRAR</Button>
+      <Button
+        type="submit"
+        form="signup"
+        disabled={Object.keys(values).find(key => values[key] === "")}
+      >
+        CADASTRAR
+      </Button>
     </Wrapper>
   );
 };
 
 export default SignUp;
 
-const Wrapper = styled.div`
+const Wrapper = styled.form`
   background-color: white;
   width: 90%;
   margin: 120px auto;
@@ -109,7 +211,7 @@ const ImageField = styled.input`
   margin: 15px 0;
 `;
 
-const Form = styled.form`
+const Form = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
