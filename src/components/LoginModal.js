@@ -55,7 +55,7 @@ const LoginModal = ({ isOpen, onLogin }) => {
 export default LoginModal;
 
 const LoginWrapper = styled.form`
-  position: absolute;
+  position: fixed;
   z-index: 2500;
   top: 60px;
   right: 20px;

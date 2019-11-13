@@ -3,6 +3,7 @@ import { navigate } from "@reach/router";
 import styled from "styled-components";
 import cepPromise from "cep-promise";
 import { useForm } from "hooks";
+import SweetAlert from 'sweetalert2-react';
 
 import TextField from "base-components/TextField";
 import Button from "base-components/Button";
@@ -10,6 +11,7 @@ import { UserContext } from "components/UserContext";
 
 const SignUp = () => {
   const [image, setImage] = useState(require("assets/img/profile.png"));
+  const [signUp,setSignUp] = useState(false);
   const { setUser } = useContext(UserContext);
 
   const submit = () => {
@@ -196,12 +198,19 @@ const SignUp = () => {
         </FormRow>
       </Form>
       <Button
+        onClick={() => setSignUp(true)}
         type="submit"
         form="signup"
         disabled={Object.keys(values).find(key => values[key] === "")}
       >
         CADASTRAR
       </Button>
+      <SweetAlert
+        show={signUp}
+        title="Cadastro concluído"
+        text="Seu cadastro foi concluído com sucesso!"
+        onConfirm={() => setSignUp(false)}
+      />
     </Wrapper>
   );
 };

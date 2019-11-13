@@ -1,6 +1,7 @@
+import "flatpickr/dist/themes/airbnb.css";
 import React, { useState } from "react";
 import styled from "styled-components";
-import Flatpickr from "flatpickr";
+import Flatpickr from "react-flatpickr";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar, faTrash } from "@fortawesome/free-solid-svg-icons";

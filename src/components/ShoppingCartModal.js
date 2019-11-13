@@ -35,7 +35,7 @@ const ShoppingCartModal = ({ toggleCart, isOpen }) => {
 export default ShoppingCartModal;
 
 const Wrapper = styled.div`
-  position: absolute;
+  position: fixed;
   max-width: 150px;
   max-height: 250px;
   z-index: 2500;

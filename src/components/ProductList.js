@@ -1,6 +1,7 @@
 import React, { useEffect, useContext } from "react";
 import styled from "styled-components";
 
+import device from "assets/device";
 import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CartContext }  from "components/CartContext";
@@ -79,8 +80,21 @@ const ProductListWrapper = styled.div`
   width: 100%;
   box-sizing: border-box;
   padding: 10px 10px;
-  display: grid;
-  grid-template-columns: 50% 50%;
+
+  @media ${device.laptop} {
+    display: grid;
+    grid-template-columns: 50% 50%;
+  }
+
+  @media ${device.tablet} {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  @media ${device.mobile} {
+  }
 `;
 
 const ProductWrapper = styled.div`
