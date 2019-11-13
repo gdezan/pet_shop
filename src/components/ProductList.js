@@ -1,28 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import styled from "styled-components";
 
 import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CartContext }  from "components/CartContext";
 
-const Product = ({ product, cartItems, updateCart }) => {
-  const decQuant = () => {
+const Product = ({ product }) => {
+  const { cartItems, setCartItems } = useContext(CartContext);
+
+  const handleClick = (op) => {
+    let localData = localStorage.getItem('cartItems');
+    let items = localData ? JSON.parse(localData) : [];
     let item;
+    let found = false;
     
-    for(let i = 0; i < cartItems.length; ++i){
+    for(let i = 0; i < cartItems.length && !found; ++i){
       item = cartItems[i];
       if(item.name === product.name){
-        updateCart(product.quantity, "-", i);
-      }
-    }
-  };
-
-  const incQuant = () => {
-    let item;
-
-    for(let i = 0; i < cartItems.length; ++i){
-      item = cartItems[i];
-      if(item.name === product.name){
-        updateCart(product.quantity, "+", i);
+        if(op === "-"){
+          items[i].quantity -= 1;
+          if(items[i].quantity === 0){
+            items.splice(i, 1);
+          }
+        } else {
+          items[i].quantity += 1;
+        }
+        found = true;
+        setCartItems(items);
+        localStorage.setItem('cartItems',JSON.stringify(items));
       }
     }
   };
@@ -35,9 +40,9 @@ const Product = ({ product, cartItems, updateCart }) => {
         <Text>Preço: {product.discountedPrice ? product.discountedPrice : product.price}</Text>
         <QuantityWrapper>
           Quantidade: 
-          <MinusButton onClick={decQuant}><FontAwesomeIcon icon={faMinusCircle} /></MinusButton>
+          <MinusButton onClick={() => handleClick("-")}><FontAwesomeIcon icon={faMinusCircle} /></MinusButton>
           <Text>{product.quantity}</Text>
-          <PlusButton onClick={incQuant}><FontAwesomeIcon icon={faPlusCircle} /></PlusButton>
+          <PlusButton onClick={() => handleClick("+")}><FontAwesomeIcon icon={faPlusCircle} /></PlusButton>
         </QuantityWrapper>
       </Details>
     </ProductWrapper>
@@ -45,26 +50,7 @@ const Product = ({ product, cartItems, updateCart }) => {
 };
 
 const ProductList = ({ updateTotal }) => {
-  let localData = localStorage.getItem('cartItems');
-  let cartItems = localData ? JSON.parse(localData) : [];
-
-  const [products,setProducts] = useState(cartItems);
-
-  const updateCart = (quant, op, i) => {
-    localData = localStorage.getItem('cartItems');
-    cartItems = localData ? JSON.parse(localData) : [];
-
-    if(op === "-"){
-      cartItems[i].quantity = quant - 1;
-      if(cartItems[i].quantity === 0){
-        cartItems.splice(i, 1);
-      }
-    } else {
-      cartItems[i].quantity = quant + 1;
-    }
-    setProducts(cartItems);
-    localStorage.setItem('cartItems',JSON.stringify(cartItems));
-  };
+  const { cartItems } = useContext(CartContext);
 
   useEffect(() => {
     updateTotal();
@@ -72,13 +58,11 @@ const ProductList = ({ updateTotal }) => {
 
   return (
     <>
-      {products.length ? (
+      {cartItems.length ? (
         <ProductListWrapper>
-          {products.map(product => (
+          {cartItems.map(product => (
             <Product
               product={product}
-              cartItems={products}
-              updateCart={updateCart}
             />
           ))}
         </ProductListWrapper>

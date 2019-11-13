@@ -1,29 +1,30 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled, { css } from "styled-components";
+import { Link } from "@reach/router";
 
 import CartItem from "components/CartItem";
+import { CartContext } from "components/CartContext";
 
-const ShoppingCartModal = ({ isOpen }) => {
-  const localData = localStorage.getItem('cartItems');
-  const cartItems = localData ? JSON.parse(localData) : [];
+const ShoppingCartModal = ({ toggleCart, isOpen }) => {
+  const { cartItems } = useContext(CartContext);
 
   return (
     <Wrapper isOpen={isOpen}>
       <Title>Carrinho</Title>
       {cartItems.length ? (
-        <ItemsWrapper>
-          {cartItems.map(product => {
-            return(
-              <CartItem
-                img={product.img}
-                name={product.name}
-                price={product.price}
-                discountedPrice={product.discountedPrice}
-                quantity={product.quantity}
-              />
-            );
-          })}
-        </ItemsWrapper>
+        <CartWrapper>
+          <ItemsWrapper>
+            {cartItems.map((product, i) => {
+              return(
+                <CartItem
+                  key={i}
+                  product={product}
+                />
+              );
+            })}
+          </ItemsWrapper>
+          <Button onClick={() => toggleCart()} to="shopping_cart">PAGAR</Button>
+        </CartWrapper>        
       ) : (
         <P>Seu carrinho está vazio!</P>
       )}
@@ -58,6 +59,13 @@ const Wrapper = styled.div`
         `};
 `;
 
+const CartWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Title = styled.h4`
   color: white;
   text-align: center;
@@ -67,6 +75,7 @@ const Title = styled.h4`
 const ItemsWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
+  margin-bottom: 10px;
 `;
 
 const P = styled.p`
@@ -74,4 +83,29 @@ const P = styled.p`
   text-align: center;
   color: white;
   font-family: "Raleway", sans-serif;
+`;
+
+const Button = styled(Link)`
+  cursor: pointer;
+  padding: 10px;
+  margin: 10px;
+  text-decoration: none;
+  text-align: center;
+  width: 60px;
+  color: white;
+  font-family: "Raleway", sans-serif;
+  transition: 0.15s all;
+  background-color: ${props => props.theme.accent};
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+
+  &:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.3);
+  }
+
+  &:active {
+    filter: brightness(0.9);
+  }
 `;

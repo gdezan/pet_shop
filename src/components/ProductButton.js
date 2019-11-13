@@ -1,44 +1,65 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import styled, { css } from "styled-components";
 
-const ProductButton = ({ name, price, discountedPrice, img, cartItems, ...props }) => {
-  const [quantity, setQuantity] = useState(0);
+import { CartContext } from "components/CartContext";
+
+const ProductButton = ({ product }) => {
+  const { setCartItems } = useContext(CartContext);
 
   const handleClick = () => {
-    let included = false;
+    let localData = localStorage.getItem('cartItems');
+    let items = localData ? JSON.parse(localData) : [];
     let item;
-    setQuantity(quantity + 1);
-    for(let i = 0; i < cartItems.length && !included; ++i){
-      item = cartItems[i];
-      if(item.name === name){
-        item.quantity = quantity + 1;
-        included = true;
+    let found = false;
+    
+    for(let i = 0; i < items.length && !found; ++i){
+      item = items[i];
+      if(item.name === product.name){
+        items[i].quantity += 1;
+        localStorage.setItem('cartItems',JSON.stringify(items));
+        setCartItems(items);
+        found = true;
       }
     }
-    if(!included){
-      item = {name, price, discountedPrice, img, quantity};
-      item.quantity = quantity + 1;
-      cartItems.push(item);
+    if(!found) {
+      product.quantity = 1;
+      if(product.discountedPrice){
+        items.push({ 
+          name: product.name,
+          img: product.img,
+          price: product.price,
+          discountedPrice: product.discountedPrice,
+          quantity: product.quantity,
+        });
+      }else {
+        items.push({ 
+          name: product.name,
+          img: product.img,
+          price: product.price,
+          quantity: product.quantity,
+        });
+      }
+      localStorage.setItem('cartItems',JSON.stringify(items));
+      setCartItems(items);
     }
-    localStorage.setItem('cartItems',JSON.stringify(cartItems));
   };
   
-  if (discountedPrice) {
+  if (product.discountedPrice) {
     return (
-      <Wrapper onClick={handleClick} discounted>
-        <Image src={img} alt={`{name} image`} />
-        <Name>{name}</Name>
-        <OldPrice>{price}</OldPrice>
-        <DiscountedPrice>{discountedPrice}</DiscountedPrice>
+      <Wrapper onClick={() => handleClick()} discounted>
+        <Image src={product.img} alt={`{name} image`} />
+        <Name>{product.name}</Name>
+        <OldPrice>{product.price}</OldPrice>
+        <DiscountedPrice>{product.discountedPrice}</DiscountedPrice>
       </Wrapper>
     );
   }
 
   return (
-    <Wrapper onClick={handleClick}>
-      <Image src={img} alt={`{name} image`} />
-      <Name>{name}</Name>
-      <Price>{price}</Price>
+    <Wrapper onClick={() => handleClick()}>
+      <Image src={product.img} alt={`{name} image`} />
+      <Name>{product.name}</Name>
+      <Price>{product.price}</Price>
     </Wrapper>
   );
 };

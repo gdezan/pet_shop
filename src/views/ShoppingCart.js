@@ -1,21 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { Link } from "@reach/router";
 import SweetAlert from 'sweetalert2-react';
 
 import Divider from "base-components/Divider";
 import ProductList from "components/ProductList";
+import { CartContext } from "components/CartContext";
 
 const ShoppingCart = () => {
   const [total,setTotal] = useState(0);
   const [pay,setPay] = useState(false);
+  const { cartItems, setCartItems } = useContext(CartContext);
 
   const updateTotal = () => {
-    let localData = localStorage.getItem('cartItems');
-    let cartItems = localData ? JSON.parse(localData) : [];
-
     let total = 0;
     let item;
+    
     for(let i = 0; i < cartItems.length; ++i){
       item = cartItems[i];
       total += item.quantity * (item.discountedPrice ? (
@@ -29,7 +29,8 @@ const ShoppingCart = () => {
 
   const handlePay = () => {
     setPay(true);
-    localStorage.clear();
+    localStorage.removeItem('cartItems');
+    setCartItems([]);
   };
 
   return (
@@ -39,7 +40,7 @@ const ShoppingCart = () => {
       <ProductList updateTotal={updateTotal} />
       <Divider title="Pagamento" />
       <Text>Total: {total.toFixed(2)}</Text>
-      <Button to="/" onClick={handlePay}>PAGAR</Button>
+      <Button to="/" onClick={() => handlePay()}>PAGAR</Button>
       <SweetAlert
         show={pay}
         title="Pagamento concluído"

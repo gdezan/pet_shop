@@ -1,22 +1,49 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 
 import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CartContext } from "components/CartContext";
 
-const CartItem = ({ name, price, discountedPrice, img, quantity, ...props }) => {
-  if (discountedPrice) {
+const CartItem = ({ product }) => {
+  const { setCartItems } = useContext(CartContext);
+
+  const handleClick = (op) => {
+    let localData = localStorage.getItem('cartItems');
+    let items = localData ? JSON.parse(localData) : [];
+    let item;
+    let found = false;
+    
+    for(let i = 0; i < items.length && !found; ++i){
+      item = items[i];
+      if(item.name === product.name){
+        if(op === "-"){
+          items[i].quantity -= 1;
+          if(items[i].quantity === 0){
+            items.splice(i, 1);
+          }
+        } else {
+          items[i].quantity += 1;
+        }
+        found = true;
+        setCartItems(items);
+        localStorage.setItem('cartItems',JSON.stringify(items));
+      }
+    }
+  };
+
+  if (product.discountedPrice) {
     return (
       <Wrapper discounted>
-        <Image src={img} alt={`{name} image`} />
+        <Image src={product.img} alt={`{name} image`} />
         <Info>
-          <Name>{name}</Name>
-          <OldPrice>{price}</OldPrice>
-          <DiscountedPrice>{discountedPrice}</DiscountedPrice>
+          <Name>{product.name}</Name>
+          <OldPrice>{product.price}</OldPrice>
+          <DiscountedPrice>{product.discountedPrice}</DiscountedPrice>
           <QuantityWrapper>
-            <MinusButton><FontAwesomeIcon icon={faMinusCircle} /></MinusButton>
-            <QuantityDisplay>{quantity}</QuantityDisplay>
-            <PlusButton><FontAwesomeIcon icon={faPlusCircle} /></PlusButton>
+            <MinusButton onClick={() => handleClick("-")}><FontAwesomeIcon icon={faMinusCircle} /></MinusButton>
+            <Text>{product.quantity}</Text>
+            <PlusButton onClick={() => handleClick("+")}><FontAwesomeIcon icon={faPlusCircle} /></PlusButton>
           </QuantityWrapper>
         </Info>
       </Wrapper>
@@ -25,14 +52,14 @@ const CartItem = ({ name, price, discountedPrice, img, quantity, ...props }) => 
 
   return (
     <Wrapper>
-      <Image src={img} alt={`{name} image`} />
+      <Image src={product.img} alt={`{name} image`} />
       <Info>
-        <Name>{name}</Name>
-        <Price>{price}</Price>
+        <Name>{product.name}</Name>
+        <Price>{product.price}</Price>
         <QuantityWrapper>
-          <MinusButton><FontAwesomeIcon icon={faMinusCircle} /></MinusButton>
-          <QuantityDisplay>{quantity}</QuantityDisplay>
-          <PlusButton><FontAwesomeIcon icon={faPlusCircle} /></PlusButton>
+          <MinusButton onClick={() => handleClick("-")}><FontAwesomeIcon icon={faMinusCircle} /></MinusButton>
+          <Text>{product.quantity}</Text>
+          <PlusButton onClick={() => handleClick("+")}><FontAwesomeIcon icon={faPlusCircle} /></PlusButton>
         </QuantityWrapper>
       </Info>
     </Wrapper>
@@ -97,7 +124,7 @@ const QuantityWrapper = styled.div`
   aligns-items: space-between;
 `;
 
-const QuantityDisplay = styled.div`
+const Text = styled.div`
   font-size: 10px;
   color: black;
   font-weight: bold;

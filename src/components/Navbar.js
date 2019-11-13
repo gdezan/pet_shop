@@ -88,6 +88,9 @@ const Navbar = props => {
                 <UserLink onClick={logout} to="/">
                   Logout
                 </UserLink>
+                <UserLink onClick={() => setSideMenu(false)} to="shopping_cart">
+                  <FontAwesomeIcon icon={faShoppingCart}></FontAwesomeIcon>
+                </UserLink>
               </MobileUserLinks>
             ) : (
               <MobileUserLinks>
@@ -103,6 +106,10 @@ const Navbar = props => {
     );
   }
 
+  const toggleCart = () => {
+    setShoppingCartOpen(!shoppingCartOpen);
+  }
+
   return (
     <>
       <Nav>
@@ -114,9 +121,17 @@ const Navbar = props => {
                 Minha Conta
               </StyledLink>
               <LoginButton onClick={logout}>Logout</LoginButton>
+              <ShoppingCartButton onClick={() => setShoppingCartOpen(!shoppingCartOpen)}>
+                <FontAwesomeIcon icon={faShoppingCart}></FontAwesomeIcon>
+              </ShoppingCartButton>
             </>
           ) : (
-            <LoginButton onClick={() => setLoginModalOpen(!loginModalOpen)}>Login</LoginButton>
+            <>
+              <LoginButton onClick={() => setLoginModalOpen(!loginModalOpen)}>Login</LoginButton>
+              <ShoppingCartButton onClick={() => setShoppingCartOpen(!shoppingCartOpen)}>
+                <FontAwesomeIcon icon={faShoppingCart}></FontAwesomeIcon>
+              </ShoppingCartButton>
+            </>
           )}
         </UserLinks>
       </Nav>
@@ -127,7 +142,7 @@ const Navbar = props => {
           navigate("/");
         }}
       />
-      <ShoppingCartModal isOpen={shoppingCartOpen} />
+      <ShoppingCartModal toggleCart={toggleCart} isOpen={shoppingCartOpen} />
     </>
   );
 };

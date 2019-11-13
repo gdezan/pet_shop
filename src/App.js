@@ -6,6 +6,7 @@ import withAuthentication from "hocs/withAuthentication";
 
 import Navbar from "components/Navbar";
 import { UserContext } from "components/UserContext";
+import { CartContext } from "components/CartContext";
 
 import "flatpickr/dist/themes/airbnb.css";
 
@@ -56,12 +57,16 @@ const PosedRouter = ({ children }) => (
 const AdminDashboardWithAuth = withAuthentication(AdminDashboard, true);
 const UserListWithAuth = withAuthentication(UserList, true);
 const UserDashboardWithAuth = withAuthentication(UserDashboard);
+const ShoppingCartWithAuth = withAuthentication(ShoppingCart);
 
 function App() {
   const [user, setUser] = useState();
+  const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
     const authToken = window.localStorage.getItem("authToken");
+    const localData = window.localStorage.getItem('cartItems');
+
     if (authToken) {
       fetch("/api/users/session", {
         method: "POST",
@@ -74,30 +79,35 @@ function App() {
         })
         .catch(err => console.error(err));
     }
+    if(localData){
+      setCartItems(JSON.parse(localData));
+    }
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
-      <ThemeProvider theme={mainTheme}>
-        <Navbar pages={pages} />
-        <PosedRouter>
-          {pages.map(page => {
-            const Page = page.component;
-            return <Page key={page.name} path={page.path} />;
-          })}
-          <Login path="login" />
-          <SignUp path="signup" />
-          <SignUpPet path="signup_pet" />
-          <EditAccount path="edit_account" />
-          <UserDashboardWithAuth path="user" />
-          <AdminDashboardWithAuth path="admin" />
-          <UserListWithAuth path="user_list" />
-          <UserListWithAuth path="admin_list" adminUsers />
-          <ForgotPW path="forgot_password" />
-          <ShoppingCart path="shopping_cart" />
-        </PosedRouter>
-      </ThemeProvider>
-    </UserContext.Provider>
+    <CartContext.Provider value={{ cartItems, setCartItems }}>
+      <UserContext.Provider value={{ user, setUser }}>
+        <ThemeProvider theme={mainTheme}>
+          <Navbar pages={pages} />
+          <PosedRouter>
+            {pages.map(page => {
+              const Page = page.component;
+              return <Page key={page.name} path={page.path} />;
+            })}
+            <Login path="login" />
+            <SignUp path="signup" />
+            <SignUpPet path="signup_pet" />
+            <EditAccount path="edit_account" />
+            <UserDashboardWithAuth path="user" />
+            <AdminDashboardWithAuth path="admin" />
+            <UserListWithAuth path="user_list" />
+            <UserListWithAuth path="admin_list" adminUsers />
+            <ForgotPW path="forgot_password" />
+            <ShoppingCartWithAuth path="shopping_cart" />
+          </PosedRouter>
+        </ThemeProvider>
+      </UserContext.Provider>
+    </CartContext.Provider>
   );
 }
 
