@@ -11,7 +11,7 @@ const promotionList = [
     img: require("assets/img/dog_food.png"),
     name: "Ração X",
     price: "R$ 67.89",
-    discountedPrice: "R$ 29,99",
+    discountedPrice: "R$ 29.99",
   },
   {
     img: require("assets/img/dog_food.png"),

@@ -20,6 +20,7 @@ import SignUp from "views/SignUp";
 import SignUpPet from "views/SignUpPet";
 import EditAccount from "views/EditAccount";
 import ForgotPW from "views/ForgotPW";
+import ShoppingCart from "views/ShoppingCart";
 
 const mainTheme = {
   bg: "#d9eeec",
@@ -89,6 +90,7 @@ function App() {
           <UserDashboardWithAuth path="user" />
           <AdminDashboardWithAuth path="admin" />
           <ForgotPW path="forgot_password" />
+          <ShoppingCart path="shopping_cart" />
         </PosedRouter>
       </ThemeProvider>
     </UserContext.Provider>
