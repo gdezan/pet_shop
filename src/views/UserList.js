@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 import Divider from "base-components/Divider";
 import TextField from "base-components/TextField";
-import { userInfo } from "os";
 
 const UserList = ({ adminUsers = false }) => {
   const [search, setSearch] = useState("");

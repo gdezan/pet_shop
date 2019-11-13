@@ -16,6 +16,7 @@ const TextField = props => {
   const retActive = props.locked ? active : active || value;
   return (
     <Field active={retActive} locked={props.locked} lightBg={props.lightBg}>
+      {props.prepend && <Prepend>{props.prepend}</Prepend>}
       <Input
         lightBg={props.lightBg}
         id={props.id}
@@ -31,7 +32,13 @@ const TextField = props => {
           props.onBlur();
         }}
       />
-      <Label htmlFor={props.id} active={retActive} error={error} lightBg={props.lightBg}>
+      <Label
+        prepend={props.prepend}
+        htmlFor={props.id}
+        active={retActive}
+        error={error}
+        lightBg={props.lightBg}
+      >
         {error || label}
       </Label>
     </Field>
@@ -61,6 +68,7 @@ const Field = styled.div`
   transition: 0.3s background-color ease-in-out, 0.3s box-shadow ease-in-out;
   border-radius: 4px;
   overflow: hidden;
+  display: flex;
 
   &:hover {
     ${props =>
@@ -135,7 +143,7 @@ const Label = styled.label`
   font-family: "Raleway";
   position: absolute;
   top: 24px;
-  left: 16px;
+  left: ${props => (props.prepend ? 56 : 16)}px;
   font-size: 10px;
   font-weight: 600;
   line-height: 24px;
@@ -153,4 +161,14 @@ const Label = styled.label`
       opacity: 1;
       color: #512da8;
     `}
+`;
+
+const Prepend = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border: 2px solid #ccc;
+  padding: 5px;
+  width: 40px;
 `;

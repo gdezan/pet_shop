@@ -11,13 +11,13 @@ const SignUpPet = () => {
     <Wrapper>
       <Title>Cadastre seu pet</Title>
       <Img src={image} id="outputImg"></Img>
-      <ImageField 
-        label={"Image"} 
-        id="inputImg" 
-        type="file" 
+      <ImageField
+        label={"Image"}
+        id="inputImg"
+        type="file"
         accept="image/*"
-        onChange={event => setImage(URL.createObjectURL(event.target.files[0]))}>
-      </ImageField>
+        onChange={event => setImage(URL.createObjectURL(event.target.files[0]))}
+      ></ImageField>
       <Form>
         <FormRow>
           <TextField label={"Nome"} id="name" type="text" lightBg></TextField>
@@ -51,20 +51,29 @@ const Wrapper = styled.div`
 
 const Title = styled.h1`
   width: 95%;
-  text-align: center;
-  margin: 0 0 10px;
+  text-align: left;
+  margin-bottom: 50px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid black;
 `;
 
 const Img = styled.img`
-  border: 3px solid #3c70a4;
-  border-radius: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
   width: 130px;
   height: 130px;
   margin-bottom: 15px;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.6);
 `;
 
 const ImageField = styled.input`
-  margin: 15px 0;
+  margin: 15px auto 30px;
+  border: 1px solid #ddd;
+  padding: 10px 15px;
+  box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.6);
+  border-radius: 8px;
+  background-color: #f5f5f5;
 `;
 
 const Form = styled.form`
