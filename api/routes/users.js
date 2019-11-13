@@ -27,9 +27,7 @@ router.post("/signup", async (req, res) => {
 
   try {
     // create a new user with the password hash from bcrypt
-    let user = await db.user.create(
-      Object.assign(req.body, { password: hash })
-    );
+    let user = await db.user.create(Object.assign(req.body, { password: hash }));
 
     // data will be an object with the user and it's authToken
     let data = await user.authorize();
@@ -47,22 +45,23 @@ router.put("/signup", async (req, res) => {
   // hash the password provided by the user with bcrypt so that
   // we are never storing plain text passwords
   let hash = null;
-  if (req.body.password !== "")
-    hash = bcrypt.hashSync(req.body.password, 10);
+  if (req.body.password !== "") hash = bcrypt.hashSync(req.body.password, 10);
 
   try {
-    // create a new user with the password hash from bcrypt
-    const user = await db.user.update(
-      Object.assign(req.body, hash && { password: hash }),
-      { returning: true, where: { id: req.body.id } }
+    const user = await db.user.findByPk(req.body.id);
+    await user.update(
+      {
+        ...req.body,
+        ...(hash && { password: hash }),
+      },
+      {
+        fields: Object.keys(req.body).filter(key => !(key === "password" && req.body[key] === "")),
+      },
     );
-    // data will be an object with the user and it's authToken
-    console.log(user)
-    const data = await user[1].authorize();
 
-    // send back the new user and auth token to the
-    // client { user, authToken }
-    return res.send(data);
+    await user.save();
+
+    return res.send(user);
   } catch (err) {
     console.log(err);
     return res.status(400).send(err);

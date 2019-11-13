@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import { navigate } from "@reach/router";
 import styled from "styled-components";
 import cepPromise from "cep-promise";
@@ -13,12 +13,11 @@ const EditAccount = () => {
   const { user, setUser } = useContext(UserContext);
 
   const submit = () => {
-    const { email, password, phone } = values;
+    const { password, phone } = values;
 
     const body = {
       id: user.id,
       name: `${values.name} ${values.surname}`,
-      email,
       password,
       phone,
       zip_code: values.cep,
@@ -32,8 +31,7 @@ const EditAccount = () => {
     })
       .then(res => res.json())
       .then(data => {
-        window.localStorage.setItem("authToken", data.authToken.token);
-        setUser(data.user);
+        setUser(data);
         navigate("/");
       })
       .catch(err => console.error(err));
@@ -42,7 +40,6 @@ const EditAccount = () => {
   const addressArr = user ? user.address.split(", ") : [];
   const initialValues = user
     ? {
-        email: user.email,
         name: user.name.split(" ")[0],
         surname: user.name.split(" ")[1],
         phone: user.phone,
@@ -111,16 +108,6 @@ const EditAccount = () => {
           />
         </FormRow>
         <FormRow>
-          <TextField
-            label={"E-mail"}
-            id="email"
-            name="email"
-            type="email"
-            lightBg
-            value={values.email}
-            onChange={handleChange}
-          />
-          <Pusher />
           <TextField
             label={"Senha"}
             id="password"

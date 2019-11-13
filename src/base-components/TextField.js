@@ -22,7 +22,7 @@ const TextField = props => {
         name={props.name}
         active={props.locked ? active : active || value}
         type={props.type}
-        value={props.value || value}
+        value={props.value !== undefined ? props.value : value}
         placeholder={label}
         onChange={props.onChange || onChange}
         onFocus={() => !props.locked && setActive(true)}
@@ -41,7 +41,6 @@ const TextField = props => {
 TextField.defaultProps = {
   locked: false,
   focussed: false,
-  value: "",
   error: "",
   label: "",
   type: "text",
