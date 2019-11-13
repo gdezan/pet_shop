@@ -23,6 +23,7 @@ import EditAccount from "views/EditAccount";
 import ForgotPW from "views/ForgotPW";
 import UserList from "views/UserList";
 import ShoppingCart from "views/ShoppingCart";
+import AddProduct from "views/AddProduct";
 
 const mainTheme = {
   bg: "#d9eeec",
@@ -56,6 +57,7 @@ const PosedRouter = ({ children }) => (
 
 const AdminDashboardWithAuth = withAuthentication(AdminDashboard, true);
 const UserListWithAuth = withAuthentication(UserList, true);
+const AddProductWithAuth = withAuthentication(AddProduct, true);
 const UserDashboardWithAuth = withAuthentication(UserDashboard);
 const ShoppingCartWithAuth = withAuthentication(ShoppingCart);
 
@@ -65,7 +67,7 @@ function App() {
 
   useEffect(() => {
     const authToken = window.localStorage.getItem("authToken");
-    const localData = window.localStorage.getItem('cartItems');
+    const localData = window.localStorage.getItem("cartItems");
 
     if (authToken) {
       fetch("/api/users/session", {
@@ -79,7 +81,7 @@ function App() {
         })
         .catch(err => console.error(err));
     }
-    if(localData){
+    if (localData) {
       setCartItems(JSON.parse(localData));
     }
   }, []);

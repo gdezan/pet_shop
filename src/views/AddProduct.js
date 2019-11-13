@@ -1,14 +1,40 @@
 import React, { useState, useContext } from "react";
 import { navigate } from "@reach/router";
 import styled from "styled-components";
-import cepPromise from "cep-promise";
 import { useForm } from "hooks";
 
 import TextField from "base-components/TextField";
 import Button from "base-components/Button";
 import { UserContext } from "components/UserContext";
 
-const SignUp = () => {
+const getInt = str => str.match(/\d/g).join("");
+
+const currencyMask = tmp => {
+  if (!tmp || !tmp.match(/\d/g)) return "";
+  tmp = getInt(tmp);
+  tmp = tmp.replace(/^\D+/g, "").replace(/([0-9]{2})$/g, ",$1");
+  if (tmp.length > 6) tmp = tmp.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+
+  return tmp;
+};
+
+const DiscountedPrice = ({ price, discount }) => {
+  let disc = 0;
+  if (price && !discount) {
+    disc = getInt(price);
+  } else if (price && discount) {
+    disc = (getInt(price) * getInt(discount)) / 100;
+  }
+  console.log(disc);
+  return (
+    <div>
+      <div>Preço com desconto</div>
+      {currencyMask(disc)}
+    </div>
+  );
+};
+
+const AddProduct = () => {
   const [image, setImage] = useState(require("assets/img/profile.png"));
   const { setUser } = useContext(UserContext);
 
@@ -24,7 +50,7 @@ const SignUp = () => {
       address: `${values.street}, ${values.addressnumber}, ${values.nbhood}, ${values.city}, ${values.state}`,
     };
 
-    fetch("/api/users/signup", {
+    fetch("/api/products", {
       method: "POST",
       body: JSON.stringify(body),
       headers: { "Content-Type": "application/json" },
@@ -40,28 +66,9 @@ const SignUp = () => {
 
   const { values, handleChange, handleSubmit, changeValues } = useForm(submit);
 
-  const searchCep = () => {
-    if (!values.cep) {
-      return;
-    }
-
-    const cep = values.cep.replace(/\D/g, "");
-    if (cep.length === 8) {
-      cepPromise(cep).then(data => {
-        const { street, neighborhood: nbhood, city, state } = data;
-        changeValues({
-          street,
-          nbhood,
-          city,
-          state,
-        });
-      });
-    }
-  };
-
   return (
-    <Wrapper id="signup" onSubmit={handleSubmit}>
-      <Title>Cadastre-se</Title>
+    <Wrapper id="registerProduct" onSubmit={handleSubmit}>
+      <Title>Registro de produto</Title>
       <Img src={image} id="outputImg"></Img>
       <ImageField
         label={"Image"}
@@ -69,11 +76,11 @@ const SignUp = () => {
         type="file"
         accept="image/*"
         onChange={event => setImage(URL.createObjectURL(event.target.files[0]))}
-      ></ImageField>
+      />
       <Form>
         <FormRow>
           <TextField
-            label={"Nome"}
+            label="Nome do produto"
             id="name"
             name="name"
             type="text"
@@ -81,123 +88,37 @@ const SignUp = () => {
             value={values.name}
             onChange={handleChange}
           />
-          <Pusher />
+        </FormRow>
+        <FormRow>
           <TextField
-            label={"Sobrenome"}
-            id="surname"
-            name="surname"
+            label="Preço"
+            id="price"
+            name="price"
             type="text"
+            prepend="R$"
             lightBg
-            value={values.surname}
+            value={currencyMask(values.price)}
             onChange={handleChange}
           />
         </FormRow>
         <FormRow>
           <TextField
-            label={"E-mail"}
-            id="email"
-            name="email"
-            type="email"
+            label="Porcentagem de Desconto"
+            id="discount"
+            name="discount"
+            type="text"
             lightBg
-            value={values.email}
+            prepend="%"
+            value={values.discount}
             onChange={handleChange}
           />
           <Pusher />
-          <TextField
-            label={"Senha"}
-            id="password"
-            name="password"
-            type="password"
-            lightBg
-            value={values.password}
-            onChange={handleChange}
-          />
-        </FormRow>
-        <FormRow>
-          <TextField
-            label={"Telefone"}
-            id="phone"
-            name="phone"
-            type="phone"
-            lightBg
-            value={values.phone}
-            onChange={handleChange}
-          />
-          <Pusher />
-          <TextField
-            label={"CEP"}
-            id="cep"
-            name="cep"
-            type="text"
-            size="10"
-            maxlength="9"
-            lightBg
-            value={values.cep}
-            onChange={handleChange}
-            onBlur={searchCep}
-          />
-        </FormRow>
-        <FormRow>
-          <TextField
-            label={"Rua"}
-            id="inputStreet"
-            name="street"
-            type="text"
-            size="60"
-            lightBg
-            value={values.street}
-            onChange={handleChange}
-          />
-        </FormRow>
-        <FormRow>
-          <TextField
-            label={"Bairro"}
-            id="inputNBHood"
-            name="nbhood"
-            type="text"
-            size="40"
-            lightBg
-            value={values.nbhood}
-            onChange={handleChange}
-          />
-          <Pusher />
-          <TextField
-            label={"Número"}
-            id="inputNum"
-            name="addressnumber"
-            type="text"
-            lightBg
-            value={values.addressnumber}
-            onChange={handleChange}
-          />
-        </FormRow>
-        <FormRow>
-          <TextField
-            label={"Cidade"}
-            id="inputCity"
-            name="city"
-            type="text"
-            size="40"
-            lightBg
-            value={values.city}
-            onChange={handleChange}
-          />
-          <Pusher />
-          <TextField
-            label={"Estado"}
-            id="inputState"
-            name="state"
-            type="text"
-            size="2"
-            lightBg
-            value={values.state}
-            onChange={handleChange}
-          />
+          <DiscountedPrice price={values.price} discount={values.discount} />
         </FormRow>
       </Form>
       <Button
         type="submit"
-        form="signup"
+        form="registerProduct"
         disabled={Object.keys(values).find(key => values[key] === "")}
       >
         CADASTRAR
@@ -206,7 +127,7 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default AddProduct;
 
 const Wrapper = styled.form`
   background-color: white;
