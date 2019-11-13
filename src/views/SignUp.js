@@ -13,7 +13,6 @@ const SignUp = () => {
   const { setUser } = useContext(UserContext);
 
   const submit = () => {
-    console.log(values);
     const { email, password, phone } = values;
 
     const body = {

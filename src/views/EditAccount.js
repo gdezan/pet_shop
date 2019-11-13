@@ -1,86 +1,234 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { navigate } from "@reach/router";
 import styled from "styled-components";
+import cepPromise from "cep-promise";
+import { useForm } from "hooks";
 
 import TextField from "base-components/TextField";
 import Button from "base-components/Button";
+import { UserContext } from "components/UserContext";
 
 const EditAccount = () => {
   const [image, setImage] = useState(require("assets/img/profile.png"));
-  const [value, setValue] = useState("");
+  const { user, setUser } = useContext(UserContext);
 
-  function pesquisaCEP(e) {
-    setValue(e.target.value);
-    
-    let cep = e.target.value.replace(/\D/g, "");
-    let cepPromise = require("cep-promise");
+  const submit = () => {
+    const { email, password, phone } = values;
 
-    if(cep.length === 8){
+    const body = {
+      id: user.id,
+      name: `${values.name} ${values.surname}`,
+      email,
+      password,
+      phone,
+      zip_code: values.cep,
+      address: `${values.street}, ${values.addressnumber}, ${values.nbhood}, ${values.city}, ${values.state}`,
+    };
+
+    fetch("/api/users/signup", {
+      method: "PUT",
+      body: JSON.stringify(body),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then(res => res.json())
+      .then(data => {
+        window.localStorage.setItem("authToken", data.authToken.token);
+        setUser(data.user);
+        navigate("/");
+      })
+      .catch(err => console.error(err));
+  };
+
+  const addressArr = user ? user.address.split(", ") : [];
+  const initialValues = user
+    ? {
+        email: user.email,
+        name: user.name.split(" ")[0],
+        surname: user.name.split(" ")[1],
+        phone: user.phone,
+        password: "",
+        cep: user.zip_code,
+        street: addressArr[0],
+        addressnumber: addressArr[1],
+        nbhood: addressArr[2],
+        city: addressArr[3],
+        state: addressArr[4],
+      }
+    : {};
+
+  const { values, handleChange, handleSubmit, changeValues } = useForm(submit, initialValues);
+
+  const searchCep = () => {
+    if (!values.cep) {
+      return;
+    }
+
+    const cep = values.cep.replace(/\D/g, "");
+    if (cep.length === 8) {
       cepPromise(cep).then(data => {
-        document.getElementById("inputStreet").value = data.street;
-        document.getElementById("inputNBHood").value = data.neighborhood;
-        document.getElementById("inputCity").value = data.city;
-        document.getElementById("inputState").value = data.state;
+        const { street, neighborhood: nbhood, city, state } = data;
+        changeValues({
+          street,
+          nbhood,
+          city,
+          state,
+        });
       });
     }
-  }
+  };
 
   return (
-    <Wrapper>
-      <Title>Edite sua conta</Title>
+    <Wrapper id="update" onSubmit={handleSubmit}>
+      <Title>Cadastre-se</Title>
       <Img src={image} id="outputImg"></Img>
-      <ImageField 
-        label={"Image"} 
-        id="inputImg" 
-        type="file" 
+      <ImageField
+        label={"Image"}
+        id="inputImg"
+        type="file"
         accept="image/*"
-        onChange={event => setImage(URL.createObjectURL(event.target.files[0]))}>
-      </ImageField>
+        onChange={event => setImage(URL.createObjectURL(event.target.files[0]))}
+      ></ImageField>
       <Form>
         <FormRow>
-          <TextField label={"Nome"} id="name" type="text" lightBg></TextField>
+          <TextField
+            label={"Nome"}
+            id="name"
+            name="name"
+            type="text"
+            lightBg
+            value={values.name}
+            onChange={handleChange}
+          />
           <Pusher />
-          <TextField label={"Sobrenome"} id="surname" type="text" lightBg></TextField>
+          <TextField
+            label={"Sobrenome"}
+            id="surname"
+            name="surname"
+            type="text"
+            lightBg
+            value={values.surname}
+            onChange={handleChange}
+          />
         </FormRow>
         <FormRow>
-          <TextField label={"E-mail"} id="email" type="email" lightBg></TextField>
+          <TextField
+            label={"E-mail"}
+            id="email"
+            name="email"
+            type="email"
+            lightBg
+            value={values.email}
+            onChange={handleChange}
+          />
           <Pusher />
-          <TextField label={"Senha"} id="password" type="password" lightBg></TextField>
+          <TextField
+            label={"Senha"}
+            id="password"
+            name="password"
+            type="password"
+            lightBg
+            value={values.password}
+            onChange={handleChange}
+          />
         </FormRow>
         <FormRow>
-          <TextField label={"Telefone"} id="phone" type="phone" lightBg></TextField>
+          <TextField
+            label={"Telefone"}
+            id="phone"
+            name="phone"
+            type="phone"
+            lightBg
+            value={values.phone}
+            onChange={handleChange}
+          />
           <Pusher />
-          <TextField 
-            label={"CEP"} 
-            id="cep" 
-            type="text" 
+          <TextField
+            label={"CEP"}
+            id="cep"
+            name="cep"
+            type="text"
             size="10"
-            value={value}
-            onChange={e => pesquisaCEP(e)}
-            maxlength="9" lightBg>
-          </TextField>
+            maxlength="9"
+            lightBg
+            value={values.cep}
+            onChange={handleChange}
+            onBlur={searchCep}
+          />
         </FormRow>
         <FormRow>
-          <TextField label={"Rua"} id="inputStreet" type="text" size="60" lightBg></TextField>
+          <TextField
+            label={"Rua"}
+            id="inputStreet"
+            name="street"
+            type="text"
+            size="60"
+            lightBg
+            value={values.street}
+            onChange={handleChange}
+          />
         </FormRow>
         <FormRow>
-          <TextField label={"Bairro"} id="inputNBHood" type="text" size="40" lightBg></TextField>
+          <TextField
+            label={"Bairro"}
+            id="inputNBHood"
+            name="nbhood"
+            type="text"
+            size="40"
+            lightBg
+            value={values.nbhood}
+            onChange={handleChange}
+          />
           <Pusher />
-          <TextField label={"Número"} id="inputNum" type="text" lightBg></TextField>
+          <TextField
+            label={"Número"}
+            id="inputNum"
+            name="addressnumber"
+            type="text"
+            lightBg
+            value={values.addressnumber}
+            onChange={handleChange}
+          />
         </FormRow>
         <FormRow>
-          <TextField label={"Cidade"} id="inputCity" type="text" size="40" lightBg></TextField>
+          <TextField
+            label={"Cidade"}
+            id="inputCity"
+            name="city"
+            type="text"
+            size="40"
+            lightBg
+            value={values.city}
+            onChange={handleChange}
+          />
           <Pusher />
-          <TextField label={"Estado"} id="inputState" type="text" size="2" lightBg></TextField>
+          <TextField
+            label={"Estado"}
+            id="inputState"
+            name="state"
+            type="text"
+            size="2"
+            lightBg
+            value={values.state}
+            onChange={handleChange}
+          />
         </FormRow>
       </Form>
-      <Button>SALVAR</Button>
+      <Button
+        type="submit"
+        form="update"
+        disabled={
+          Object.keys(values).find(key => values[key] === "" && key !== "password") || false
+        }
+      >
+        SALVAR
+      </Button>
     </Wrapper>
   );
 };
 
 export default EditAccount;
 
-const Wrapper = styled.div`
+const Wrapper = styled.form`
   background-color: white;
   width: 90%;
   margin: 120px auto;
@@ -112,7 +260,7 @@ const ImageField = styled.input`
   margin: 15px 0;
 `;
 
-const Form = styled.form`
+const Form = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;

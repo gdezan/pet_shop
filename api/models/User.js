@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       name: DataTypes.STRING,
       phone: DataTypes.STRING,
-      zip_code: { type: DataTypes.STRING },
+      zip_code: { type: DataTypes.STRING, underscored: true },
       address: DataTypes.STRING,
       email: {
         type: DataTypes.STRING,
@@ -20,7 +20,11 @@ module.exports = (sequelize, DataTypes) => {
         validate: { isEmail: true }
       },
       password: { type: DataTypes.STRING, required: true },
-      is_admin: { type: DataTypes.BOOLEAN, defaultValue: false }
+      is_admin: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        underscored: true
+      },
     },
     {}
   );
