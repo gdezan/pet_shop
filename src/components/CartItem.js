@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
+import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const CartItem = ({ name, price, discountedPrice, img, quantity, ...props }) => {
@@ -14,9 +14,9 @@ const CartItem = ({ name, price, discountedPrice, img, quantity, ...props }) => 
           <OldPrice>{price}</OldPrice>
           <DiscountedPrice>{discountedPrice}</DiscountedPrice>
           <QuantityWrapper>
-            <MinusButton><FontAwesomeIcon icon={faMinus} /></MinusButton>
+            <MinusButton><FontAwesomeIcon icon={faMinusCircle} /></MinusButton>
             <QuantityDisplay>{quantity}</QuantityDisplay>
-            <PlusButton><FontAwesomeIcon icon={faPlus} /></PlusButton>
+            <PlusButton><FontAwesomeIcon icon={faPlusCircle} /></PlusButton>
           </QuantityWrapper>
         </Info>
       </Wrapper>
@@ -30,9 +30,9 @@ const CartItem = ({ name, price, discountedPrice, img, quantity, ...props }) => 
         <Name>{name}</Name>
         <Price>{price}</Price>
         <QuantityWrapper>
-          <MinusButton><FontAwesomeIcon icon={faMinus} /></MinusButton>
+          <MinusButton><FontAwesomeIcon icon={faMinusCircle} /></MinusButton>
           <QuantityDisplay>{quantity}</QuantityDisplay>
-          <PlusButton><FontAwesomeIcon icon={faPlus} /></PlusButton>
+          <PlusButton><FontAwesomeIcon icon={faPlusCircle} /></PlusButton>
         </QuantityWrapper>
       </Info>
     </Wrapper>
@@ -106,7 +106,8 @@ const QuantityDisplay = styled.div`
 
 const PlusButton = styled.button`
   cursor: pointer;
-  font-size: 10px;  
+  font-size: 10px;
+  outline: none;
 `;
 
 const MinusButton = styled(PlusButton)``;

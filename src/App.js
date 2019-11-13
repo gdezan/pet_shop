@@ -21,6 +21,7 @@ import SignUpPet from "views/SignUpPet";
 import EditAccount from "views/EditAccount";
 import ForgotPW from "views/ForgotPW";
 import UserList from "views/UserList";
+import ShoppingCart from "views/ShoppingCart";
 
 const mainTheme = {
   bg: "#d9eeec",
@@ -93,6 +94,7 @@ function App() {
           <UserListWithAuth path="user_list" />
           <UserListWithAuth path="admin_list" adminUsers />
           <ForgotPW path="forgot_password" />
+          <ShoppingCart path="shopping_cart" />
         </PosedRouter>
       </ThemeProvider>
     </UserContext.Provider>
