@@ -1,7 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
-import { faUserCog, faUsers, faShoppingCart, faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUserCog,
+  faUsers,
+  faShoppingCart,
+  faCalendarAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import { faPlus, faClock, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
 
@@ -14,8 +19,8 @@ const AdminDashboard = () => {
       <Title>Painel de Controle Administrativo</Title>
       <Divider title="Registros" />
       <AdminOptions>
-        <DashboardButton title="Registrar Administradores" icon={faUserCog} path="/" />
-        <DashboardButton title="Registrar Clientes" icon={faUsers} path="/" />
+        <DashboardButton title="Exibir administradores" icon={faUserCog} path="/admin_list" />
+        <DashboardButton title="Exibir usuários" icon={faUsers} path="/user_list" />
         <DashboardButton title="Registrar Produtos" icon={faShoppingCart} path="/" />
         <DashboardButton title="Registrar Serviços" icon={faCalendarAlt} path="/" />
       </AdminOptions>

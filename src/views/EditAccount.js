@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useCallback } from "react";
+import React, { useState, useContext } from "react";
 import { navigate } from "@reach/router";
 import styled from "styled-components";
 import cepPromise from "cep-promise";

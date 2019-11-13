@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Redirect } from "@reach/router";
+import { UserContext } from "components/UserContext";
 
-const withAuthentication = WrappedComponent => {
+const withAuthentication = (WrappedComponent, isAdmin = false) => {
   return props => {
-    if (!window.localStorage.getItem("authToken")) {
+    const { user } = useContext(UserContext);
+    const logged = window.localStorage.getItem("authToken");
+
+    if (!logged) {
       return <Redirect to="/login" noThrow />;
+    }
+
+    if (!user) return null;
+
+    if (isAdmin && !user.is_admin) {
+      return <Redirect to="/" noThrow />;
     }
 
     return <WrappedComponent {...props} />;

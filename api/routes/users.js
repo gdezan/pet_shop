@@ -42,8 +42,6 @@ router.post("/signup", async (req, res) => {
 });
 
 router.put("/signup", async (req, res) => {
-  // hash the password provided by the user with bcrypt so that
-  // we are never storing plain text passwords
   let hash = null;
   if (req.body.password !== "") hash = bcrypt.hashSync(req.body.password, 10);
 

@@ -20,6 +20,7 @@ import SignUp from "views/SignUp";
 import SignUpPet from "views/SignUpPet";
 import EditAccount from "views/EditAccount";
 import ForgotPW from "views/ForgotPW";
+import UserList from "views/UserList";
 
 const mainTheme = {
   bg: "#d9eeec",
@@ -51,7 +52,8 @@ const PosedRouter = ({ children }) => (
   </Location>
 );
 
-const AdminDashboardWithAuth = withAuthentication(AdminDashboard);
+const AdminDashboardWithAuth = withAuthentication(AdminDashboard, true);
+const UserListWithAuth = withAuthentication(UserList, true);
 const UserDashboardWithAuth = withAuthentication(UserDashboard);
 
 function App() {
@@ -88,6 +90,8 @@ function App() {
           <EditAccount path="edit_account" />
           <UserDashboardWithAuth path="user" />
           <AdminDashboardWithAuth path="admin" />
+          <UserListWithAuth path="user_list" />
+          <UserListWithAuth path="admin_list" adminUsers />
           <ForgotPW path="forgot_password" />
         </PosedRouter>
       </ThemeProvider>
