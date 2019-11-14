@@ -1,13 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styled, { css } from "styled-components";
 import { Link } from "@reach/router";
 import { useForm } from "hooks";
+import SweetAlert from 'sweetalert2-react';
 
 import Button from "base-components/Button";
 import TextField from "base-components/TextField";
 import { UserContext } from "components/UserContext";
 
-const LoginModal = ({ isOpen, onLogin }) => {
+const LoginModal = ({ isOpen, onLogin, toggleLogin }) => {
+  const [wrongPW, setWrongPW] = useState(false);
   const { setUser } = useContext(UserContext);
 
   const submit = () => {
@@ -15,14 +17,18 @@ const LoginModal = ({ isOpen, onLogin }) => {
       method: "POST",
       body: JSON.stringify(values),
       headers: { "Content-Type": "application/json" },
-    })
+    })      
       .then(res => res.json())
       .then(data => {
         window.localStorage.setItem("authToken", data.authToken.token);
         setUser(data.user);
         onLogin();
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        setWrongPW(true);
+        toggleLogin();
+        console.error(err);
+      });
   };
 
   const { values, handleChange, handleSubmit } = useForm(submit);
@@ -48,6 +54,12 @@ const LoginModal = ({ isOpen, onLogin }) => {
       </StyledButton>
       <StyledLink to="forgot_password">Esqueceu a senha?</StyledLink>
       <StyledLink to="signup">Cadastre-se</StyledLink>
+      <SweetAlert
+        show={wrongPW}
+        title="E-mail e/ou senha errados"
+        text="Tente fazer seu login novamente."
+        onConfirm={() => setWrongPW(false)}
+      />
     </LoginWrapper>
   );
 };

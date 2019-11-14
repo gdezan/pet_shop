@@ -1,5 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
+import dbPet from "dbPet";
 
 import Divider from "base-components/Divider";
 
@@ -7,20 +8,6 @@ import UserOptions from "components/UserOptions";
 import PetList from "components/PetList";
 import Scheduler from "components/Scheduler";
 import { UserContext } from "components/UserContext";
-
-const pets = [
-  {
-    id: 0,
-    name: "Spike",
-    breed: "Golden Retriever",
-    age: 7,
-    scheduled_services: [
-      { id: 0, service: "Banho", datetime: "2019-10-21T13:00:00Z", price: "R$ 20,00" },
-      { id: 1, service: "Tosa", datetime: "2019-10-21T14:00:00Z", price: "R$ 15,00" },
-    ],
-    img: require("assets/img/golden.jpg"),
-  },
-];
 
 const Details = ({ client }) => {
   return (
@@ -38,6 +25,16 @@ const Details = ({ client }) => {
 
 const UserDashboard = () => {
   const { user } = useContext(UserContext);
+  const [posts,setPosts] = useState("");
+
+  useEffect(() => {
+    const getPosts = async() => {
+      let allPosts = await dbPet.posts.toArray();
+      console.log(allPosts);
+      setPosts(allPosts);
+    };
+    getPosts();
+  },[]);
 
   if (!user) return null;
 
@@ -59,7 +56,7 @@ const UserDashboard = () => {
       <Divider title="Agendar um serviço" />
       <Scheduler />
       <Divider title="Meus pets" />
-      <PetList pets={pets} />
+      <PetList pets={posts} />
     </Wrapper>
   );
 };

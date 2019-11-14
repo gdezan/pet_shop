@@ -1,34 +1,71 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import SweetAlert from 'sweetalert2-react';
+import { navigate } from "@reach/router";
 
 import TextField from "base-components/TextField";
 import Button from "base-components/Button";
+import dbPet from "dbPet";
 
 const SignUpPet = () => {
-  const [image, setImage] = useState(require("assets/img/profile.png"));
+  const [postImg,setImg] = useState(require("assets/img/profile.png"));
+  const [postName,setName] = useState("");
+  const [postRace,setRace] = useState("");
+  const [postAge,setAge] = useState("");
+  const [signedPet, setSignedPet] = useState(false);
+
+  const getFile = e => {
+    let reader = new FileReader();
+    reader.readAsDataURL(e[0]);
+    reader.onload = e => {
+      setImg(reader.result);
+    }
+  };
+
+  const submit = e => {
+    e.preventDefault();
+    if(postImg !== "" && postName !== "" && postRace !== "" && postAge !== ""){
+      let post = {
+        img: postImg,
+        name: postName,
+        race: postRace,
+        age: postAge,
+        scheduled_services: []
+      };
+      dbPet.posts.add(post);
+      setSignedPet(true);
+      navigate("/user");
+    }
+  };
 
   return (
     <Wrapper>
       <Title>Cadastre seu pet</Title>
-      <Img src={image} id="outputImg"></Img>
+      <Img src={postImg} id="outputImg"></Img>
       <ImageField
         label={"Image"}
         id="inputImg"
         type="file"
         accept="image/*"
-        onChange={event => setImage(URL.createObjectURL(event.target.files[0]))}
+        onChange={e => getFile(e.target.files)}
       ></ImageField>
       <Form>
         <FormRow>
-          <TextField label={"Nome"} id="name" type="text" lightBg></TextField>
+          <TextField onChange={e => setName(e.target.value)} label={"Nome"} id="name" type="text" lightBg></TextField>
         </FormRow>
         <FormRow>
-          <TextField label={"Raça"} id="race" type="text" lightBg></TextField>
+          <TextField onChange={e => setRace(e.target.value)} label={"Raça"} id="race" type="text" lightBg></TextField>
           <Pusher />
-          <TextField label={"Idade"} id="age" type="number" min="1" max="200" lightBg></TextField>
+          <TextField onChange={e => setAge(e.target.value)} label={"Idade"} id="age" type="number" min="1" max="200" lightBg></TextField>
         </FormRow>
       </Form>
-      <Button>CADASTRAR</Button>
+      <Button onClick={e => submit(e)}>CADASTRAR</Button>
+      <SweetAlert
+        show={signedPet}
+        title="Pet cadastrado"
+        text="Seu pet foi cadastrado com sucesso!"
+        onConfirm={() => setSignedPet(false)}
+      />
     </Wrapper>
   );
 };

@@ -106,10 +106,6 @@ const Navbar = props => {
     );
   }
 
-  const toggleCart = () => {
-    setShoppingCartOpen(!shoppingCartOpen);
-  }
-
   return (
     <>
       <Nav>
@@ -141,8 +137,13 @@ const Navbar = props => {
         onLogin={() => {
           navigate("/");
         }}
+        toggleLogin={() => {
+          setLoginModalOpen(false);
+        }}
       />
-      <ShoppingCartModal toggleCart={toggleCart} isOpen={shoppingCartOpen} />
+      <ShoppingCartModal toggleCart={() => {
+        setShoppingCartOpen(!shoppingCartOpen);
+      }} isOpen={shoppingCartOpen} />
     </>
   );
 };

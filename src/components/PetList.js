@@ -16,11 +16,17 @@ const Pet = ({ name, img, breed, age, services }) => {
           <FontAwesomeIcon icon={faClock} /> Serviços agendados:
         </Text>
         <ServicesWrapper>
-          {services.map(s => (
-            <Service key={s.id}>
-              {s.service} - {format(new Date(s.datetime), "dd/MM/yyyy - HH:mm")} ({s.price})
-            </Service>
-          ))}
+          {services.length ? (
+            <>
+              {services.map(s => (
+                <Service key={s.id}>
+                  {s.service} - {format(new Date(s.datetime), "dd/MM/yyyy - HH:mm")} ({s.price})
+                </Service>
+              ))}
+            </>
+          ) : (
+            <></>
+          )}
         </ServicesWrapper>
       </Details>
     </PetWrapper>
@@ -30,16 +36,22 @@ const Pet = ({ name, img, breed, age, services }) => {
 const PetList = ({ pets }) => {
   return (
     <PetListWrapper>
-      {pets.map(pet => (
-        <Pet
-          key={pet.id}
-          name={pet.name}
-          img={pet.img}
-          age={pet.age}
-          breed={pet.breed}
-          services={pet.scheduled_services}
-        />
-      ))}
+      {pets.length ? (
+        <>
+          {pets.map(pet => (
+            <Pet
+              key={pet.id}
+              name={pet.name}
+              img={pet.img}
+              age={pet.age}
+              breed={pet.race}
+              services={pet.scheduled_services}
+            />
+          ))}
+        </>
+      ) : (
+        <></>
+      )}
     </PetListWrapper>
   );
 };

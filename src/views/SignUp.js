@@ -12,6 +12,7 @@ import { UserContext } from "components/UserContext";
 const SignUp = () => {
   const [image, setImage] = useState(require("assets/img/profile.png"));
   const [signUp,setSignUp] = useState(false);
+  const [signedEmail, setSignedEmail] = useState(false);
   const { setUser } = useContext(UserContext);
 
   const submit = () => {
@@ -35,9 +36,13 @@ const SignUp = () => {
       .then(data => {
         window.localStorage.setItem("authToken", data.authToken.token);
         setUser(data.user);
+        setSignUp(true);
         navigate("/");
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        setSignedEmail(true);
+        console.error(err)
+      });
   };
 
   const { values, handleChange, handleSubmit, changeValues } = useForm(submit);
@@ -198,13 +203,18 @@ const SignUp = () => {
         </FormRow>
       </Form>
       <Button
-        onClick={() => setSignUp(true)}
         type="submit"
         form="signup"
         disabled={Object.keys(values).find(key => values[key] === "")}
       >
         CADASTRAR
       </Button>
+      <SweetAlert
+        show={signedEmail}
+        title="E-mail já cadastrado"
+        text="Você já possui um e-mail cadastrado."
+        onConfirm={() => setSignedEmail(false)}
+      />
       <SweetAlert
         show={signUp}
         title="Cadastro concluído"
