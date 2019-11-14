@@ -1,81 +1,62 @@
-import React, { useState, useContext } from "react";
-import { navigate } from "@reach/router";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useForm } from "hooks";
+import { masks, formatters } from "Utils";
 
 import TextField from "base-components/TextField";
 import Button from "base-components/Button";
-import { UserContext } from "components/UserContext";
-
-const getInt = str => str.match(/\d/g).join("");
-
-const currencyMask = tmp => {
-  if (!tmp || !tmp.match(/\d/g)) return "";
-  tmp = getInt(tmp);
-  tmp = tmp.replace(/^\D+/g, "").replace(/([0-9]{2})$/g, ",$1");
-  if (tmp.length > 6) tmp = tmp.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
-
-  return tmp;
-};
-
-const DiscountedPrice = ({ price, discount }) => {
-  let disc = 0;
-  if (price && !discount) {
-    disc = getInt(price);
-  } else if (price && discount) {
-    disc = (getInt(price) * getInt(discount)) / 100;
-  }
-  console.log(disc);
-  return (
-    <div>
-      <div>Preço com desconto</div>
-      {currencyMask(disc)}
-    </div>
-  );
-};
+import Select from "base-components/Select";
 
 const AddProduct = () => {
-  const [image, setImage] = useState(require("assets/img/profile.png"));
-  const { setUser } = useContext(UserContext);
+  const [image, setImage] = useState({ image_url: require("assets/img/profile.png"), img: null });
+  const [category, setCategory] = useState("Cachorro");
 
   const submit = () => {
-    const { email, password, phone } = values;
-
+    const { name, price, discountedPrice } = values;
     const body = {
-      name: `${values.name} ${values.surname}`,
-      email,
-      password,
-      phone,
-      zip_code: values.cep,
-      address: `${values.street}, ${values.addressnumber}, ${values.nbhood}, ${values.city}, ${values.state}`,
+      name,
+      price: formatters.inputToPrice(price),
+      discounted_price: formatters.inputToPrice(discountedPrice),
+      category: category.id,
     };
-
     fetch("/api/products", {
       method: "POST",
       body: JSON.stringify(body),
       headers: { "Content-Type": "application/json" },
     })
       .then(res => res.json())
-      .then(data => {
-        window.localStorage.setItem("authToken", data.authToken.token);
-        setUser(data.user);
-        navigate("/");
-      })
+      .then(data => window.location.reload())
       .catch(err => console.error(err));
   };
 
-  const { values, handleChange, handleSubmit, changeValues } = useForm(submit);
+  const initialValues = {
+    price: "",
+    discountedPrice: "",
+    name: "",
+  };
 
+  const categories = {
+    Cachorro: { name: "Cachorro", id: "dog" },
+    Gato: { name: "Gato", id: "cat" },
+    "Outros Pets": { name: "Outros Pets", id: "other_pets" },
+  };
+
+  const { values, handleChange, handleSubmit } = useForm(submit, initialValues);
   return (
     <Wrapper id="registerProduct" onSubmit={handleSubmit}>
       <Title>Registro de produto</Title>
-      <Img src={image} id="outputImg"></Img>
+      <Img src={image.image_url} id="outputImg"></Img>
       <ImageField
         label={"Image"}
         id="inputImg"
         type="file"
         accept="image/*"
-        onChange={event => setImage(URL.createObjectURL(event.target.files[0]))}
+        onChange={event =>
+          setImage({
+            image_url: URL.createObjectURL(event.target.files[0]),
+            img: event.target.files[0],
+          })
+        }
       />
       <Form>
         <FormRow>
@@ -90,6 +71,15 @@ const AddProduct = () => {
           />
         </FormRow>
         <FormRow>
+          <Select
+            options={categories}
+            value={category.name}
+            onChange={e => {
+              setCategory(categories[e.target.value]);
+            }}
+          />
+        </FormRow>
+        <FormRow>
           <TextField
             label="Preço"
             id="price"
@@ -97,29 +87,29 @@ const AddProduct = () => {
             type="text"
             prepend="R$"
             lightBg
-            value={currencyMask(values.price)}
+            value={masks.currency(values.price)}
             onChange={handleChange}
           />
         </FormRow>
         <FormRow>
           <TextField
-            label="Porcentagem de Desconto"
-            id="discount"
-            name="discount"
+            label="Preço com Desconto"
+            id="discountedPrice"
+            name="discountedPrice"
             type="text"
             lightBg
-            prepend="%"
-            value={values.discount}
+            prepend="R$"
+            value={masks.currency(values.discountedPrice)}
             onChange={handleChange}
           />
-          <Pusher />
-          <DiscountedPrice price={values.price} discount={values.discount} />
         </FormRow>
       </Form>
       <Button
         type="submit"
         form="registerProduct"
-        disabled={Object.keys(values).find(key => values[key] === "")}
+        disabled={Object.keys(values).find(
+          key => (key === "name" || key === "price") && values[key] === "",
+        )}
       >
         CADASTRAR
       </Button>
@@ -182,8 +172,4 @@ const FormRow = styled.div`
   display: flex;
   width: 80%;
   padding: 5px 0;
-`;
-
-const Pusher = styled.div`
-  margin-right: 20px;
 `;

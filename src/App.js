@@ -99,6 +99,7 @@ function App() {
             <Login path="login" />
             <SignUp path="signup" />
             <SignUpPet path="signup_pet" />
+            <AddProductWithAuth path="add_product" />
             <EditAccount path="edit_account" />
             <UserDashboardWithAuth path="user" />
             <AdminDashboardWithAuth path="admin" />

@@ -15,7 +15,7 @@ const ButtonWrapper = styled.button`
   color: white;
   font-family: "Raleway", sans-serif;
   transition: 0.15s all;
-  background-color: ${props => props.theme.accent};
+  background-color: ${props => (props.disabled ? "#bbb" : props.theme.accent)};
   box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.3);
   border-radius: 8px;
 
