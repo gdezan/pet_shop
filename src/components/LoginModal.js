@@ -27,7 +27,7 @@ const LoginModal = ({ isOpen, onLogin }) => {
 
   const { values, handleChange, handleSubmit } = useForm(submit);
   return (
-    <LoginWrapper isOpen={isOpen} id="login" onSubmit={handleSubmit}>
+    <LoginWrapper isOpen={isOpen} id="login_modal" onSubmit={handleSubmit}>
       <Title>Faça aqui o seu login!</Title>
       <TextField
         label={"E-mail"}
@@ -43,7 +43,7 @@ const LoginModal = ({ isOpen, onLogin }) => {
         value={values.password}
         onChange={handleChange}
       />
-      <StyledButton type="submit" form="login" disabled={!values.email || !values.password}>
+      <StyledButton type="submit" form="login_modal" disabled={!values.email || !values.password}>
         Login
       </StyledButton>
       <StyledLink to="forgot_password">Esqueceu a senha?</StyledLink>

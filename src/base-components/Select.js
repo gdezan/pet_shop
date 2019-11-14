@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
-const Select = ({ options, value }) => {
+const Select = ({ options, value, onChange }) => {
   return (
-    <SelectInput value={value}>
+    <SelectInput value={value} onChange={onChange}>
       {Object.keys(options).map(id => (
         <Option key={id} value={id}>
           {options[id].name}

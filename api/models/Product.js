@@ -9,8 +9,9 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       name: { type: DataTypes.STRING, allowNull: false },
+      category: { type: DataTypes.STRING, allowNull: false },
       price: DataTypes.DECIMAL,
-      discount: { type: DataTypes.FLOAT, defaultValue: 0 },
+      discounted_price: { type: DataTypes.DECIMAL, defaultValue: 0 },
     },
     {},
   );

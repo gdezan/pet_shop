@@ -1,5 +1,8 @@
 import { Router } from "express";
 import db from "../models";
+import multer from "multer";
+import fs from "fs";
+
 const router = Router();
 
 router.get("/", (req, res) => {
@@ -9,19 +12,15 @@ router.get("/", (req, res) => {
       res.send(products);
       res.sendStatus(200);
     })
-    .catch(err => console.error(err));
+    .catch(err => res.send(err));
 });
 
 router.post("/", (req, res) => {
-  const { name, price, discount } = req.body;
-  console.log("reqbody", req.body);
+  const { name, price, discounted_price, category } = req.body;
   db.product
-    .create({ name, price, discount })
-    .then(() => {
-      res.send("Product created");
-      res.sendStatus(201);
-    })
-    .catch(err => console.error(err));
+    .create({ name, price, discounted_price, category })
+    .then((data) => res.status(201).send(data))
+    .catch(err => res.send(err));
 });
 
 export default router;
