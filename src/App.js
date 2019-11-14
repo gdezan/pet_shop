@@ -22,8 +22,10 @@ import SignUpPet from "views/SignUpPet";
 import EditAccount from "views/EditAccount";
 import ForgotPW from "views/ForgotPW";
 import UserList from "views/UserList";
+import ProductList from "views/ProductList";
 import ShoppingCart from "views/ShoppingCart";
 import AddProduct from "views/AddProduct";
+import ScheduleService from "views/ScheduleService";
 
 const mainTheme = {
   bg: "#d9eeec",
@@ -57,9 +59,11 @@ const PosedRouter = ({ children }) => (
 
 const AdminDashboardWithAuth = withAuthentication(AdminDashboard, true);
 const UserListWithAuth = withAuthentication(UserList, true);
+const ProductListWithAuth = withAuthentication(ProductList, true);
 const AddProductWithAuth = withAuthentication(AddProduct, true);
 const UserDashboardWithAuth = withAuthentication(UserDashboard);
 const ShoppingCartWithAuth = withAuthentication(ShoppingCart);
+const ScheduleServiceWithAuth = withAuthentication(ScheduleService);
 
 function App() {
   const [user, setUser] = useState();
@@ -104,9 +108,11 @@ function App() {
             <UserDashboardWithAuth path="user" />
             <AdminDashboardWithAuth path="admin" />
             <UserListWithAuth path="user_list" />
+            <ProductListWithAuth path="product_list" />
             <UserListWithAuth path="admin_list" adminUsers />
             <ForgotPW path="forgot_password" />
             <ShoppingCartWithAuth path="shopping_cart" />
+            <ScheduleServiceWithAuth path="schedule_service" />
           </PosedRouter>
         </ThemeProvider>
       </UserContext.Provider>

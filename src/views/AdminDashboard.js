@@ -22,21 +22,22 @@ const AdminDashboard = () => {
         <DashboardButton title="Exibir administradores" icon={faUserCog} path="/admin_list" />
         <DashboardButton title="Exibir usuários" icon={faUsers} path="/user_list" />
         <DashboardButton title="Registrar Produtos" icon={faShoppingCart} path="/add_product" />
-        <DashboardButton title="Registrar Serviços" icon={faCalendarAlt} path="/" />
+        <DashboardButton title="Registrar Serviços" icon={faCalendarAlt} path="/schedule_service" />
       </AdminOptions>
-      <Divider title="Serviços" />
+      {/* <Divider title="Serviços" />
       <AdminOptions>
-        <DashboardButton title="Criar Serviço" icon={faPlus} path="/" />
-        <DashboardButton title="Agendar Serviço" icon={faClock} path="/" />
-        <DashboardButton title="Liberar Horário" icon={faTrash} path="/" />
-        <DashboardButton title="Calendário" icon={faCalendarAlt} path="/" />
-      </AdminOptions>
+      <DashboardButton title="Criar Serviço" icon={faPlus} path="/" />
+      <DashboardButton title="Agendar Serviço" icon={faClock} path="/" />
+      <DashboardButton title="Liberar Horário" icon={faTrash} path="/" />
+      <DashboardButton title="Calendário" icon={faCalendarAlt} path="/" />
+    </AdminOptions> */}
       <Divider title="Produtos" />
       <AdminOptions>
-        <DashboardButton title="Registrar Serviço" icon={faPlus} path="/" />
+        <DashboardButton title="Registrar Produtos" icon={faShoppingCart} path="/add_product" />
+        {/* <DashboardButton title="Registrar Serviço" icon={faPlus} path="/" />
         <DashboardButton title="Editar Produto" icon={faEdit} path="/" />
-        <DashboardButton title="Remover Produto" icon={faTrash} path="/" />
-        <DashboardButton title="Consultar" icon={faSearch} path="/" />
+        <DashboardButton title="Remover Produto" icon={faTrash} path="/" /> */}
+        <DashboardButton title="Consultar" icon={faSearch} path="/product_list" />
       </AdminOptions>
     </Wrapper>
   );

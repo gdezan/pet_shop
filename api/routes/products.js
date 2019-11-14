@@ -1,7 +1,5 @@
 import { Router } from "express";
 import db from "../models";
-import multer from "multer";
-import fs from "fs";
 
 const router = Router();
 

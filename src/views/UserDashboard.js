@@ -18,7 +18,7 @@ const Details = ({ client }) => {
         <DetailsLine>Endereço: {client.address}</DetailsLine>
         <DetailsLine>{client.city}</DetailsLine>
       </DetailsText>
-      <DetailsImage src={client.profile_img} alt="Profile Picture" />
+      {/* <DetailsImage src={client.profile_img} alt="Profile Picture" /> */}
     </DetailsWrapper>
   );
 };
@@ -53,8 +53,8 @@ const UserDashboard = () => {
       <Details client={client} />
       <Divider title="Opções" />
       <UserOptions />
-      <Divider title="Agendar um serviço" />
-      <Scheduler />
+      {/* <Divider title="Agendar um serviço" />
+      <Scheduler /> */}
       <Divider title="Meus pets" />
       <PetList pets={posts} />
     </Wrapper>
