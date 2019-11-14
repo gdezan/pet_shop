@@ -14,7 +14,8 @@ module.exports = {
       email: {
         type: Sequelize.STRING,
         required: true,
-        validate: { isEmail: true }
+        validate: { isEmail: true },
+	unique: true
       },
       password: { type: Sequelize.STRING, required: true },
       is_admin: {
