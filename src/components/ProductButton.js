@@ -7,50 +7,50 @@ const ProductButton = ({ product }) => {
   const { setCartItems } = useContext(CartContext);
 
   const handleClick = () => {
-    let localData = localStorage.getItem('cartItems');
+    let localData = localStorage.getItem("cartItems");
     let items = localData ? JSON.parse(localData) : [];
     let item;
     let found = false;
-    
-    for(let i = 0; i < items.length && !found; ++i){
+
+    for (let i = 0; i < items.length && !found; ++i) {
       item = items[i];
-      if(item.name === product.name){
+      if (item.name === product.name) {
         items[i].quantity += 1;
-        localStorage.setItem('cartItems',JSON.stringify(items));
+        localStorage.setItem("cartItems", JSON.stringify(items));
         setCartItems(items);
         found = true;
       }
     }
-    if(!found) {
+    if (!found) {
       product.quantity = 1;
-      if(product.discountedPrice){
-        items.push({ 
+      if (product.discounted_price) {
+        items.push({
           name: product.name,
           img: product.img,
           price: product.price,
-          discountedPrice: product.discountedPrice,
+          discounted_price: product.discounted_price,
           quantity: product.quantity,
         });
-      }else {
-        items.push({ 
+      } else {
+        items.push({
           name: product.name,
           img: product.img,
           price: product.price,
           quantity: product.quantity,
         });
       }
-      localStorage.setItem('cartItems',JSON.stringify(items));
+      localStorage.setItem("cartItems", JSON.stringify(items));
       setCartItems(items);
     }
   };
-  
-  if (product.discountedPrice) {
+
+  if (product.discounted_price) {
     return (
       <Wrapper onClick={() => handleClick()} discounted>
         <Image src={product.img} alt={`{name} image`} />
         <Name>{product.name}</Name>
-        <OldPrice>{product.price}</OldPrice>
-        <DiscountedPrice>{product.discountedPrice}</DiscountedPrice>
+        <OldPrice>R${product.price}</OldPrice>
+        <Discounted_price>R${product.discounted_price}</Discounted_price>
       </Wrapper>
     );
   }
@@ -59,7 +59,7 @@ const ProductButton = ({ product }) => {
     <Wrapper onClick={() => handleClick()}>
       <Image src={product.img} alt={`{name} image`} />
       <Name>{product.name}</Name>
-      <Price>{product.price}</Price>
+      <Price>R${product.price}</Price>
     </Wrapper>
   );
 };
@@ -108,7 +108,7 @@ const Price = styled.div`
   color: #555;
 `;
 
-const DiscountedPrice = styled.div`
+const Discounted_price = styled.div`
   font-weight: 600;
   color: red;
   font-size: 23px;
