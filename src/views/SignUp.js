@@ -3,7 +3,7 @@ import { navigate } from "@reach/router";
 import styled from "styled-components";
 import cepPromise from "cep-promise";
 import { useForm } from "hooks";
-import SweetAlert from 'sweetalert2-react';
+import SweetAlert from "sweetalert2-react";
 
 import TextField from "base-components/TextField";
 import Button from "base-components/Button";
@@ -11,7 +11,7 @@ import { UserContext } from "components/UserContext";
 
 const SignUp = () => {
   const [image, setImage] = useState(require("assets/img/profile.png"));
-  const [signUp,setSignUp] = useState(false);
+  const [signUp, setSignUp] = useState(false);
   const [signedEmail, setSignedEmail] = useState(false);
   const { setUser } = useContext(UserContext);
 
@@ -34,14 +34,14 @@ const SignUp = () => {
     })
       .then(res => res.json())
       .then(data => {
-        window.localStorage.setItem("authToken", data.authToken.token);
+        window.localStorage.setItem("authToken", data.session._id);
         setUser(data.user);
         setSignUp(true);
         navigate("/");
       })
       .catch(err => {
         setSignedEmail(true);
-        console.error(err)
+        console.error(err);
       });
   };
 

@@ -4,6 +4,8 @@ import { ThemeProvider } from "styled-components";
 import posed, { PoseGroup } from "react-pose";
 import withAuthentication from "hocs/withAuthentication";
 
+import { objectToQueryString } from "Utils";
+
 import Navbar from "components/Navbar";
 import { UserContext } from "components/UserContext";
 import { CartContext } from "components/CartContext";
@@ -72,11 +74,9 @@ function App() {
   useEffect(() => {
     const authToken = window.localStorage.getItem("authToken");
     const localData = window.localStorage.getItem("cartItems");
-
     if (authToken) {
-      fetch("/api/users/session", {
-        method: "POST",
-        body: JSON.stringify({ auth_token: authToken }),
+      fetch(`/api/users/session?${objectToQueryString({ token: authToken })}`, {
+        method: "GET",
         headers: { "Content-Type": "application/json" },
       })
         .then(res => res.json())

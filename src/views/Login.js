@@ -17,7 +17,7 @@ const Login = () => {
     })
       .then(res => res.json())
       .then(data => {
-        window.localStorage.setItem("authToken", data.authToken.token);
+        window.localStorage.setItem("authToken", data.session._id);
         setUser(data.user);
         navigate("/");
       })

@@ -1,142 +1,117 @@
 import { Router } from "express";
-import bcrypt from "bcrypt";
-import db from "../models";
+
+import User from "../models/User";
+import UserSession from "../models/UserSession";
+
 const router = Router();
 
-router.get("/", (req, res) => {
-  db.user
-    .findAll()
-    .then(users => {
-      res.send(users);
+// Get All Users
+router.get("/", async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (err) {
+    res.json(err);
+  }
+});
+
+// Register an User
+router.post("/signup", (req, res) => {
+  const { name, password, address, zip_code, phone } = req.body;
+  const email = req.body.email.toLowerCase();
+
+  if (!name || !email || !password || !address) {
+    return res.status(422).send({ success: false, message: "Por favor preencha todos o campos" });
+  }
+
+  User.findOne({ email })
+    .then(foundUser => {
+      if (foundUser) {
+        return res
+          .status(422)
+          .send({ success: false, message: `O e-mail "${email}" já está sendo utilizado` });
+      }
+
+      const user = new User({
+        name,
+        email,
+        address,
+        zip_code,
+        phone,
+      });
+
+      user.password = User.generateHash(password);
+
+      user
+        .save()
+        .then(user => {
+          const userSession = new UserSession({
+            userId: user._id,
+          });
+          userSession
+            .save()
+            .then(session => res.json(session))
+            .catch(err => res.json(err));
+        })
+        .catch(err => res.status(500).json(err));
     })
-    .catch(err => console.error(err));
+    .catch(err => res.status(500).json(err));
 });
 
-router.post("/", (req, res) => {
-  const { name, email } = req.body;
-  db.user
-    .create({ name, email })
-    .then(() => res.sendStatus(201))
-    .catch(err => console.error(err));
+// Login Handle
+router.post("/login", (req, res, next) => {
+  const { password } = req.body;
+  const email = req.body.email.toLowerCase();
+
+  User.findOne({ email })
+    .then(user => {
+      if (!user || !user.validPassword(password)) {
+        return res.status(422).send({ success: false, message: "E-mail ou senha incorretos" });
+      }
+
+      const userSession = new UserSession({
+        userId: user._id,
+      });
+      userSession
+        .save()
+        .then(session => res.status(201).json({ user, session }))
+        .catch(err => res.json(err));
+    })
+    .catch(err => res.status(500).json(err));
 });
 
-router.post("/signup", async (req, res) => {
-  // hash the password provided by the user with bcrypt so that
-  // we are never storing plain text passwords
-  const hash = bcrypt.hashSync(req.body.password, 10);
+// Check if user is logged in
+router.get("/session", (req, res) => {
+  const { token } = req && req.query;
 
-  try {
-    // create a new user with the password hash from bcrypt
-    let user = await db.user.create(Object.assign(req.body, { password: hash }));
-
-    // data will be an object with the user and it's authToken
-    let data = await user.authorize();
-
-    // send back the new user and auth token to the
-    // client { user, authToken }
-    return res.send(data);
-  } catch (err) {
-    console.log(err);
-    return res.status(400).send(err);
-  }
+  UserSession.findOne({
+    _id: token,
+  })
+    .then(session => {
+      if (session) {
+        User.findById(session.userId).then(user => res.status(200).json(user));
+      } else {
+        res.status(404).send({ success: false, message: "Sessão não encontrada" });
+      }
+    })
+    .catch(err => res.status(500).json(err));
 });
 
-router.put("/signup", async (req, res) => {
-  let hash = null;
-  if (req.body.password !== "") hash = bcrypt.hashSync(req.body.password, 10);
+// Logout Handle
+router.delete("/logout", (req, res) => {
+  const { token } = req && req.query;
 
-  try {
-    const user = await db.user.findByPk(req.body.id);
-    await user.update(
-      {
-        ...req.body,
-        ...(hash && { password: hash }),
-      },
-      {
-        fields: Object.keys(req.body).filter(key => !(key === "password" && req.body[key] === "")),
-      },
-    );
-
-    await user.save();
-
-    return res.send(user);
-  } catch (err) {
-    console.log(err);
-    return res.status(400).send(err);
-  }
-});
-
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  // if the email / password is missing, we use status code 400
-  // indicating a bad request was made and send back a message
-  if (!email || !password) {
-    return res.status(400).send("Request missing email or password param");
-  }
-
-  try {
-    let user = await db.user.authenticate(email, password);
-    // user = await user.authorize();
-
-    return res.send(user);
-  } catch (err) {
-    console.log(err);
-    return res.status(400).send("invalid email or password");
-  }
-});
-
-router.delete("/logout", async (req, res) => {
-  // because the logout request needs to be send with
-  // authorization we should have access to the user
-  // on the req object, so we will try to find it and
-  // call the model method logout
-  const { user, auth_token: authToken } = req.body;
-
-  // we only want to attempt a logout if the user is
-  // present in the req object, meaning it already
-  // passed the authentication middleware. There is no reason
-  // the authToken should be missing at this point, check anyway
-  if (user && authToken) {
-    try {
-      const foundUser = await db.user.findByPk(user.id);
-      await foundUser.logout(authToken);
-      return res.status(204).send();
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  // if the user missing, the user is not logged in, hence we
-  // use status code 400 indicating a bad request was made
-  // and send back a message
-  return res.status(400).send({ errors: [{ message: "not authenticated" }] });
-});
-
-router.post("/session", async (req, res) => {
-  const { auth_token: authToken } = req.body;
-
-  // if the email / password is missing, we use status code 400
-  // indicating a bad request was made and send back a message
-  if (!authToken) {
-    return res.status(400).send("No auth token sent");
-  }
-
-  try {
-    let user = await db.user.findByAuthToken(authToken);
-
-    return res.send(user);
-  } catch (err) {
-    console.log(err);
-    return res.status(400).send("Invalid auth token");
-  }
-});
-
-router.get("/me", (req, res) => {
-  if (req.user) {
-    return res.send(req.user);
-  }
-  res.status(404).send({ errors: [{ message: "missing auth token" }] });
+  UserSession.findOneAndDelete({
+    _id: token,
+  })
+    .then(session => {
+      if (session) {
+        res.status(200).json(session);
+      } else {
+        res.status(404).send({ success: false, message: "Sessão não encontrada" });
+      }
+    })
+    .catch(err => res.status(500).json(err));
 });
 
 export default router;

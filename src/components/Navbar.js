@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faBars } from "@fortawesome/free-solid-svg-icons";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 
+import { objectToQueryString } from "Utils";
+
 import Button from "base-components/Button";
 import LoginModal from "components/LoginModal";
 import ShoppingCartModal from "components/ShoppingCartModal";
@@ -36,17 +38,16 @@ const Navbar = props => {
   }, [isMobile]);
 
   const logout = () => {
-    fetch("/api/users/logout", {
+    const params = { token: window.localStorage.getItem("authToken") };
+    fetch(`/api/users/logout?${objectToQueryString(params)}`, {
       method: "DELETE",
-      body: JSON.stringify({ user, auth_token: window.localStorage.getItem("authToken") }),
       headers: { "Content-Type": "application/json" },
     })
       .then(res => {
-        console.log(res.status);
-        if (res.status === 204) {
+        if (res.status === 200) {
           window.localStorage.removeItem("authToken");
-          navigate("/");
           setUser(null);
+          navigate("/");
         }
       })
       .catch(err => console.error(err));
@@ -141,9 +142,12 @@ const Navbar = props => {
           setLoginModalOpen(false);
         }}
       />
-      <ShoppingCartModal toggleCart={() => {
-        setShoppingCartOpen(!shoppingCartOpen);
-      }} isOpen={shoppingCartOpen} />
+      <ShoppingCartModal
+        toggleCart={() => {
+          setShoppingCartOpen(!shoppingCartOpen);
+        }}
+        isOpen={shoppingCartOpen}
+      />
     </>
   );
 };

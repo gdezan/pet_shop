@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
-import dbPet from "dbPet";
 
 import Divider from "base-components/Divider";
 
@@ -25,16 +24,6 @@ const Details = ({ client }) => {
 
 const UserDashboard = () => {
   const { user } = useContext(UserContext);
-  const [posts,setPosts] = useState("");
-
-  useEffect(() => {
-    const getPosts = async() => {
-      let allPosts = await dbPet.posts.toArray();
-      console.log(allPosts);
-      setPosts(allPosts);
-    };
-    getPosts();
-  },[]);
 
   if (!user) return null;
 
@@ -56,7 +45,7 @@ const UserDashboard = () => {
       {/* <Divider title="Agendar um serviço" />
       <Scheduler /> */}
       <Divider title="Meus pets" />
-      <PetList pets={posts} />
+      {/* <PetList pets={posts} /> */}
     </Wrapper>
   );
 };

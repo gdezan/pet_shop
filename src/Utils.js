@@ -32,3 +32,9 @@ export const formatters = {
     return parseInt(value.replace(/[^0-9]|^0+/g, "")) / 100;
   },
 };
+
+export const objectToQueryString = obj => {
+  return Object.keys(obj)
+    .map(key => key + "=" + obj[key])
+    .join("&");
+};

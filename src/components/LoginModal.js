@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import styled, { css } from "styled-components";
 import { Link } from "@reach/router";
 import { useForm } from "hooks";
-import SweetAlert from 'sweetalert2-react';
+import SweetAlert from "sweetalert2-react";
 
 import Button from "base-components/Button";
 import TextField from "base-components/TextField";
@@ -17,10 +17,10 @@ const LoginModal = ({ isOpen, onLogin, toggleLogin }) => {
       method: "POST",
       body: JSON.stringify(values),
       headers: { "Content-Type": "application/json" },
-    })      
+    })
       .then(res => res.json())
       .then(data => {
-        window.localStorage.setItem("authToken", data.authToken.token);
+        window.localStorage.setItem("authToken", data.session._id);
         setUser(data.user);
         onLogin();
       })
