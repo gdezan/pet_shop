@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import { Link, navigate } from "@reach/router";
 import { useForm } from "hooks";
+import Swal from "sweetalert2";
 
 import Button from "base-components/Button";
 import TextField from "base-components/TextField";
@@ -17,11 +18,12 @@ const Login = () => {
     })
       .then(res => res.json())
       .then(data => {
+        if (data.error) throw data;
         window.localStorage.setItem("authToken", data.session._id);
         setUser(data.user);
         navigate("/");
       })
-      .catch(err => console.error(err));
+      .catch(err => Swal.fire("Erro", err.message, "error"));
   };
 
   const { values, handleChange, handleSubmit } = useForm(submit);

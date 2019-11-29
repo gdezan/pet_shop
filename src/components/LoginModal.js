@@ -1,15 +1,14 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import styled, { css } from "styled-components";
 import { Link } from "@reach/router";
 import { useForm } from "hooks";
-import SweetAlert from "sweetalert2-react";
+import Swal from "sweetalert2";
 
 import Button from "base-components/Button";
 import TextField from "base-components/TextField";
 import { UserContext } from "components/UserContext";
 
 const LoginModal = ({ isOpen, onLogin, toggleLogin }) => {
-  const [wrongPW, setWrongPW] = useState(false);
   const { setUser } = useContext(UserContext);
 
   const submit = () => {
@@ -20,14 +19,14 @@ const LoginModal = ({ isOpen, onLogin, toggleLogin }) => {
     })
       .then(res => res.json())
       .then(data => {
+        if (data.error) throw data;
         window.localStorage.setItem("authToken", data.session._id);
         setUser(data.user);
         onLogin();
       })
       .catch(err => {
-        setWrongPW(true);
+        Swal.fire("Erro", err.message, "error");
         toggleLogin();
-        console.error(err);
       });
   };
 
@@ -54,12 +53,6 @@ const LoginModal = ({ isOpen, onLogin, toggleLogin }) => {
       </StyledButton>
       <StyledLink to="forgot_password">Esqueceu a senha?</StyledLink>
       <StyledLink to="signup">Cadastre-se</StyledLink>
-      <SweetAlert
-        show={wrongPW}
-        title="E-mail e/ou senha errados"
-        text="Tente fazer seu login novamente."
-        onConfirm={() => setWrongPW(false)}
-      />
     </LoginWrapper>
   );
 };

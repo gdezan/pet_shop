@@ -6,8 +6,9 @@ const UserSchema = mongoose.Schema({
   password: { type: String, required: true },
   name: { type: String, required: true },
   address: String,
-  zip_code: String,
+  zipCode: String,
   phone: String,
+  imagePath: { type: String, default: null },
   isAdmin: { type: Boolean, default: false },
 });
 

@@ -9,6 +9,7 @@ import Scheduler from "components/Scheduler";
 import { UserContext } from "components/UserContext";
 
 const Details = ({ client }) => {
+  console.log(client);
   return (
     <DetailsWrapper>
       <DetailsText>
@@ -17,7 +18,7 @@ const Details = ({ client }) => {
         <DetailsLine>Endereço: {client.address}</DetailsLine>
         <DetailsLine>{client.city}</DetailsLine>
       </DetailsText>
-      {/* <DetailsImage src={client.profile_img} alt="Profile Picture" /> */}
+      <DetailsImage src={require(`../../${client.imagePath}`)} alt="Profile Picture" />
     </DetailsWrapper>
   );
 };
@@ -33,6 +34,7 @@ const UserDashboard = () => {
     email: user.email,
     address: addressArr.slice(0, 3).join(", "),
     city: addressArr.slice(3, 5).join(", "),
+    imagePath: user.imagePath,
   };
 
   return (

@@ -3,45 +3,54 @@ import { navigate } from "@reach/router";
 import styled from "styled-components";
 import cepPromise from "cep-promise";
 import { useForm } from "hooks";
-import SweetAlert from "sweetalert2-react";
+import Swal from "sweetalert2";
 
 import TextField from "base-components/TextField";
 import Button from "base-components/Button";
 import { UserContext } from "components/UserContext";
 
 const SignUp = () => {
-  const [image, setImage] = useState(require("assets/img/profile.png"));
-  const [signUp, setSignUp] = useState(false);
-  const [signedEmail, setSignedEmail] = useState(false);
+  const [image, setImage] = useState(null);
   const { setUser } = useContext(UserContext);
 
   const submit = () => {
     const { email, password, phone } = values;
+
+    const formData = new FormData();
+    image && formData.append("image", image);
 
     const body = {
       name: `${values.name} ${values.surname}`,
       email,
       password,
       phone,
-      zip_code: values.cep,
+      zipCode: values.cep,
       address: `${values.street}, ${values.addressnumber}, ${values.nbhood}, ${values.city}, ${values.state}`,
     };
 
+    Object.keys(body).forEach(
+      key => body[key] && body[key].length && formData.append(key, body[key]),
+    );
+
     fetch("/api/users/signup", {
       method: "POST",
-      body: JSON.stringify(body),
-      headers: { "Content-Type": "application/json" },
+      body: formData,
     })
       .then(res => res.json())
       .then(data => {
+        if (data.error) throw data;
         window.localStorage.setItem("authToken", data.session._id);
         setUser(data.user);
-        setSignUp(true);
-        navigate("/");
+        Swal.fire({
+          title: "Sucesso!",
+          text: "Usuário cadastrado",
+          icon: "success",
+        }).then(() => {
+          navigate("/");
+        });
       })
       .catch(err => {
-        setSignedEmail(true);
-        console.error(err);
+        Swal.fire("Erro", err.message, "error");
       });
   };
 
@@ -69,14 +78,19 @@ const SignUp = () => {
   return (
     <Wrapper id="signup" onSubmit={handleSubmit}>
       <Title>Cadastre-se</Title>
-      <Img src={image} id="outputImg"></Img>
+      <Img
+        src={(image && URL.createObjectURL(image)) || require("assets/img/profile.png")}
+        id="outputImg"
+      ></Img>
       <ImageField
         label={"Image"}
         id="inputImg"
         type="file"
         accept="image/*"
-        onChange={event => setImage(URL.createObjectURL(event.target.files[0]))}
-      ></ImageField>
+        onChange={event => {
+          setImage(event.target.files[0]);
+        }}
+      />
       <Form>
         <FormRow>
           <TextField
@@ -85,7 +99,7 @@ const SignUp = () => {
             name="name"
             type="text"
             lightBg
-            value={values.name}
+            value={values.name || ""}
             onChange={handleChange}
           />
           <Pusher />
@@ -95,7 +109,7 @@ const SignUp = () => {
             name="surname"
             type="text"
             lightBg
-            value={values.surname}
+            value={values.surname || ""}
             onChange={handleChange}
           />
         </FormRow>
@@ -106,7 +120,7 @@ const SignUp = () => {
             name="email"
             type="email"
             lightBg
-            value={values.email}
+            value={values.email || ""}
             onChange={handleChange}
           />
           <Pusher />
@@ -116,7 +130,7 @@ const SignUp = () => {
             name="password"
             type="password"
             lightBg
-            value={values.password}
+            value={values.password || ""}
             onChange={handleChange}
           />
         </FormRow>
@@ -127,7 +141,7 @@ const SignUp = () => {
             name="phone"
             type="phone"
             lightBg
-            value={values.phone}
+            value={values.phone || ""}
             onChange={handleChange}
           />
           <Pusher />
@@ -139,7 +153,7 @@ const SignUp = () => {
             size="10"
             maxlength="9"
             lightBg
-            value={values.cep}
+            value={values.cep || ""}
             onChange={handleChange}
             onBlur={searchCep}
           />
@@ -152,7 +166,7 @@ const SignUp = () => {
             type="text"
             size="60"
             lightBg
-            value={values.street}
+            value={values.street || ""}
             onChange={handleChange}
           />
         </FormRow>
@@ -164,7 +178,7 @@ const SignUp = () => {
             type="text"
             size="40"
             lightBg
-            value={values.nbhood}
+            value={values.nbhood || ""}
             onChange={handleChange}
           />
           <Pusher />
@@ -174,7 +188,7 @@ const SignUp = () => {
             name="addressnumber"
             type="text"
             lightBg
-            value={values.addressnumber}
+            value={values.addressnumber || ""}
             onChange={handleChange}
           />
         </FormRow>
@@ -186,7 +200,7 @@ const SignUp = () => {
             type="text"
             size="40"
             lightBg
-            value={values.city}
+            value={values.city || ""}
             onChange={handleChange}
           />
           <Pusher />
@@ -197,7 +211,7 @@ const SignUp = () => {
             type="text"
             size="2"
             lightBg
-            value={values.state}
+            value={values.state || ""}
             onChange={handleChange}
           />
         </FormRow>
@@ -209,18 +223,6 @@ const SignUp = () => {
       >
         CADASTRAR
       </Button>
-      <SweetAlert
-        show={signedEmail}
-        title="E-mail já cadastrado"
-        text="Você já possui um e-mail cadastrado."
-        onConfirm={() => setSignedEmail(false)}
-      />
-      <SweetAlert
-        show={signUp}
-        title="Cadastro concluído"
-        text="Seu cadastro foi concluído com sucesso!"
-        onConfirm={() => setSignUp(false)}
-      />
     </Wrapper>
   );
 };

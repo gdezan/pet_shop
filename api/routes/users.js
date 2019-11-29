@@ -17,28 +17,40 @@ router.get("/", async (req, res) => {
 
 // Register an User
 router.post("/signup", (req, res) => {
-  const { name, password, address, zip_code, phone } = req.body;
-  const email = req.body.email.toLowerCase();
+  const { name, password, address, zipCode, phone } = req.body;
+  const email = req.body.email && req.body.email.toLowerCase();
 
-  if (!name || !email || !password || !address) {
-    return res.status(422).send({ success: false, message: "Por favor preencha todos o campos" });
+  if (!name || !email || !password || !address || !zipCode || !phone) {
+    return res.status(400).send({ error: true, message: "Por favor preencha todos o campos" });
   }
 
   User.findOne({ email })
     .then(foundUser => {
       if (foundUser) {
         return res
-          .status(422)
-          .send({ success: false, message: `O e-mail "${email}" já está sendo utilizado` });
+          .status(400)
+          .send({ error: true, message: `O e-mail "${email}" já está sendo utilizado` });
       }
 
       const user = new User({
         name,
         email,
         address,
-        zip_code,
+        zipCode,
         phone,
       });
+
+      if (req.files) {
+        const { image } = req.files;
+        const imagePath = `public/uploads/${image.name}`;
+        image.mv(`${__dirname}/../../${imagePath}`, err => {
+          if (err) {
+            console.log(err);
+            return res.status(500).send(err);
+          }
+        });
+        user.imagePath = imagePath;
+      }
 
       user.password = User.generateHash(password);
 
@@ -50,12 +62,24 @@ router.post("/signup", (req, res) => {
           });
           userSession
             .save()
-            .then(session => res.json(session))
-            .catch(err => res.json(err));
+            .then(session => {
+              console.log(user);
+              res.status(201).json({ user, session });
+            })
+            .catch(err => {
+              console.log(err);
+              res.status(500).json(err);
+            });
         })
-        .catch(err => res.status(500).json(err));
+        .catch(err => {
+          console.log(err);
+          res.status(500).json(err);
+        });
     })
-    .catch(err => res.status(500).json(err));
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 // Login Handle
@@ -66,7 +90,7 @@ router.post("/login", (req, res, next) => {
   User.findOne({ email })
     .then(user => {
       if (!user || !user.validPassword(password)) {
-        return res.status(422).send({ success: false, message: "E-mail ou senha incorretos" });
+        return res.status(400).send({ error: true, message: "E-mail ou senha incorretos" });
       }
 
       const userSession = new UserSession({
@@ -77,7 +101,10 @@ router.post("/login", (req, res, next) => {
         .then(session => res.status(201).json({ user, session }))
         .catch(err => res.json(err));
     })
-    .catch(err => res.status(500).json(err));
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 // Check if user is logged in
@@ -89,12 +116,18 @@ router.get("/session", (req, res) => {
   })
     .then(session => {
       if (session) {
-        User.findById(session.userId).then(user => res.status(200).json(user));
+        User.findById(session.userId).then(user => {
+          console.log(user);
+          res.status(200).json(user);
+        });
       } else {
-        res.status(404).send({ success: false, message: "Sessão não encontrada" });
+        res.status(404).send({ error: true, message: "Sessão não encontrada" });
       }
     })
-    .catch(err => res.status(500).json(err));
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 // Logout Handle
@@ -108,7 +141,7 @@ router.delete("/logout", (req, res) => {
       if (session) {
         res.status(200).json(session);
       } else {
-        res.status(404).send({ success: false, message: "Sessão não encontrada" });
+        res.status(404).send({ error: true, message: "Sessão não encontrada" });
       }
     })
     .catch(err => res.status(500).json(err));
