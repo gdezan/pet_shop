@@ -1,50 +1,80 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { navigate } from "@reach/router";
 import styled from "styled-components";
 import cepPromise from "cep-promise";
 import { useForm } from "hooks";
+import Swal from "sweetalert2";
 
 import TextField from "base-components/TextField";
 import Button from "base-components/Button";
 import { UserContext } from "components/UserContext";
 
 const EditAccount = () => {
-  const [image, setImage] = useState(require("assets/img/profile.png"));
   const { user, setUser } = useContext(UserContext);
+  const [image, setImage] = useState(null);
+  const [imageWasChanged, setImageWasChanged] = useState(null);
 
   const submit = () => {
-    const { password, phone } = values;
+    const { email, password, phone } = values;
+
+    const formData = new FormData();
+    if (imageWasChanged) {
+      image && formData.append("image", image);
+    }
 
     const body = {
-      id: user.id,
       name: `${values.name} ${values.surname}`,
+      email,
       password,
       phone,
-      zip_code: values.cep,
+      zipCode: values.cep,
       address: `${values.street}, ${values.addressnumber}, ${values.nbhood}, ${values.city}, ${values.state}`,
     };
 
-    fetch("/api/users/signup", {
+    Object.keys(body).forEach(
+      key => body[key] && body[key].length && formData.append(key, body[key]),
+    );
+
+    // Request to update the user
+    fetch(`/api/users/${user._id}`, {
       method: "PUT",
-      body: JSON.stringify(body),
-      headers: { "Content-Type": "application/json" },
+      body: formData,
     })
       .then(res => res.json())
       .then(data => {
-        setUser(data);
-        navigate("/");
+        if (data.error) throw data;
+
+        // If there is no error, fetch the current user information
+        // I'm not sure how to send the updated user via the PUT request response, so as of now,
+        // we are fetching it from the server with a GET request
+        fetch(`/api/users/${user._id}`, {
+          method: "GET",
+        })
+          .then(res => res.json())
+          .then(user => {
+            Swal.fire({
+              title: "Sucesso!",
+              text: "Usuário atualizado",
+              icon: "success",
+            }).then(() => {
+              setUser(user);
+              navigate("/");
+            });
+          });
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        Swal.fire("Erro", err.message, "error");
+      });
   };
 
-  const addressArr = user ? user.address.split(", ") : [];
+  const addressArr = user && user.address ? user.address.split(", ") : [];
   const initialValues = user
     ? {
         name: user.name.split(" ")[0],
         surname: user.name.split(" ")[1],
         phone: user.phone,
         password: "",
-        cep: user.zip_code,
+        cep: user.zipCode,
         street: addressArr[0],
         addressnumber: addressArr[1],
         nbhood: addressArr[2],
@@ -53,7 +83,7 @@ const EditAccount = () => {
       }
     : {};
 
-  const { values, handleChange, handleSubmit, changeValues } = useForm(submit, initialValues);
+  let { values, handleChange, handleSubmit, changeValues } = useForm(submit, initialValues);
 
   const searchCep = () => {
     if (!values.cep) {
@@ -77,13 +107,25 @@ const EditAccount = () => {
   return (
     <Wrapper id="update" onSubmit={handleSubmit}>
       <Title>Cadastre-se</Title>
-      <Img src={image} id="outputImg"></Img>
+      <Img
+        src={
+          image
+            ? URL.createObjectURL(image)
+            : user && user.imagePath
+            ? require(`../../${user.imagePath}`)
+            : require("assets/img/profile.png")
+        }
+        id="outputImg"
+      />
       <ImageField
         label={"Image"}
         id="inputImg"
         type="file"
         accept="image/*"
-        onChange={event => setImage(URL.createObjectURL(event.target.files[0]))}
+        onChange={event => {
+          setImage(event.target.files[0]);
+          setImageWasChanged(true);
+        }}
       ></ImageField>
       <Form>
         <FormRow>
@@ -93,7 +135,7 @@ const EditAccount = () => {
             name="name"
             type="text"
             lightBg
-            value={values.name}
+            value={values.name || ""}
             onChange={handleChange}
           />
           <Pusher />
@@ -103,7 +145,7 @@ const EditAccount = () => {
             name="surname"
             type="text"
             lightBg
-            value={values.surname}
+            value={values.surname || ""}
             onChange={handleChange}
           />
         </FormRow>
@@ -114,7 +156,7 @@ const EditAccount = () => {
             name="password"
             type="password"
             lightBg
-            value={values.password}
+            value={values.password || ""}
             onChange={handleChange}
           />
         </FormRow>
@@ -125,7 +167,7 @@ const EditAccount = () => {
             name="phone"
             type="phone"
             lightBg
-            value={values.phone}
+            value={values.phone || ""}
             onChange={handleChange}
           />
           <Pusher />
@@ -137,7 +179,7 @@ const EditAccount = () => {
             size="10"
             maxlength="9"
             lightBg
-            value={values.cep}
+            value={values.cep || ""}
             onChange={handleChange}
             onBlur={searchCep}
           />
@@ -150,7 +192,7 @@ const EditAccount = () => {
             type="text"
             size="60"
             lightBg
-            value={values.street}
+            value={values.street || ""}
             onChange={handleChange}
           />
         </FormRow>
@@ -162,7 +204,7 @@ const EditAccount = () => {
             type="text"
             size="40"
             lightBg
-            value={values.nbhood}
+            value={values.nbhood || ""}
             onChange={handleChange}
           />
           <Pusher />
@@ -172,7 +214,7 @@ const EditAccount = () => {
             name="addressnumber"
             type="text"
             lightBg
-            value={values.addressnumber}
+            value={values.addressnumber || ""}
             onChange={handleChange}
           />
         </FormRow>
@@ -184,7 +226,7 @@ const EditAccount = () => {
             type="text"
             size="40"
             lightBg
-            value={values.city}
+            value={values.city || ""}
             onChange={handleChange}
           />
           <Pusher />
@@ -195,7 +237,7 @@ const EditAccount = () => {
             type="text"
             size="2"
             lightBg
-            value={values.state}
+            value={values.state || ""}
             onChange={handleChange}
           />
         </FormRow>

@@ -1,96 +1,117 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
-import SweetAlert from "sweetalert2-react";
 import { navigate } from "@reach/router";
+import { useForm } from "hooks";
+import Swal from "sweetalert2";
 
 import TextField from "base-components/TextField";
 import Button from "base-components/Button";
+import { UserContext } from "components/UserContext";
 
 const SignUpPet = () => {
-  const [postImg, setImg] = useState(require("assets/img/profile.png"));
-  const [postName, setName] = useState("");
-  const [postRace, setRace] = useState("");
-  const [postAge, setAge] = useState("");
-  const [signedPet, setSignedPet] = useState(false);
+  const [image, setImage] = useState(null);
+  const { user } = useContext(UserContext);
 
-  const getFile = e => {
-    let reader = new FileReader();
-    reader.readAsDataURL(e[0]);
-    reader.onload = e => {
-      setImg(reader.result);
-    };
+  const submit = () => {
+    const { name, breed, age } = values;
+    console.log(values);
+    if (!name || !breed || !age) {
+      return Swal.fire("Erro", "Preencha todos os campos", "error");
+    }
+
+    const formData = new FormData();
+    image && formData.append("image", image);
+
+    const body = { name, breed, age };
+
+    Object.keys(body).forEach(
+      key => body[key] && body[key].length && formData.append(key, body[key]),
+    );
+
+    fetch(`/api/users/${user._id}/pets`, {
+      method: "POST",
+      body: formData,
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) throw data;
+        Swal.fire({
+          title: "Sucesso!",
+          text: "Pet cadastrado",
+          icon: "success",
+        }).then(() => {
+          navigate("/user");
+        });
+      })
+      .catch(err => {
+        Swal.fire("Erro", err.message, "error");
+      });
   };
 
-  // const submit = e => {
-  //   e.preventDefault();
-  //   if(postImg !== "" && postName !== "" && postRace !== "" && postAge !== ""){
-  //     let post = {
-  //       img: postImg,
-  //       name: postName,
-  //       race: postRace,
-  //       age: postAge,
-  //       scheduled_services: []
-  //     };
-  //     setSignedPet(true);
-  //     navigate("/user");
-  //   }
-  // };
+  const { values, handleChange, handleSubmit } = useForm(submit);
 
   return (
-    <Wrapper>
+    <Wrapper id="signup_pet" onSubmit={handleSubmit}>
       <Title>Cadastre seu pet</Title>
-      <Img src={postImg} id="outputImg"></Img>
+      <Img
+        src={(image && URL.createObjectURL(image)) || require("assets/img/profile.png")}
+        id="outputImg"
+      />
       <ImageField
-        label={"Image"}
+        abel={"Image"}
         id="inputImg"
         type="file"
         accept="image/*"
-        onChange={e => getFile(e.target.files)}
-      ></ImageField>
+        onChange={event => {
+          setImage(event.target.files[0]);
+        }}
+      />
       <Form>
         <FormRow>
           <TextField
-            onChange={e => setName(e.target.value)}
             label={"Nome"}
             id="name"
+            name="name"
             type="text"
             lightBg
-          ></TextField>
+            value={values.name || ""}
+            onChange={handleChange}
+          />
         </FormRow>
         <FormRow>
           <TextField
-            onChange={e => setRace(e.target.value)}
             label={"Raça"}
-            id="race"
+            id="breed"
+            name="breed"
             type="text"
             lightBg
-          ></TextField>
+            value={values.breed || ""}
+            onChange={handleChange}
+          />
           <Pusher />
           <TextField
-            onChange={e => setAge(e.target.value)}
-            label={"Idade"}
+            label={"Idade (Anos)"}
             id="age"
+            name="age"
             type="number"
-            min="1"
-            max="200"
+            min="0"
+            max="25"
+            value={values.age || ""}
+            onChange={handleChange}
             lightBg
-          ></TextField>
+          />
         </FormRow>
       </Form>
-      {/* <Button onClick={e => submit(e)}>CADASTRAR</Button> */}
-      <SweetAlert
-        show={signedPet}
-        title="Pet cadastrado"
-        text="Seu pet foi cadastrado com sucesso!"
-        onConfirm={() => setSignedPet(false)}
-      />
+      <Button type="submit" form="signup_pet">
+        CADASTRAR
+      </Button>
     </Wrapper>
   );
 };
 
 export default SignUpPet;
 
-const Wrapper = styled.div`
+const Wrapper = styled.form`
   background-color: white;
   width: 90%;
   margin: 120px auto;
@@ -131,7 +152,7 @@ const ImageField = styled.input`
   background-color: #f5f5f5;
 `;
 
-const Form = styled.form`
+const Form = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;

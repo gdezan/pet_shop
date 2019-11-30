@@ -104,7 +104,7 @@ function App() {
             <SignUp path="signup" />
             <SignUpPet path="signup_pet" />
             <AddProductWithAuth path="add_product" />
-            <EditAccount path="edit_account" />
+            {user && <EditAccount path="edit_account" />}
             <UserDashboardWithAuth path="user" />
             <AdminDashboardWithAuth path="admin" />
             <UserListWithAuth path="user_list" />

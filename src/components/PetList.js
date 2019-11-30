@@ -4,30 +4,30 @@ import { format } from "date-fns";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock } from "@fortawesome/free-regular-svg-icons";
 
+import device from "assets/device";
+
 const Pet = ({ name, img, breed, age, services }) => {
   return (
     <PetWrapper>
-      <Image src={img} alt="Pet image" />
+      <Image src={require(`../../${img}`)} alt="Pet image" />
       <Details>
         <PetName>{name}</PetName>
         <Text>Raça: {breed}</Text>
         <Text>Idade: {age} anos</Text>
-        <Text>
-          <FontAwesomeIcon icon={faClock} /> Serviços agendados:
-        </Text>
-        <ServicesWrapper>
-          {services.length ? (
-            <>
+        {services && services.length && (
+          <>
+            <Text>
+              <FontAwesomeIcon icon={faClock} /> Serviços agendados:
+            </Text>
+            <ServicesWrapper>
               {services.map(s => (
                 <Service key={s.id}>
                   {s.service} - {format(new Date(s.datetime), "dd/MM/yyyy - HH:mm")} ({s.price})
                 </Service>
               ))}
-            </>
-          ) : (
-            <></>
-          )}
-        </ServicesWrapper>
+            </ServicesWrapper>
+          </>
+        )}
       </Details>
     </PetWrapper>
   );
@@ -36,15 +36,15 @@ const Pet = ({ name, img, breed, age, services }) => {
 const PetList = ({ pets }) => {
   return (
     <PetListWrapper>
-      {pets.length ? (
+      {pets && pets.length ? (
         <>
           {pets.map(pet => (
             <Pet
-              key={pet.id}
+              key={pet._id}
               name={pet.name}
-              img={pet.img}
+              img={pet.imagePath}
               age={pet.age}
-              breed={pet.race}
+              breed={pet.breed}
               services={pet.scheduled_services}
             />
           ))}
@@ -71,15 +71,23 @@ const PetWrapper = styled.div`
   margin: 0 10px 20px;
   border: 1px solid #aaa;
   border-radius: 5px;
+  @media ${device.tablet} {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const Details = styled.div`
   margin-left: 30px;
+  @media ${device.tablet} {
+    width: 100%;
+    margin-top: 30px;
+  }
 `;
 
 const Image = styled.img`
-  height: 200px;
-  width: 200px;
+  max-width: 150px;
+  height: auto;
   object-fit: cover;
   border: 1px solid #ddd;
   border-radius: 4px;

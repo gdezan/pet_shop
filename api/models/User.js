@@ -1,6 +1,13 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
+const PetSchema = mongoose.Schema({
+  name: { type: String, required: true },
+  breed: { type: String, required: true },
+  age: { type: Number, required: true },
+  imagePath: { type: String, default: null },
+});
+
 const UserSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -10,6 +17,7 @@ const UserSchema = mongoose.Schema({
   phone: String,
   imagePath: { type: String, default: null },
   isAdmin: { type: Boolean, default: false },
+  pets: [PetSchema],
 });
 
 UserSchema.statics.generateHash = function(password) {

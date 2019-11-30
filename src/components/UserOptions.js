@@ -9,7 +9,7 @@ const UserOptions = () => {
   return (
     <Wrapper>
       <DashboardButton title="Editar Conta" icon={faEdit} path="/edit_account" />
-      {/* <DashboardButton title="Adicionar pets" icon={faPlus} path="/signup_pet" /> */}
+      <DashboardButton title="Adicionar pets" icon={faPlus} path="/signup_pet" />
       <DashboardButton title="Agendar um serviço" icon={faPlus} path="/schedule_service" />
     </Wrapper>
   );

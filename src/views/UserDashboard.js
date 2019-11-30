@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 
 import Divider from "base-components/Divider";
@@ -8,8 +8,9 @@ import PetList from "components/PetList";
 import Scheduler from "components/Scheduler";
 import { UserContext } from "components/UserContext";
 
+import device from "assets/device";
+
 const Details = ({ client }) => {
-  console.log(client);
   return (
     <DetailsWrapper>
       <DetailsText>
@@ -25,10 +26,9 @@ const Details = ({ client }) => {
 
 const UserDashboard = () => {
   const { user } = useContext(UserContext);
+  if (!user || !user.address) return null;
 
-  if (!user) return null;
-
-  const addressArr = user.address.split(", ");
+  const addressArr = user.address && user.address.split(", ");
   const client = {
     name: user.name,
     email: user.email,
@@ -47,7 +47,7 @@ const UserDashboard = () => {
       {/* <Divider title="Agendar um serviço" />
       <Scheduler /> */}
       <Divider title="Meus pets" />
-      {/* <PetList pets={posts} /> */}
+      <PetList pets={user.pets} />
     </Wrapper>
   );
 };
@@ -81,12 +81,25 @@ const DetailsWrapper = styled.div`
   box-sizing: border-box;
   align-items: center;
   padding: 20px 50px;
+  @media ${device.tablet} {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
 `;
-const DetailsText = styled.div``;
+
+const DetailsText = styled.div`
+  @media ${device.tablet} {
+    margin-top: 30px;
+    width: 100%;
+  }
+`;
+
 const DetailsLine = styled.p``;
 const DetailsImage = styled.img`
   border: 1px solid #ddd;
   border-radius: 4px;
   padding: 5px;
   width: 150px;
+  height: auto;
+  max-height: 200px;
 `;
