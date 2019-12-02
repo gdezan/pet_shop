@@ -29,7 +29,7 @@ export const masks = {
 
 export const formatters = {
   inputToPrice: value => {
-    return parseInt(value.replace(/[^0-9]|^0+/g, "")) / 100;
+    return parseInt(value.replace(/[^0-9]|^0+/g, ""));
   },
 };
 

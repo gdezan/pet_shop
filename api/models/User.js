@@ -6,6 +6,12 @@ const PetSchema = mongoose.Schema({
   breed: { type: String, required: true },
   age: { type: Number, required: true },
   imagePath: { type: String, default: null },
+  services: [
+    {
+      serviceId: { type: String, required: true },
+      date: { type: Date, required: true },
+    },
+  ],
 });
 
 const UserSchema = mongoose.Schema({

@@ -9,6 +9,8 @@ import TextField from "base-components/TextField";
 import Button from "base-components/Button";
 import { UserContext } from "components/UserContext";
 
+import device from "assets/device";
+
 const EditAccount = () => {
   const { user, setUser } = useContext(UserContext);
   const [image, setImage] = useState(null);
@@ -296,6 +298,8 @@ const ImageField = styled.input`
   box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.6);
   border-radius: 8px;
   background-color: #f5f5f5;
+  width: inherit;
+  max-width: 400px;
 `;
 
 const Form = styled.div`
@@ -310,6 +314,9 @@ const FormRow = styled.div`
   display: flex;
   width: 80%;
   padding: 5px 0;
+  @media ${device.tablet} {
+    width: 100%;
+  }
 `;
 
 const Pusher = styled.div`

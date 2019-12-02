@@ -1,9 +1,9 @@
 import users from "./users";
-// import pets from "./pets";
+import services from "./services";
 import products from "./products";
 
 export default {
   users,
-  // pets,
+  services,
   products,
 };

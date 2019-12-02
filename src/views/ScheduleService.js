@@ -1,65 +1,146 @@
-import React, { useState, useContext } from "react";
-import styled from "styled-components";
+import React, { useState, useContext, useEffect } from "react";
+import styled, { css } from "styled-components";
+import { navigate } from "@reach/router";
 import Flatpickr from "react-flatpickr";
+import Swal from "sweetalert2";
 
 import Button from "base-components/Button";
+import Divider from "base-components/Divider";
 import Select from "base-components/Select";
+
 import { UserContext } from "components/UserContext";
+
+import device from "assets/device";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar, faTrash } from "@fortawesome/free-solid-svg-icons";
 
-const AddProduct = () => {
-  const [type, setType] = useState("Banho");
+const SelectOptions = props => {
+  return (
+    <OptionsList>
+      {props.options.map(option => (
+        <OptionItem
+          key={option._id}
+          selected={props.selectedOption === option._id}
+          onClick={() => props.onClick(option._id)}
+        >
+          <OptionImg
+            alt={option.name}
+            src={
+              option.imagePath
+                ? require(`../../${option.imagePath}`)
+                : require("assets/img/profile.png")
+            }
+          />
+          <OptionDetails>
+            <OptionName>{option.name}</OptionName>
+            {props.type === "pets" && (
+              <>
+                <OptionLine>Raça: {option.breed}</OptionLine>
+                <OptionLine>Idade: {option.age} anos</OptionLine>
+              </>
+            )}
+            {props.type === "services" && (
+              <OptionLine>R$ {(option.price / 100).toFixed(2)}</OptionLine>
+            )}
+          </OptionDetails>
+        </OptionItem>
+      ))}
+    </OptionsList>
+  );
+};
+
+const times = {};
+for (let i = 9; i < 19; i++) {
+  times[`${i}00`] = { name: `${i}:00` };
+  times[`${i}30`] = { name: `${i}:30` };
+}
+
+const ScheduleService = () => {
+  const [availableServices, setAvailableServices] = useState([]);
   const [date, setDate] = useState();
+  const [time, setTime] = useState(times["900"]);
+  const [selectedService, setSelectedService] = useState(null);
+  const [selectedPet, setSelectedPet] = useState(null);
   const { user } = useContext(UserContext);
 
-  const onSubmit = () => {
+  useEffect(() => {
+    fetch("api/services", {
+      method: "GET",
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.errors) throw data;
+        setAvailableServices(data);
+      })
+      .catch(err => {
+        Swal.fire("Erro", err.message, "error");
+      });
+  }, []);
+
+  const onSubmit = e => {
+    e.preventDefault();
+    const dateString = `${date[0].toISOString().slice(0, 11)}${times[time].name}:00`;
     const body = {
-      type,
-      scheduled: date.toISOString(),
-      user_id: user.id,
+      date: dateString,
+      serviceId: selectedService,
+      petId: selectedPet,
     };
-    console.log(1);
-    // fetch("/api/services", {
-    //   method: "POST",
-    //   body: JSON.stringify(body),
-    //   headers: { "Content-Type": "application/json" },
-    // })
-    //   .then(res => res.json())
-    //   // .then(data => window.location.reload())
-    //   .catch(err => console.error(err));
+
+    fetch(`/api/users/${user._id}/schedule`, {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.errors) throw data;
+        Swal.fire({
+          title: "Sucesso!",
+          text: "Serviço agendado",
+          icon: "success",
+        }).then(() => {
+          navigate("/user");
+        });
+      })
+      .catch(err => {
+        Swal.fire("Erro", err.message, "error");
+      });
   };
 
-  const types = {
-    Banho: { name: "Banho", id: "bath" },
-    Tosa: { name: "Tosa", id: "shearing" },
-    Vacinação: { name: "Vacinação", id: "vaccine" },
-  };
+  if (!availableServices.length) return null;
 
   return (
     <Wrapper id="service" onSubmit={onSubmit}>
       <Title>Agendar serviço</Title>
       <Form>
+        <Divider title="Selecione o serviço" />
         <FormRow>
-          <Select
-            options={types}
-            value={types.name}
-            onChange={e => {
-              setType(types[e.target.value]);
-            }}
+          <SelectOptions
+            options={availableServices}
+            type="services"
+            selectedOption={selectedService}
+            onClick={id => setSelectedService(id)}
           />
         </FormRow>
+        <Divider title="Selecione o seu pet" />
+        <FormRow>
+          <SelectOptions
+            options={user.pets}
+            type="pets"
+            selectedOption={selectedPet}
+            onClick={id => setSelectedPet(id)}
+          />
+        </FormRow>
+        <Divider title="Selecione um dia" />
         <FormRow>
           <StyledFlatpickr
             value={date}
             onChange={date => setDate(date)}
             options={{
-              dateFormat: "d/m/Y - H:i",
+              dateFormat: "d/m/Y",
               minDate: new Date(),
               wrap: true,
-              enableTime: true,
-              time_24hr: true,
             }}
           >
             <DateInput type="text" placeholder="Selecione um dia" data-input />
@@ -73,6 +154,10 @@ const AddProduct = () => {
             </InputButton>
           </StyledFlatpickr>
         </FormRow>
+        <Divider title="Selecione um horário" />
+        <FormRow>
+          <Select options={times} value={time} onChange={e => setTime(e.target.value)} />
+        </FormRow>
       </Form>
       <Button type="submit" form="service">
         AGENDAR
@@ -81,7 +166,7 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default ScheduleService;
 
 const Wrapper = styled.form`
   background-color: white;
@@ -100,7 +185,7 @@ const Wrapper = styled.form`
 const Title = styled.h1`
   width: 95%;
   text-align: left;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
   padding-bottom: 10px;
   border-bottom: 1px solid black;
 `;
@@ -110,19 +195,26 @@ const Form = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 95%;
+
+  @media ${device.tablet} {
+    width: 100%;
+  }
 `;
 
 const FormRow = styled.div`
   display: flex;
-  width: 80%;
   padding: 5px 0;
+  width: 80%;
+  @media ${device.tablet} {
+    width: 100%;
+  }
 `;
 
 const StyledFlatpickr = styled(Flatpickr)`
   display: flex;
-  width: 80%;
   margin: 20px auto;
+  width: 100%;
 `;
 
 const DateInput = styled.input`
@@ -147,4 +239,70 @@ const InputButton = styled.a`
     color: #444;
     background-color: #f4f4f4;
   }
+`;
+
+const OptionsList = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 10px auto;
+  grid-column-gap: 20px;
+
+  @media ${device.tablet} {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const OptionItem = styled.div`
+  display: flex;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
+  margin: 10px 0;
+  transition: 0.2s all;
+  box-sizing: border-box;
+  height: 100px;
+  cursor: pointer;
+
+  &:hover {
+    ${props =>
+      !props.selected &&
+      css`
+        transform: translateY(-3px) scale(1.005);
+        box-shadow: 0px 3px 5px 2px rgba(0, 0, 0, 0.3);
+      `}
+  }
+
+  ${props =>
+    props.selected &&
+    css`
+      color: ${props => props.theme.strong};
+      border: 2px solid ${props => props.theme.strong};
+      background-color: ${props => props.theme.bg};
+      transform: translateY(0) scale(0.995);
+      box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0);
+    `}
+`;
+
+const OptionDetails = styled.div`
+  margin: 10px;
+`;
+
+const OptionImg = styled.img`
+  width: 60px;
+  height: 60px;
+  margin: 0 10px;
+`;
+
+const OptionName = styled.p`
+  font-size: 20px;
+  font-weight: bold;
+  margin: 5px 0;
+`;
+
+const OptionLine = styled.p`
+  margin: 5px 0;
+  font-size: 15px;
 `;

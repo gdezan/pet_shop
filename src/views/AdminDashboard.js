@@ -22,7 +22,7 @@ const AdminDashboard = () => {
         <DashboardButton title="Exibir administradores" icon={faUserCog} path="/admin_list" />
         <DashboardButton title="Exibir usuários" icon={faUsers} path="/user_list" />
         <DashboardButton title="Registrar Produtos" icon={faShoppingCart} path="/add_product" />
-        <DashboardButton title="Registrar Serviços" icon={faCalendarAlt} path="/schedule_service" />
+        <DashboardButton title="Criar Serviço" icon={faCalendarAlt} path="/create_service" />
       </AdminOptions>
       {/* <Divider title="Serviços" />
       <AdminOptions>

@@ -14,6 +14,13 @@ import LoginModal from "components/LoginModal";
 import ShoppingCartModal from "components/ShoppingCartModal";
 import { UserContext } from "components/UserContext";
 
+const pages = [
+  { name: "Home", path: "/" },
+  { name: "Cachorro", path: "dog_products" },
+  { name: "Gato", path: "cat_products" },
+  { name: "Outros Pets", path: "other_products" },
+];
+
 const Navbar = props => {
   const [isMobile, setMobile] = useState(window.innerWidth < parseInt(size.tablet));
   const [loginModalOpen, setLoginModalOpen] = useState(false);
@@ -80,9 +87,14 @@ const Navbar = props => {
             <FontAwesomeIcon icon={faArrowLeft} />
           </MenuButton>
           <LinksWrapper>
-            <PageLinks isMobile>{renderLinks(props.pages, true)}</PageLinks>
+            <PageLinks isMobile>{renderLinks(pages, true)}</PageLinks>
             {user ? (
               <MobileUserLinks>
+                {user.isAdmin && (
+                  <UserLink key="admin" onClick={() => setSideMenu(false)} to="/admin">
+                    Admin
+                  </UserLink>
+                )}
                 <UserLink key="user" onClick={() => setSideMenu(false)} to="/user">
                   Minha Conta
                 </UserLink>
@@ -110,10 +122,15 @@ const Navbar = props => {
   return (
     <>
       <Nav>
-        <PageLinks>{renderLinks(props.pages)}</PageLinks>
+        <PageLinks>{renderLinks(pages)}</PageLinks>
         <UserLinks>
           {user ? (
             <>
+              {user.isAdmin && (
+                <StyledLink key="admin" onClick={() => setSideMenu(false)} to="/admin">
+                  Admin
+                </StyledLink>
+              )}
               <StyledLink key="user" onClick={() => setSideMenu(false)} to="/user">
                 Minha Conta
               </StyledLink>

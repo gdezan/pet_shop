@@ -3,6 +3,7 @@ import { Router } from "express";
 import User from "../models/User";
 import UserSession from "../models/UserSession";
 import fs from "fs";
+import { fileUpload } from "../utils";
 
 const router = Router();
 
@@ -17,7 +18,7 @@ router.get("/", async (req, res) => {
 });
 
 // Register a User
-router.post("/signup", (req, res) => {
+router.post("/signup", async (req, res) => {
   const { name, password, address, zipCode, phone } = req.body;
   const email = req.body.email && req.body.email.toLowerCase();
 
@@ -25,50 +26,39 @@ router.post("/signup", (req, res) => {
     return res.status(400).send({ error: true, message: "Por favor preencha todos o campos" });
   }
 
-  User.findOne({ email })
-    .then(foundUser => {
-      if (foundUser) {
-        return res
-          .status(400)
-          .send({ error: true, message: `O e-mail "${email}" já está sendo utilizado` });
-      }
+  try {
+    const foundUser = await User.findOne({ email });
+    if (foundUser) {
+      return res
+        .status(400)
+        .send({ error: true, message: `O e-mail "${email}" já está sendo utilizado` });
+    }
 
-      const user = new User({
-        name,
-        email,
-        address,
-        zipCode,
-        phone,
-      });
-
-      if (req.files) {
-        const { image } = req.files;
-        const imagePath = `public/uploads/${user.id}/${image.name}`;
-        image.mv(`${__dirname}/../../${imagePath}`, err => {
-          if (err) {
-            console.log(err);
-            return res.status(500).send(err);
-          }
-        });
-        user.imagePath = imagePath;
-      }
-
-      user.password = User.generateHash(password);
-
-      user.save().then(user => {
-        const userSession = new UserSession({
-          userId: user._id,
-        });
-        userSession.save().then(session => {
-          console.log(user);
-          res.status(201).json({ user, session });
-        });
-      });
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json(err);
+    const user = new User({
+      name,
+      email,
+      address,
+      zipCode,
+      phone,
     });
+
+    if (req.files) {
+      user.imagePath = fileUpload(req.files, `${user._id}/${req.files.image.name}`);
+    }
+
+    user.password = User.generateHash(password);
+
+    const savedUser = await user.save();
+    const userSession = new UserSession({
+      userId: user._id,
+    });
+    const savedSession = await userSession.save();
+
+    return res.status(201).json({ savedUser, savedSession });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
 // Login Handle
@@ -166,6 +156,10 @@ router.put("/:userId", (req, res) => {
         return res.status(404).send({ error: true, message: `Usuário não encontrado` });
       }
 
+      if (password) {
+        user.password = User.generateHash(password);
+      }
+
       if (req.files) {
         const { image } = req.files;
         fs.unlink(`${__dirname}/../../${user.imagePath}`, err => {
@@ -232,6 +226,32 @@ router.post("/:userId/pets", (req, res) => {
       }
 
       user.pets.push(pet);
+      user.save().then(user => res.status(201).json(user));
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+// Schedule a service
+router.post("/:userId/schedule", (req, res) => {
+  User.findById(req.params.userId)
+    .then(user => {
+      if (!user) {
+        return res.status(404).send({ errors: true, message: "Usuário não encontrado" });
+      }
+      const { date, serviceId, petId } = req.body;
+      console.log(req.body);
+
+      const selectedPet = user.pets.find(pet => {
+        return pet._id.equals(petId);
+      });
+      if (!selectedPet) {
+        return res.status(404).send({ errors: true, message: "Pet não encontrado" });
+      }
+
+      selectedPet.services.push({ date, serviceId });
       user.save().then(user => res.status(201).json(user));
     })
     .catch(err => {

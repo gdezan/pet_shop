@@ -27,7 +27,7 @@ mongoose
 
 // Routes
 app.use("/api/users", routes.users);
-// app.use("/api/pets", routes.pets);
+app.use("/api/services", routes.services);
 app.use("/api/products", routes.products);
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}...`));

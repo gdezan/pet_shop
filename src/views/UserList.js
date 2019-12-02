@@ -32,7 +32,7 @@ const UserList = ({ adminUsers = false }) => {
             const inSearch =
               search === "" || user.name.toLowerCase().includes(search.toLowerCase());
             if (adminUsers) {
-              return user.is_admin && inSearch;
+              return user.isAdmin && inSearch;
             }
             return inSearch;
           })

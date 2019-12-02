@@ -13,7 +13,7 @@ const withAuthentication = (WrappedComponent, isAdmin = false) => {
 
     if (!user) return null;
 
-    if (isAdmin && !user.is_admin) {
+    if (isAdmin && !user.isAdmin) {
       return <Redirect to="/" noThrow />;
     }
 

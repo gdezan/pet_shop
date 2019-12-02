@@ -66,6 +66,9 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   font-family: "Raleway", sans-serif;
+  @media ${device.tablet} {
+    padding: 40px 10px;
+  }
 `;
 
 const Title = styled.h1`
@@ -84,6 +87,7 @@ const DetailsWrapper = styled.div`
   @media ${device.tablet} {
     flex-direction: column-reverse;
     align-items: center;
+    padding: 20px;
   }
 `;
 

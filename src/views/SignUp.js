@@ -9,6 +9,8 @@ import TextField from "base-components/TextField";
 import Button from "base-components/Button";
 import { UserContext } from "components/UserContext";
 
+import device from "assets/device";
+
 const SignUp = () => {
   const [image, setImage] = useState(null);
   const { setUser } = useContext(UserContext);
@@ -282,6 +284,9 @@ const FormRow = styled.div`
   display: flex;
   width: 80%;
   padding: 5px 0;
+  @media ${device.tablet} {
+    width: 100%;
+  }
 `;
 
 const Pusher = styled.div`
