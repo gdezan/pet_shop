@@ -28,7 +28,7 @@ const SelectOptions = props => {
             alt={option.name}
             src={
               option.imagePath
-                ? require(`../../${option.imagePath}`)
+                ? require(`../${option.imagePath}`)
                 : require("assets/img/profile.png")
             }
           />

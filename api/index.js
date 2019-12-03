@@ -30,4 +30,18 @@ app.use("/api/users", routes.users);
 app.use("/api/services", routes.services);
 app.use("/api/products", routes.products);
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}...`));
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("src/build"));
+
+  // Express serve up index.html file if it doesn't recognize route
+  const path = require("path");
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "src", "build", "index.html"));
+  });
+
+  app.listen(process.env.PORT || 5000, () =>
+    console.log(`Server started on port ${process.env.PORT || 5000}...`),
+  );
+} else {
+  app.listen(PORT, () => console.log(`Server started on port ${PORT}...`));
+}

@@ -161,19 +161,7 @@ router.put("/:userId", (req, res) => {
       }
 
       if (req.files) {
-        const { image } = req.files;
-        fs.unlink(`${__dirname}/../../${user.imagePath}`, err => {
-          if (err) console.log(err);
-        });
-        const imagePath = `public/uploads/${user.id}/${image.name}`;
-        image.mv(`${__dirname}/../../${imagePath}`, err => {
-          if (err) {
-            console.log(err);
-            return res.status(500).send(err);
-          }
-        });
-
-        user.imagePath = imagePath;
+        user.imagePath = fileUpload(req.files, `${user._id}/${req.files.image.name}`);
       }
 
       user.save().then(user => {
@@ -214,15 +202,7 @@ router.post("/:userId/pets", (req, res) => {
       let pet = { name, breed, age };
 
       if (req.files) {
-        const { image } = req.files;
-        const imagePath = `public/uploads/${user.id}/${image.name}`;
-        image.mv(`${__dirname}/../../${imagePath}`, err => {
-          if (err) {
-            console.log(err);
-            return res.status(500).send(err);
-          }
-        });
-        pet.imagePath = imagePath;
+        pet.imagePath = fileUpload(req.files, `${user._id}/${req.files.image.name}`);
       }
 
       user.pets.push(pet);

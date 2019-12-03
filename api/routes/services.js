@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import User from "../models/User";
 import Service from "../models/Service";
+import { fileUpload } from "../utils";
 
 const router = Router();
 
@@ -31,15 +32,7 @@ router.post("/", (req, res) => {
   });
 
   if (req.files) {
-    const { image } = req.files;
-    const imagePath = `public/uploads/services/${service._id}`;
-    image.mv(`${__dirname}/../../${imagePath}`, err => {
-      if (err) {
-        console.log(err);
-        return res.status(500).send(err);
-      }
-    });
-    service.imagePath = imagePath;
+    service.imagePath = fileUpload(req.files, `services/${service._id}`);
   }
 
   service

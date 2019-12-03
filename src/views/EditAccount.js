@@ -114,7 +114,7 @@ const EditAccount = () => {
           image
             ? URL.createObjectURL(image)
             : user && user.imagePath
-            ? require(`../../${user.imagePath}`)
+            ? require(`../${user.imagePath}`)
             : require("assets/img/profile.png")
         }
         id="outputImg"

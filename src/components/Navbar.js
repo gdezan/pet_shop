@@ -51,11 +51,9 @@ const Navbar = props => {
       headers: { "Content-Type": "application/json" },
     })
       .then(res => {
-        if (res.status === 200) {
-          window.localStorage.removeItem("authToken");
-          setUser(null);
-          navigate("/");
-        }
+        window.localStorage.removeItem("authToken");
+        setUser(null);
+        navigate("/");
       })
       .catch(err => console.error(err));
   };

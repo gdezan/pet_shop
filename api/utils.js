@@ -1,7 +1,7 @@
 export function fileUpload(files, filePath) {
   const { image } = files;
-  const imagePath = `public/uploads/${filePath}`;
-  image.mv(`${__dirname}/../${imagePath}`, err => {
+  const imagePath = `assets/uploads/${filePath}`;
+  image.mv(`${__dirname}/../src/${imagePath}`, err => {
     if (err) {
       throw err;
     }

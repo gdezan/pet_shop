@@ -9,7 +9,7 @@ import device from "assets/device";
 const Pet = ({ name, img, breed, age, services }) => {
   return (
     <PetWrapper>
-      <Image src={require(`../../${img}`)} alt="Pet image" />
+      <Image src={require(`../${img}`)} alt="Pet image" />
       <Details>
         <PetName>{name}</PetName>
         <Text>Raça: {breed}</Text>

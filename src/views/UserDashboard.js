@@ -21,9 +21,7 @@ const Details = ({ client }) => {
       </DetailsText>
       <DetailsImage
         src={
-          client.imagePath
-            ? require(`../../${client.imagePath}`)
-            : require("assets/img/profile.png")
+          client.imagePath ? require(`../${client.imagePath}`) : require("assets/img/profile.png")
         }
         alt="Profile Picture"
       />

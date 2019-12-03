@@ -47,14 +47,12 @@ const ProductButton = ({ product }) => {
   };
 
   const { name, price, imagePath, discountedPrice } = product;
+  const image = imagePath && require(`../${imagePath}`);
 
   if (discountedPrice) {
     return (
       <Wrapper onClick={() => handleClick()} discounted>
-        <Image
-          src={imagePath ? require(`../../${imagePath}`) : require("assets/img/profile.png")}
-          alt={`${name} image`}
-        />
+        <Image src={image ? image : require("assets/img/profile.png")} alt={`${name} image`} />
         <Details>
           <Name>{name}</Name>
           <OldPrice>{formatters.brl(price)}</OldPrice>
@@ -66,10 +64,7 @@ const ProductButton = ({ product }) => {
 
   return (
     <Wrapper onClick={() => handleClick()}>
-      <Image
-        src={imagePath ? require(`../../${imagePath}`) : require("assets/img/profile.png")}
-        alt={`${name} image`}
-      />
+      <Image src={image ? image : require("assets/img/profile.png")} alt={`${name} image`} />
       <Details>
         <Name>{name}</Name>
         <Price>{formatters.brl(price)}</Price>
