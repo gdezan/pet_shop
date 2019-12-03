@@ -1,28 +1,32 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
 // import { Link } from "@reach/router";
 
 // import Button from "base-components/Button";
 import MainBanner from "components/MainBanner";
-import Promotions from "components/Promotions";
-import ProductButton from "components/ProductButton";
+import ProductList from "components/ProductList";
 
 const promotionList = [
   {
-    img: require("assets/img/dog_food.png"),
+    _id: "1e231e",
     name: "Ração X",
-    price: "R$ 67.89",
-    discounted_price: "29.99",
+    price: "6789",
+    discountedPrice: "2999",
   },
   {
-    img: require("assets/img/dog_food.png"),
+    _id: "1sdfsdfdsf1e",
     name: "Ração Y",
-    price: "67.89",
+    price: "6734",
   },
   {
-    img: require("assets/img/dog_food.png"),
+    _id: "dsffsd31e",
     name: "Ração Z",
-    price: "67.89",
+    price: "8890",
+  },
+  {
+    _id: "1e2fdsfer1e",
+    name: "ROLA",
+    price: "420420",
+    discountedPrice: "6969",
   },
 ];
 
@@ -44,31 +48,14 @@ const Home = () => {
   return (
     <>
       <MainBanner
-        imgStyle={{ transform: "translateY(15%)" }}
         img={require("assets/img/banner_dog.png")}
         title={"Au Que Mia"}
         description="Produtos mágicos para o seu melhor amigo!"
       />
-      <Promotions productList={promotionList} />
-      <ProductsWrapper>
-        {products.map(product => {
-          return (
-            <ProductButton
-              key={product.id}
-              product={{ ...product, img: require("assets/img/dog_food.png") }}
-            />
-          );
-        })}
-      </ProductsWrapper>
+      <ProductList title="Promoções!" products={promotionList} promotions />
+      <ProductList title="Nossos produtos" products={products} />
     </>
   );
 };
 
 export default Home;
-
-const ProductsWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  width: 60%;
-  margin: 40px auto;
-`;

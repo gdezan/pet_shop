@@ -31,6 +31,10 @@ export const formatters = {
   inputToPrice: value => {
     return parseInt(value.replace(/[^0-9]|^0+/g, ""));
   },
+  brl: value => {
+    let str = value.toString();
+    return `R$ ${str.slice(0, -2)},${str.slice(-2)}`;
+  },
 };
 
 export const objectToQueryString = obj => {

@@ -1,35 +1,35 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { Link } from "@reach/router";
-import SweetAlert from 'sweetalert2-react';
+import SweetAlert from "sweetalert2-react";
 
 import Divider from "base-components/Divider";
-import ProductList from "components/ProductList";
+import CartList from "components/CartList";
 import { CartContext } from "components/CartContext";
 
 const ShoppingCart = () => {
-  const [total,setTotal] = useState(0);
-  const [pay,setPay] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [pay, setPay] = useState(false);
   const { cartItems, setCartItems } = useContext(CartContext);
 
   const updateTotal = () => {
     let total = 0;
     let item;
-    
-    for(let i = 0; i < cartItems.length; ++i){
+
+    for (let i = 0; i < cartItems.length; ++i) {
       item = cartItems[i];
-      total += item.quantity * (item.discountedPrice ? (
-        parseFloat(item.discountedPrice.replace(/^R\$\s/g,""))
-      ) : (
-        parseFloat(item.price.replace(/^R\$\s/g,""))
-      ));
+      total +=
+        item.quantity *
+        (item.discountedPrice
+          ? parseFloat(item.discountedPrice.replace(/^R\$\s/g, ""))
+          : parseFloat(item.price.replace(/^R\$\s/g, "")));
     }
     setTotal(total);
   };
 
   const handlePay = () => {
     setPay(true);
-    localStorage.removeItem('cartItems');
+    localStorage.removeItem("cartItems");
     setCartItems([]);
   };
 
@@ -37,10 +37,12 @@ const ShoppingCart = () => {
     <Wrapper>
       <Title>Meu Carrinho</Title>
       <Divider title="Produtos" />
-      <ProductList updateTotal={updateTotal} />
+      <CartList updateTotal={updateTotal} />
       <Divider title="Pagamento" />
       <Text>Total: {total.toFixed(2)}</Text>
-      <Button to="/" onClick={() => handlePay()}>PAGAR</Button>
+      <Button to="/" onClick={() => handlePay()}>
+        PAGAR
+      </Button>
       <SweetAlert
         show={pay}
         title="Pagamento concluído"

@@ -23,7 +23,7 @@ router.post("/signup", async (req, res) => {
   const email = req.body.email && req.body.email.toLowerCase();
 
   if (!name || !email || !password || !address || !zipCode || !phone) {
-    return res.status(400).send({ error: true, message: "Por favor preencha todos o campos" });
+    return res.status(400).send({ errors: true, message: "Por favor preencha todos o campos" });
   }
 
   try {
@@ -31,7 +31,7 @@ router.post("/signup", async (req, res) => {
     if (foundUser) {
       return res
         .status(400)
-        .send({ error: true, message: `O e-mail "${email}" já está sendo utilizado` });
+        .send({ errors: true, message: `O e-mail "${email}" já está sendo utilizado` });
     }
 
     const user = new User({

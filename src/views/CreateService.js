@@ -20,7 +20,6 @@ const CreateService = () => {
     image && formData.append("image", image);
 
     const body = { name, price: formatters.inputToPrice(price) };
-    console.log(body);
 
     Object.keys(body).forEach(key => body[key] && formData.append(key, body[key]));
 

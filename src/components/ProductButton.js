@@ -2,6 +2,8 @@ import React, { useContext } from "react";
 import styled, { css } from "styled-components";
 
 import { CartContext } from "components/CartContext";
+import { formatters } from "Utils";
+import device from "assets/device";
 
 const ProductButton = ({ product }) => {
   const { setCartItems } = useContext(CartContext);
@@ -44,22 +46,34 @@ const ProductButton = ({ product }) => {
     }
   };
 
-  if (product.discounted_price) {
+  const { name, price, imagePath, discountedPrice } = product;
+
+  if (discountedPrice) {
     return (
       <Wrapper onClick={() => handleClick()} discounted>
-        <Image src={product.img} alt={`{name} image`} />
-        <Name>{product.name}</Name>
-        <OldPrice>R${product.price}</OldPrice>
-        <Discounted_price>R${product.discounted_price}</Discounted_price>
+        <Image
+          src={imagePath ? require(`../../${imagePath}`) : require("assets/img/profile.png")}
+          alt={`${name} image`}
+        />
+        <Details>
+          <Name>{name}</Name>
+          <OldPrice>{formatters.brl(price)}</OldPrice>
+          <DiscountedPrice>{formatters.brl(discountedPrice)}</DiscountedPrice>
+        </Details>
       </Wrapper>
     );
   }
 
   return (
     <Wrapper onClick={() => handleClick()}>
-      <Image src={product.img} alt={`{name} image`} />
-      <Name>{product.name}</Name>
-      <Price>R${product.price}</Price>
+      <Image
+        src={imagePath ? require(`../../${imagePath}`) : require("assets/img/profile.png")}
+        alt={`${name} image`}
+      />
+      <Details>
+        <Name>{name}</Name>
+        <Price>{formatters.brl(price)}</Price>
+      </Details>
     </Wrapper>
   );
 };
@@ -70,52 +84,121 @@ const Wrapper = styled.div`
   background-color: white;
   margin: 10px;
   border-radius: 8px;
-  max-width: 180px;
   font-family: "Raleway", sans-serif;
   padding: 20px;
   box-sizing: border-box;
   box-shadow: 0px 3px 4px 1px rgba(0, 0, 0, 0.4);
   cursor: pointer;
   transition: 0.15s all;
+  display: flex;
 
   &:hover {
     transform: translateY(-3px);
     box-shadow: 0px 3px 5px 2px rgba(0, 0, 0, 0.4);
   }
 
-  ${props =>
-    !props.discounted &&
-    css`
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    `}
+  &:active {
+    transform: translateY(1px);
+
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.4);
+  }
+
+  ${props => !props.discounted && css``}
+
+  @media ${device.tablet} {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const Image = styled.img`
+  width: 120px;
+  height: 120px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+
+  @media ${device.mobile} {
+    width: 100px;
+    height: 100px;
+  }
+`;
+
+const Details = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 20px 10px 20px 20px;
   width: 100%;
+
+  @media ${device.tablet} {
+    margin: 15px;
+  }
 `;
 
 const Name = styled.div`
-  margin: 30px 0 10px;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 23px;
+  margin-top: 5px;
+
+  @media ${device.tablet} {
+    text-align: center;
+  }
+
+  @media ${device.mobile} {
+    font-size: 20px;
+  }
 `;
 
 const Price = styled.div`
+  display: inline-block;
   font-weight: 600;
   font-size: 21px;
+  text-align: right;
   color: #555;
+
+  @media ${device.tablet} {
+    margin-top: 10px;
+    display: block;
+    text-align: center;
+  }
+
+  @media ${device.mobile} {
+    font-size: 18px;
+  }
 `;
 
-const Discounted_price = styled.div`
+const DiscountedPrice = styled.div`
+  display: inline-block;
+  text-align: right;
   font-weight: 600;
   color: red;
   font-size: 23px;
+
+  @media ${device.tablet} {
+    display: block;
+    text-align: center;
+  }
+
+  @media ${device.mobile} {
+    font-size: 20px;
+  }
 `;
 
 const OldPrice = styled.div`
+  display: inline-block;
+  text-align: right;
   font-size: 18px;
   color: gray;
   text-decoration: line-through;
+
+  @media ${device.tablet} {
+    margin-top: 10px;
+    display: block;
+    text-align: center;
+  }
+
+  @media ${device.mobile} {
+    font-size: 15px;
+  }
 `;

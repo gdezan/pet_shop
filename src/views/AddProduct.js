@@ -1,32 +1,69 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { navigate } from "@reach/router";
 import { useForm } from "hooks";
 import { masks, formatters } from "Utils";
+import Swal from "sweetalert2";
 
 import TextField from "base-components/TextField";
 import Button from "base-components/Button";
 import Select from "base-components/Select";
 
 const AddProduct = () => {
-  const [image, setImage] = useState({ image_url: require("assets/img/profile.png"), img: null });
-  const [category, setCategory] = useState("Cachorro");
+  const [image, setImage] = useState(null);
+  const [categories, setCategories] = useState();
+  const [category, setCategory] = useState({ _id: "noCat", name: "Sem Categoria" });
 
-  const submit = () => {
-    const { name, price, discountedPrice } = values;
-    const body = {
-      name,
-      price: formatters.inputToPrice(price),
-      discounted_price: formatters.inputToPrice(discountedPrice),
-      category: category.id,
-    };
-    fetch("/api/products", {
-      method: "POST",
-      body: JSON.stringify(body),
+  useEffect(() => {
+    fetch("/api/products/categories", {
+      method: "GET",
       headers: { "Content-Type": "application/json" },
     })
       .then(res => res.json())
-      .then(data => window.location.reload())
-      .catch(err => console.error(err));
+      .then(data => {
+        let cats = data.reduce((acc, cat) => {
+          acc[cat._id] = cat;
+          return acc;
+        }, {});
+        cats["noCat"] = { _id: "noCat", name: "Sem Categoria" };
+        setCategories(cats);
+      })
+      .catch(err => Swal.fire("Erro", err.message, "error"));
+  }, []);
+
+  const submit = () => {
+    const { name, price, discountedPrice } = values;
+
+    const formData = new FormData();
+    image && formData.append("image", image);
+
+    const body = {
+      name,
+      price: formatters.inputToPrice(price),
+      discountedPrice: formatters.inputToPrice(discountedPrice),
+      ...(category._id !== "noCat" && { categoryId: category._id }),
+    };
+
+    Object.keys(body).forEach(key => body[key] && formData.append(key, body[key]));
+
+    fetch("/api/products", {
+      method: "POST",
+      body: formData,
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.errors) throw data;
+        Swal.fire({
+          title: "Sucesso!",
+          text: "Produto cadastrado",
+          icon: "success",
+        }).then(() => {
+          navigate("/admin");
+        });
+      })
+      .catch(err => {
+        Swal.fire("Erro", err.message, "error");
+      });
   };
 
   const initialValues = {
@@ -35,28 +72,25 @@ const AddProduct = () => {
     name: "",
   };
 
-  const categories = {
-    Cachorro: { name: "Cachorro", id: "dog" },
-    Gato: { name: "Gato", id: "cat" },
-    "Outros Pets": { name: "Outros Pets", id: "other_pets" },
-  };
-
   const { values, handleChange, handleSubmit } = useForm(submit, initialValues);
+
+  if (!categories) return null;
+
   return (
     <Wrapper id="registerProduct" onSubmit={handleSubmit}>
       <Title>Registro de produto</Title>
-      <Img src={image.image_url} id="outputImg"></Img>
+      <Img
+        src={(image && URL.createObjectURL(image)) || require("assets/img/profile.png")}
+        id="outputImg"
+      />
       <ImageField
         label={"Image"}
         id="inputImg"
         type="file"
         accept="image/*"
-        onChange={event =>
-          setImage({
-            image_url: URL.createObjectURL(event.target.files[0]),
-            img: event.target.files[0],
-          })
-        }
+        onChange={event => {
+          setImage(event.target.files[0]);
+        }}
       />
       <Form>
         <FormRow>
@@ -73,7 +107,7 @@ const AddProduct = () => {
         <FormRow>
           <Select
             options={categories}
-            value={category.name}
+            value={category._id}
             onChange={e => {
               setCategory(categories[e.target.value]);
             }}
@@ -104,13 +138,7 @@ const AddProduct = () => {
           />
         </FormRow>
       </Form>
-      <Button
-        type="submit"
-        form="registerProduct"
-        disabled={Object.keys(values).find(
-          key => (key === "name" || key === "price") && values[key] === "",
-        )}
-      >
+      <Button type="submit" form="registerProduct">
         CADASTRAR
       </Button>
     </Wrapper>

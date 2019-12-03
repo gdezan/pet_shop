@@ -1,147 +1,59 @@
-import React, { useEffect, useContext } from "react";
-import styled from "styled-components";
+import React from "react";
+import styled, { css } from "styled-components";
 
+import ProductButton from "components/ProductButton";
 import device from "assets/device";
-import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { CartContext }  from "components/CartContext";
 
-const Product = ({ product }) => {
-  const { cartItems, setCartItems } = useContext(CartContext);
-
-  const handleClick = (op) => {
-    let localData = localStorage.getItem('cartItems');
-    let items = localData ? JSON.parse(localData) : [];
-    let item;
-    let found = false;
-    
-    for(let i = 0; i < cartItems.length && !found; ++i){
-      item = cartItems[i];
-      if(item.name === product.name){
-        if(op === "-"){
-          items[i].quantity -= 1;
-          if(items[i].quantity === 0){
-            items.splice(i, 1);
-          }
-        } else {
-          items[i].quantity += 1;
-        }
-        found = true;
-        setCartItems(items);
-        localStorage.setItem('cartItems',JSON.stringify(items));
-      }
-    }
-  };
-
+const ProductList = ({ products, category, promotions, title }) => {
   return (
-    <ProductWrapper>
-      <Image src={product.img} alt="Pet image" />
-      <Details>
-        <ProductName>{product.name}</ProductName>
-        <Text>Preço: {product.discountedPrice ? product.discountedPrice : product.price}</Text>
-        <QuantityWrapper>
-          Quantidade: 
-          <MinusButton onClick={() => handleClick("-")}><FontAwesomeIcon icon={faMinusCircle} /></MinusButton>
-          <Text>{product.quantity}</Text>
-          <PlusButton onClick={() => handleClick("+")}><FontAwesomeIcon icon={faPlusCircle} /></PlusButton>
-        </QuantityWrapper>
-      </Details>
-    </ProductWrapper>
-  );
-};
-
-const ProductList = ({ updateTotal }) => {
-  const { cartItems } = useContext(CartContext);
-
-  useEffect(() => {
-    updateTotal();
-  });
-
-  return (
-    <>
-      {cartItems.length ? (
-        <ProductListWrapper>
-          {cartItems.map(product => (
-            <Product
-              product={product}
-            />
-          ))}
-        </ProductListWrapper>
-      ) : (
-        <Text>Seu carrinho está vazio!</Text>
-      )}
-    </>
+    <Wrapper promotions={promotions}>
+      <Title promotions={promotions}>{title}</Title>
+      <ProductsWrapper promotions={promotions}>
+        {products.map(product => {
+          return <ProductButton key={product._id} product={product} />;
+        })}
+      </ProductsWrapper>
+    </Wrapper>
   );
 };
 
 export default ProductList;
 
-const ProductListWrapper = styled.div`
+const Wrapper = styled.div`
   width: 100%;
   box-sizing: border-box;
-  padding: 10px 10px;
+  padding: 50px 10px;
+
+  ${props =>
+    props.promotions &&
+    css`
+      background-color: ${props => props.theme.accent};
+    `}
+`;
+
+const ProductsWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr ${props => props.promotions && "1fr"};
+  width: 90%;
+  margin: 40px auto;
 
   @media ${device.laptop} {
-    display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 1fr 1fr;
   }
 
   @media ${device.tablet} {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  @media ${device.mobile} {
+    grid-template-columns: 1fr 1fr;
   }
 `;
 
-const ProductWrapper = styled.div`
+const Title = styled.h2`
   font-family: "Raleway", sans-serif;
-  display: flex;
-  padding: 20px;
-  margin: 0 10px 20px;
-  border: 1px solid #aaa;
-  border-radius: 5px;
-`;
+  margin: 0 5% 40px;
+  font-size: 30px;
 
-const Details = styled.div`
-  margin-left: 30px;
-`;
-
-const Image = styled.img`
-  width: 20%;
-  object-fit: cover;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 5px;
-`;
-
-const ProductName = styled.h2``;
-const Text = styled.p`
-  text-align: left;
-  width: 100%;
-  margin: 0;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-`;
-
-const QuantityWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  aligns-items: center;
-  margin: 5px 0;
-`;
-
-const PlusButton = styled.button`
-  cursor: pointer;
-  font-size: 10px; 
-  margin: 0 3px;
-  outline: none;
-`;
-
-const MinusButton = styled(PlusButton)`
+  ${props =>
+    props.promotions &&
+    css`
+      color: white;
+    `}
 `;

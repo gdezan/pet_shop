@@ -40,8 +40,9 @@ const SignUp = () => {
     })
       .then(res => res.json())
       .then(data => {
-        if (data.error) throw data;
-        window.localStorage.setItem("authToken", data.session._id);
+        console.log(data);
+        if (data.errors) throw data;
+        window.localStorage.setItem("authToken", data.savedSession._id);
         setUser(data.user);
         Swal.fire({
           title: "Sucesso!",

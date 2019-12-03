@@ -19,7 +19,14 @@ const Details = ({ client }) => {
         <DetailsLine>Endereço: {client.address}</DetailsLine>
         <DetailsLine>{client.city}</DetailsLine>
       </DetailsText>
-      <DetailsImage src={require(`../../${client.imagePath}`)} alt="Profile Picture" />
+      <DetailsImage
+        src={
+          client.imagePath
+            ? require(`../../${client.imagePath}`)
+            : require("assets/img/profile.png")
+        }
+        alt="Profile Picture"
+      />
     </DetailsWrapper>
   );
 };
