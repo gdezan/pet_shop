@@ -66,8 +66,8 @@ router.get("/schedule", async (req, res) => {
         );
       });
     });
-    schedule.sort((a, b) => {
-      return a.service.date > b.service.date;
+    schedule.sort(function(a, b) {
+      return a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
     });
     return res.status(200).json(schedule);
   } catch (err) {

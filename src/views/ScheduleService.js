@@ -14,6 +14,7 @@ import device from "assets/device";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { format } from "date-fns/esm";
 
 const SelectOptions = props => {
   return (
@@ -59,6 +60,7 @@ for (let i = 9; i < 19; i++) {
 const ScheduleService = () => {
   const [availableServices, setAvailableServices] = useState([]);
   const [date, setDate] = useState();
+  const [schedule, setSchedule] = useState();
   const [time, setTime] = useState(900);
   const [selectedService, setSelectedService] = useState(null);
   const [selectedPet, setSelectedPet] = useState(null);
@@ -72,6 +74,19 @@ const ScheduleService = () => {
       .then(data => {
         if (data.errors) throw data;
         setAvailableServices(data);
+      })
+      .catch(err => {
+        Swal.fire("Erro", err.message, "error");
+      });
+
+    fetch("api/services/schedule", {
+      method: "GET",
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.errors) throw data;
+        data.sort((a, b) => a.service.date < b.service.date);
+        setSchedule(data);
       })
       .catch(err => {
         Swal.fire("Erro", err.message, "error");
@@ -113,6 +128,16 @@ const ScheduleService = () => {
   };
 
   if (!availableServices.length) return null;
+
+  let filteredTimes = times;
+  if (date) {
+    schedule.forEach(sc => {
+      const scDate = new Date(sc.service.date);
+      if (format(scDate, "yyyy-MM-dd") === format(new Date(date), "yyyy-MM-dd")) {
+        delete filteredTimes[format(scDate, "Hmm")];
+      }
+    });
+  }
 
   return (
     <Wrapper id="service" onSubmit={onSubmit}>
@@ -160,7 +185,7 @@ const ScheduleService = () => {
         </FormRow>
         <Divider title="Selecione um horário" />
         <FormRow>
-          <Select options={times} value={time} onChange={e => setTime(e.target.value)} />
+          <Select options={filteredTimes} value={time} onChange={e => setTime(e.target.value)} />
         </FormRow>
       </Form>
       <Button type="submit" form="service">

@@ -9,7 +9,7 @@ const Service = ({ service, pet, user }) => {
     <ServiceWrapper>
       <Row border>
         <Title>{service.service}</Title>
-        <Time>{service.date.slice(11, 16)}</Time>
+        <Time>{format(new Date(service.date), "HH:mm")}</Time>
       </Row>
       <Row>
         <Time>Cliente: {user.name}</Time>
@@ -29,6 +29,9 @@ const ScheduledServices = () => {
       .then(res => res.json())
       .then(data => {
         if (data.errors) throw data;
+        data.sort(function(a, b) {
+          return a.service.date < b.service.date ? -1 : a.service.date > b.service.date ? 1 : 0;
+        });
         setSchedule(data);
       })
       .catch(err => {
@@ -42,7 +45,7 @@ const ScheduledServices = () => {
     <Wrapper>
       {schedule.map(serv => {
         const { service, pet, user } = serv;
-        const newDate = format(Date.parse(service.date), "dd/MM");
+        const newDate = format(new Date(service.date), "dd/MM");
         if (newDate !== date) {
           date = newDate;
           return (

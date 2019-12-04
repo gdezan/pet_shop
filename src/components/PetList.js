@@ -8,6 +8,9 @@ import device from "assets/device";
 import { formatters } from "Utils";
 
 const Pet = ({ name, img, breed, age, services }) => {
+  services.sort(function(a, b) {
+    return a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
+  });
   return (
     <PetWrapper>
       <Image src={require(`../${img}`)} alt="Pet image" />
