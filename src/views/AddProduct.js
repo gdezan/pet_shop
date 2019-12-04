@@ -32,7 +32,7 @@ const AddProduct = () => {
   }, []);
 
   const submit = () => {
-    const { name, price, discountedPrice } = values;
+    const { name, price, discountedPrice, qtyStock } = values;
 
     const formData = new FormData();
     image && formData.append("image", image);
@@ -42,6 +42,7 @@ const AddProduct = () => {
       price: formatters.inputToPrice(price),
       discountedPrice: formatters.inputToPrice(discountedPrice),
       ...(category._id !== "noCat" && { categoryId: category._id }),
+      qtyStock,
     };
 
     Object.keys(body).forEach(key => body[key] && formData.append(key, body[key]));
@@ -70,6 +71,7 @@ const AddProduct = () => {
     price: "",
     discountedPrice: "",
     name: "",
+    qtyStock: "",
   };
 
   const { values, handleChange, handleSubmit } = useForm(submit, initialValues);
@@ -138,6 +140,17 @@ const AddProduct = () => {
           />
         </FormRow>
       </Form>
+      <FormRow>
+        <TextField
+          label="Quantidade em Estoque"
+          id="qtyStock"
+          name="qtyStock"
+          type="text"
+          lightBg
+          value={values.qtyStock}
+          onChange={handleChange}
+        />
+      </FormRow>
       <Button type="submit" form="registerProduct">
         CADASTRAR
       </Button>

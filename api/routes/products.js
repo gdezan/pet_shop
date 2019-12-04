@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { name, price, discountedPrice, categoryId } = req.body;
+  const { name, price, discountedPrice, categoryId, qtyStock } = req.body;
   console.log(req.body);
   if (!name || !price) {
     return res
@@ -31,6 +31,7 @@ router.post("/", async (req, res) => {
       price,
       discountedPrice,
       categoryId,
+      qtyStock,
     });
 
     if (req.files) {
@@ -75,6 +76,43 @@ router.get("/by_category/:categoryUrl", async (req, res) => {
     } else {
       return res.status(400).json({ errors: true, message: "No category id" });
     }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+router.put("/:productId", async (req, res) => {
+  const { name, price, discountedPrice, categoryId, qtyStock } = req.body;
+
+  if (!name || !price) {
+    return res
+      .status(400)
+      .json({ errors: true, message: "Por favor preencha o preço e nome do produto" });
+  }
+
+  try {
+    const updatedProduct = await Product.update(
+      { _id: req.params.productId },
+      {
+        $set: {
+          name,
+          price,
+          discountedPrice: discountedPrice || 0,
+          categoryId,
+          qtyStock,
+        },
+      },
+    );
+    if (!updatedProduct) {
+      return res.status(404).json({ errors: true, message: "Produto não encontrado" });
+    }
+
+    if (req.files) {
+      updatedProduct.imagePath = fileUpload(req.files, `products/${updatedProduct._id}`);
+    }
+
+    return res.status(200).json(updatedProduct);
   } catch (err) {
     console.log(err);
     res.status(500).json(err);

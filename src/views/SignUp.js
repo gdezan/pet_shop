@@ -43,7 +43,7 @@ const SignUp = () => {
         console.log(data);
         if (data.errors) throw data;
         window.localStorage.setItem("authToken", data.savedSession._id);
-        setUser(data.user);
+        setUser(data.savedUser);
         Swal.fire({
           title: "Sucesso!",
           text: "Usuário cadastrado",
@@ -285,8 +285,15 @@ const FormRow = styled.div`
   display: flex;
   width: 80%;
   padding: 5px 0;
+
   @media ${device.tablet} {
     width: 100%;
+  }
+
+  @media ${device.mobile} {
+    width: 100%;
+    flex-direction: column;
+    padding: 0;
   }
 `;
 

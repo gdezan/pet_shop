@@ -59,10 +59,10 @@ for (let i = 9; i < 19; i++) {
 const ScheduleService = () => {
   const [availableServices, setAvailableServices] = useState([]);
   const [date, setDate] = useState();
-  const [time, setTime] = useState(times["900"]);
+  const [time, setTime] = useState(900);
   const [selectedService, setSelectedService] = useState(null);
   const [selectedPet, setSelectedPet] = useState(null);
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
     fetch("api/services", {
@@ -80,6 +80,9 @@ const ScheduleService = () => {
 
   const onSubmit = e => {
     e.preventDefault();
+    if (!date) {
+      return Swal.fire("Erro", "Preencha uma data", "error");
+    }
     const dateString = `${date[0].toISOString().slice(0, 11)}${times[time].name}:00`;
     const body = {
       date: dateString,
@@ -95,6 +98,7 @@ const ScheduleService = () => {
       .then(res => res.json())
       .then(data => {
         if (data.errors) throw data;
+        setUser(data);
         Swal.fire({
           title: "Sucesso!",
           text: "Serviço agendado",
@@ -294,6 +298,8 @@ const OptionImg = styled.img`
   width: 60px;
   height: 60px;
   margin: 0 10px;
+  border: 1px solid #ccc;
+  padding: 5px;
 `;
 
 const OptionName = styled.p`

@@ -15,16 +15,13 @@ const ShoppingCartModal = ({ toggleCart, isOpen }) => {
         <CartWrapper>
           <ItemsWrapper>
             {cartItems.map((product, i) => {
-              return(
-                <CartItem
-                  key={i}
-                  product={product}
-                />
-              );
+              return <CartItem key={i} product={product} />;
             })}
           </ItemsWrapper>
-          <Button onClick={() => toggleCart()} to="shopping_cart">PAGAR</Button>
-        </CartWrapper>        
+          <Button onClick={() => toggleCart()} to="shopping_cart">
+            PAGAR
+          </Button>
+        </CartWrapper>
       ) : (
         <P>Seu carrinho está vazio!</P>
       )}
@@ -36,8 +33,8 @@ export default ShoppingCartModal;
 
 const Wrapper = styled.div`
   position: fixed;
-  max-width: 150px;
-  max-height: 250px;
+  width: 40vw;
+  max-height: 60vh;
   z-index: 2500;
   top: 60px;
   right: 20px;

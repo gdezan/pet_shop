@@ -22,6 +22,14 @@ const ProductSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     default: null,
   },
+  qtyStock: {
+    type: Number,
+    default: 0,
+  },
+  qtySold: {
+    type: Number,
+    default: 0,
+  },
 });
 
 export default mongoose.model("Products", ProductSchema);

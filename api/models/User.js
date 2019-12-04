@@ -10,6 +10,8 @@ const PetSchema = mongoose.Schema({
     {
       serviceId: { type: String, required: true },
       date: { type: Date, required: true },
+      service: String,
+      price: Number,
     },
   ],
 });

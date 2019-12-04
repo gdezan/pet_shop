@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 
 import DashboardButton from "components/DashboardButton";
+import device from "assets/device";
 
 const UserOptions = () => {
   return (
@@ -19,7 +20,11 @@ export default UserOptions;
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
   width: 100%;
   padding: 15px 0;
+  grid-template-columns: 1fr 1fr;
+
+  @media ${device.tablet} {
+    grid-template-columns: 1fr;
+  }
 `;

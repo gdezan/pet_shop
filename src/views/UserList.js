@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 
 import Divider from "base-components/Divider";
 import TextField from "base-components/TextField";
+import { UserContext } from "components/UserContext";
+import Button from "base-components/Button";
+import Swal from "sweetalert2";
 
 const UserList = ({ adminUsers = false }) => {
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);
+  const { user } = useContext(UserContext);
 
-  useEffect(() => {
+  const fetchUsers = () => {
     fetch("/api/users", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -18,7 +22,69 @@ const UserList = ({ adminUsers = false }) => {
         setUsers(data);
       })
       .catch(err => console.error(err));
+  };
+
+  useEffect(() => {
+    fetchUsers();
   }, []);
+
+  const onAddAdmin = u => {
+    Swal.fire({
+      title: "Adicionar como administrador?",
+      icon: "warning",
+      text: `Deseja mesmo adicionar o usuário ${u.name} como administrador?`,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Confirmar",
+      cancelButtonText: "Cancelar",
+    }).then(result => {
+      if (result.value) {
+        fetch(`/api/users/${u._id}/admin`, {
+          method: "POST",
+          body: JSON.stringify({ isAdmin: true }),
+          headers: { "Content-Type": "application/json" },
+        })
+          .then(res => res.json())
+          .then(data => {
+            Swal.fire("Modificado", `O usuário ${u.name} é agora um administrador`, "success");
+            fetchUsers();
+          })
+          .catch(err => Swal.fire("Erro", err.message, "error"));
+      }
+    });
+  };
+
+  const onRemoveAdmin = u => {
+    Swal.fire({
+      title: "Remover como administrador?",
+      icon: "warning",
+      text: `Deseja mesmo remover o usuário ${u.name} como administrador?`,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Confirmar",
+      cancelButtonText: "Cancelar",
+    }).then(result => {
+      if (result.value) {
+        fetch(`/api/users/${u._id}/admin`, {
+          method: "POST",
+          body: JSON.stringify({ isAdmin: false }),
+          headers: { "Content-Type": "application/json" },
+        })
+          .then(res => res.json())
+          .then(data => {
+            Swal.fire(
+              "Modificado",
+              `O usuário ${u.name} agora não é mais um administrador`,
+              "success",
+            );
+            fetchUsers();
+          })
+          .catch(err => Swal.fire("Erro", err.message, "error"));
+      }
+    });
+  };
 
   return (
     <Wrapper>
@@ -28,22 +94,29 @@ const UserList = ({ adminUsers = false }) => {
       <Divider title={adminUsers ? "Administradores" : "Usuários"} />
       <ListWrapper>
         {users
-          .filter(user => {
-            const inSearch =
-              search === "" || user.name.toLowerCase().includes(search.toLowerCase());
+          .filter(u => {
+            const inSearch = search === "" || u.name.toLowerCase().includes(search.toLowerCase());
             if (adminUsers) {
-              return user.isAdmin && inSearch;
+              return u.isAdmin && inSearch;
             }
             return inSearch;
           })
-          .map(user => (
-            <UserWrapper key={user.id}>
-              <Text bold>{user.name}</Text>
-              <Text>E-Mail: {user.email}</Text>
-              <Text>Endereço: {user.address}</Text>
-              <Text>Telephone: {user.phone}</Text>
-            </UserWrapper>
-          ))}
+          .map(u => {
+            return (
+              <UserWrapper key={u._id}>
+                <Text bold>{u.name}</Text>
+                <Text>E-Mail: {u.email}</Text>
+                <Text>Endereço: {u.address}</Text>
+                <Text>Telephone: {u.phone}</Text>
+                {user._id !== u._id &&
+                  (u.isAdmin ? (
+                    <RemoveAdmin onClick={() => onRemoveAdmin(u)}>Remover Admin</RemoveAdmin>
+                  ) : (
+                    <AddAdmin onClick={() => onAddAdmin(u)}>Tornar Admin</AddAdmin>
+                  ))}
+              </UserWrapper>
+            );
+          })}
       </ListWrapper>
     </Wrapper>
   );
@@ -86,4 +159,14 @@ const Text = styled.p`
   font-size: 14px;
   margin: 10px;
   font-weight: ${props => (props.bold ? "bold" : "regular")};
+`;
+
+const RemoveAdmin = styled(Button)`
+  font-size: 12px;
+  background-color: #d9534f;
+`;
+
+const AddAdmin = styled(Button)`
+  font-size: 12px;
+  background-color: #5cb85c;
 `;

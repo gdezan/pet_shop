@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { formatters } from "Utils";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 import Divider from "base-components/Divider";
 import TextField from "base-components/TextField";
+import Button from "base-components/Button";
+import ProductEditModal from "components/ProductEditModal";
 
 const ProductList = () => {
   const [search, setSearch] = useState("");
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState({});
+  const [productToEdit, setProductToEdit] = useState();
+  const [isModalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/products", {
@@ -18,13 +27,24 @@ const ProductList = () => {
         setProducts(data);
       })
       .catch(err => console.error(err));
+
+    fetch("/api/products/categories", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then(res => res.json())
+      .then(data => {
+        setCategories(
+          data.reduce((acc, cat) => {
+            acc[cat._id] = cat;
+            return acc;
+          }, {}),
+        );
+      })
+      .catch(err => console.error(err));
   }, []);
 
-  const categories = {
-    dog: "Cachorro",
-    cat: "Gato",
-    other_pets: "Outros Pets",
-  };
+  if (!categories || !products) return null;
 
   return (
     <Wrapper>
@@ -40,16 +60,46 @@ const ProductList = () => {
             return inSearch;
           })
           .map(product => (
-            <ProductWrapper key={product.id}>
+            <ProductWrapper key={product._id}>
               <Text bold>{product.name}</Text>
-              <Text>Preço: R${product.price}</Text>
-              {product.discounted_price && (
-                <Text>Preço com desconto: R${product.discounted_price}</Text>
+              <Text>Preço: {formatters.brl(product.price)}</Text>
+              <Text>Quantidade em estoque: {product.qtyStock}</Text>
+              <Text>Quantidade vendida: {product.qtySold}</Text>
+              {product.discountedPrice ? (
+                <Text>Preço com desconto: {formatters.brl(product.discountedPrice)}</Text>
+              ) : (
+                ""
               )}
-              <Text>Categoria: {categories[product.category]}</Text>
+              <LastLine>
+                <Text>
+                  Categoria:{" "}
+                  {categories[product.categoryId]
+                    ? categories[product.categoryId].name
+                    : "Sem Categoria"}
+                </Text>
+                <StyledButton
+                  onClick={() => {
+                    setProductToEdit(product);
+                    setModalOpen(true);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faEdit} /> Editar
+                </StyledButton>
+              </LastLine>
             </ProductWrapper>
           ))}
       </ListWrapper>
+      <ProductEditModal
+        product={productToEdit}
+        categories={{ ...categories, noCat: { _id: "noCat", name: "Sem Categoria" } }}
+        isOpen={isModalOpen}
+        onSuccess={() => {
+          setModalOpen(false);
+        }}
+        onCancel={() => {
+          setModalOpen(false);
+        }}
+      />
     </Wrapper>
   );
 };
@@ -91,4 +141,17 @@ const Text = styled.p`
   font-size: 14px;
   margin: 10px;
   font-weight: ${props => (props.bold ? "bold" : "regular")};
+`;
+
+const LastLine = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+`;
+
+const StyledButton = styled(Button)`
+  font-size: 14px;
+  text-transform: uppercase;
+  background-color: #ddd;
+  color: #222;
 `;

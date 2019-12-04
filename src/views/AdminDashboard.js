@@ -7,11 +7,12 @@ import {
   faShoppingCart,
   faCalendarAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import { faPlus, faClock, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 import Divider from "base-components/Divider";
 import DashboardButton from "components/DashboardButton";
+import ScheduledServices from "components/ScheduledServices";
+import device from "assets/device";
 
 const AdminDashboard = () => {
   return (
@@ -23,27 +24,27 @@ const AdminDashboard = () => {
         <DashboardButton title="Exibir usuários" icon={faUsers} path="/user_list" />
         <DashboardButton title="Registrar Produtos" icon={faShoppingCart} path="/add_product" />
         <DashboardButton title="Criar Serviço" icon={faCalendarAlt} path="/create_service" />
+        <DashboardButton title="Editar Produtos" icon={faEdit} path="/product_list" />
       </AdminOptions>
-      {/* <Divider title="Serviços" />
-      <AdminOptions>
-      <DashboardButton title="Criar Serviço" icon={faPlus} path="/" />
-      <DashboardButton title="Agendar Serviço" icon={faClock} path="/" />
-      <DashboardButton title="Liberar Horário" icon={faTrash} path="/" />
-      <DashboardButton title="Calendário" icon={faCalendarAlt} path="/" />
-    </AdminOptions> */}
-      <Divider title="Produtos" />
-      <AdminOptions>
-        <DashboardButton title="Registrar Produtos" icon={faShoppingCart} path="/add_product" />
-        {/* <DashboardButton title="Registrar Serviço" icon={faPlus} path="/" />
-        <DashboardButton title="Editar Produto" icon={faEdit} path="/" />
-        <DashboardButton title="Remover Produto" icon={faTrash} path="/" /> */}
-        <DashboardButton title="Consultar" icon={faSearch} path="/product_list" />
-      </AdminOptions>
+
+      <Divider title="Serviços Agendados" />
+      <ScheduledServices />
     </Wrapper>
   );
 };
 
 export default AdminDashboard;
+
+const AdminOptions = styled.div`
+  display: grid;
+  width: 100%;
+  padding: 15px 0;
+  grid-template-columns: 1fr 1fr;
+
+  @media ${device.tablet} {
+    grid-template-columns: 1fr;
+  }
+`;
 
 const Wrapper = styled.div`
   background-color: white;
@@ -63,11 +64,4 @@ const Title = styled.h1`
   width: 95%;
   text-align: left;
   margin: 0 0 10px;
-`;
-
-const AdminOptions = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  width: 100%;
-  padding: 15px 0;
 `;

@@ -1,14 +1,16 @@
 import React, { useContext } from "react";
 import styled, { css } from "styled-components";
+import { navigate } from "@reach/router";
+import Swal from "sweetalert2";
 
 import { CartContext } from "components/CartContext";
 import { formatters } from "Utils";
 import device from "assets/device";
 
-const ProductButton = ({ product }) => {
+const ProductButton = ({ product, user }) => {
   const { setCartItems } = useContext(CartContext);
 
-  const handleClick = () => {
+  const addToCart = () => {
     let localData = localStorage.getItem("cartItems");
     let items = localData ? JSON.parse(localData) : [];
     let item;
@@ -25,25 +27,51 @@ const ProductButton = ({ product }) => {
     }
     if (!found) {
       product.quantity = 1;
-      if (product.discounted_price) {
-        items.push({
-          name: product.name,
-          img: product.img,
-          price: product.price,
-          discounted_price: product.discounted_price,
-          quantity: product.quantity,
-        });
-      } else {
-        items.push({
-          name: product.name,
-          img: product.img,
-          price: product.price,
-          quantity: product.quantity,
-        });
-      }
+      items.push({
+        _id: product._id,
+        name: product.name,
+        imagePath: product.imagePath,
+        price: product.price,
+        ...(discountedPrice && { discountedPrice: product.discountedPrice }),
+        quantity: product.quantity,
+      });
       localStorage.setItem("cartItems", JSON.stringify(items));
       setCartItems(items);
     }
+  };
+
+  const handleClick = () => {
+    if (!user) {
+      return Swal.fire({
+        title: "Sem usuário!",
+        text:
+          "Você precisa fazer o login ou se cadastrar para poder adicionar um item ao seu carrinho",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Fazer Login",
+        cancelButtonText: "Cancelar",
+      }).then(result => {
+        navigate("/login");
+      });
+    }
+
+    Swal.fire({
+      title: "Adicionar item ao carrinho?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Adicionar",
+      cancelButtonText: "Cancelar",
+    }).then(result => {
+      addToCart();
+      if (result.value) {
+        Swal.fire("Adicionado", "Seu produto foi adicionado ao carrinho", "success");
+      }
+    });
+    return;
   };
 
   const { name, price, imagePath, discountedPrice } = product;
@@ -101,6 +129,7 @@ const Wrapper = styled.div`
   ${props => !props.discounted && css``}
 
   @media ${device.tablet} {
+    padding: 10px;
     flex-direction: column;
     align-items: center;
   }
@@ -113,9 +142,14 @@ const Image = styled.img`
   border: 1px solid #ccc;
   border-radius: 5px;
 
-  @media ${device.mobile} {
+  @media ${device.tablet} {
     width: 100px;
     height: 100px;
+  }
+
+  @media ${device.mobile} {
+    width: 80px;
+    height: 80px;
   }
 `;
 
@@ -132,8 +166,7 @@ const Details = styled.div`
 `;
 
 const Name = styled.div`
-  font-weight: 600;
-  font-size: 23px;
+  font-size: 16px;
   margin-top: 5px;
 
   @media ${device.tablet} {
@@ -141,14 +174,14 @@ const Name = styled.div`
   }
 
   @media ${device.mobile} {
-    font-size: 20px;
+    font-size: 14px;
   }
 `;
 
 const Price = styled.div`
   display: inline-block;
   font-weight: 600;
-  font-size: 21px;
+  font-size: 19px;
   text-align: right;
   color: #555;
 
@@ -159,7 +192,7 @@ const Price = styled.div`
   }
 
   @media ${device.mobile} {
-    font-size: 18px;
+    font-size: 17px;
   }
 `;
 
@@ -168,7 +201,7 @@ const DiscountedPrice = styled.div`
   text-align: right;
   font-weight: 600;
   color: red;
-  font-size: 23px;
+  font-size: 19px;
 
   @media ${device.tablet} {
     display: block;
@@ -176,14 +209,14 @@ const DiscountedPrice = styled.div`
   }
 
   @media ${device.mobile} {
-    font-size: 20px;
+    font-size: 17px;
   }
 `;
 
 const OldPrice = styled.div`
   display: inline-block;
   text-align: right;
-  font-size: 18px;
+  font-size: 15px;
   color: gray;
   text-decoration: line-through;
 
@@ -194,6 +227,6 @@ const OldPrice = styled.div`
   }
 
   @media ${device.mobile} {
-    font-size: 15px;
+    font-size: 13px;
   }
 `;

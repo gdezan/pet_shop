@@ -1,9 +1,9 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { navigate } from "@reach/router";
 import styled from "styled-components";
-import cepPromise from "cep-promise";
 import { useForm } from "hooks";
 import Swal from "sweetalert2";
+import cepPromise from "cep-promise";
 
 import TextField from "base-components/TextField";
 import Button from "base-components/Button";
@@ -44,25 +44,16 @@ const EditAccount = () => {
     })
       .then(res => res.json())
       .then(data => {
-        if (data.error) throw data;
-
-        // If there is no error, fetch the current user information
-        // I'm not sure how to send the updated user via the PUT request response, so as of now,
-        // we are fetching it from the server with a GET request
-        fetch(`/api/users/${user._id}`, {
-          method: "GET",
-        })
-          .then(res => res.json())
-          .then(user => {
-            Swal.fire({
-              title: "Sucesso!",
-              text: "Usuário atualizado",
-              icon: "success",
-            }).then(() => {
-              setUser(user);
-              navigate("/");
-            });
-          });
+        if (data.errors) throw data;
+        console.log(data);
+        Swal.fire({
+          title: "Sucesso!",
+          text: "Usuário atualizado",
+          icon: "success",
+        }).then(() => {
+          setUser(data.user);
+          navigate("/user");
+        });
       })
       .catch(err => {
         Swal.fire("Erro", err.message, "error");
@@ -314,8 +305,16 @@ const FormRow = styled.div`
   display: flex;
   width: 80%;
   padding: 5px 0;
+  flex-direction: row;
+
   @media ${device.tablet} {
     width: 100%;
+  }
+
+  @media ${device.mobile} {
+    width: 100%;
+    flex-direction: column;
+    padding: 0;
   }
 `;
 

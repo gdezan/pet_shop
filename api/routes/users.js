@@ -4,6 +4,7 @@ import User from "../models/User";
 import UserSession from "../models/UserSession";
 import fs from "fs";
 import { fileUpload } from "../utils";
+import Service from "../models/Service";
 
 const router = Router();
 
@@ -136,42 +137,51 @@ router.get("/:userId", (req, res) => {
 });
 
 // Update a User
-router.put("/:userId", (req, res) => {
+router.put("/:userId", async (req, res) => {
   const { name, password, address, zipCode, phone } = req.body;
 
   if (!name || !address || !zipCode || !phone) {
-    return res.status(400).send({ error: true, message: "Por favor preencha todos o campos" });
+    return res.status(400).send({ errors: true, message: "Por favor preencha todos o campos" });
   }
+  try {
+    const updatedUser = await User.update(
+      { _id: req.params.userId },
+      {
+        $set: {
+          name,
+          address,
+          zipCode,
+          phone,
+          ...(password && { password: User.generateHash(password) }),
+          ...(req.files && {
+            imagePath: fileUpload(req.files, `${req.params.userId}/${req.files.image.name}`),
+          }),
+        },
+      },
+    );
 
-  User.findByIdAndUpdate(req.params.userId, {
-    $set: {
-      name,
-      address,
-      zipCode,
-      phone,
-    },
-  })
-    .then(user => {
-      if (!user) {
-        return res.status(404).send({ error: true, message: `Usuário não encontrado` });
-      }
+    if (!updatedUser) {
+      return res.status(404).send({ errors: true, message: `Usuário não encontrado` });
+    }
 
-      if (password) {
-        user.password = User.generateHash(password);
-      }
+    res.status(200).json({ user: await User.findById(req.params.userId) });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
 
-      if (req.files) {
-        user.imagePath = fileUpload(req.files, `${user._id}/${req.files.image.name}`);
-      }
-
-      user.save().then(user => {
-        res.status(200).json({ user });
-      });
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json(err);
-    });
+router.post("/:userId/admin", async (req, res) => {
+  try {
+    const modification = await User.updateOne(
+      { _id: req.params.userId },
+      { $set: { isAdmin: req.body.isAdmin } },
+    );
+    return res.status(200).json(modification);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
 // Pet Routes
@@ -215,29 +225,39 @@ router.post("/:userId/pets", (req, res) => {
 });
 
 // Schedule a service
-router.post("/:userId/schedule", (req, res) => {
-  User.findById(req.params.userId)
-    .then(user => {
-      if (!user) {
-        return res.status(404).send({ errors: true, message: "Usuário não encontrado" });
-      }
-      const { date, serviceId, petId } = req.body;
-      console.log(req.body);
+router.post("/:userId/schedule", async (req, res) => {
+  try {
+    const foundUser = await User.findById(req.params.userId);
 
-      const selectedPet = user.pets.find(pet => {
-        return pet._id.equals(petId);
-      });
-      if (!selectedPet) {
-        return res.status(404).send({ errors: true, message: "Pet não encontrado" });
-      }
+    if (!foundUser) {
+      return res.status(404).send({ errors: true, message: "Usuário não encontrado" });
+    }
+    const { date, serviceId, petId } = req.body;
 
-      selectedPet.services.push({ date, serviceId });
-      user.save().then(user => res.status(201).json(user));
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json(err);
+    const selectedPet = foundUser.pets.find(pet => {
+      return pet._id.equals(petId);
     });
+    if (!selectedPet) {
+      return res.status(404).send({ errors: true, message: "Pet não encontrado" });
+    }
+
+    const foundService = await Service.findById(serviceId);
+    if (!foundService) {
+      return res.status(404).send({ errors: true, message: "Serviço não encontrado" });
+    }
+    console.log(foundService);
+    selectedPet.services.push({
+      date,
+      serviceId,
+      service: foundService.name,
+      price: foundService.price,
+    });
+
+    res.status(201).json(await foundUser.save());
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
 export default router;

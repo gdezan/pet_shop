@@ -58,18 +58,16 @@ router.get("/schedule", async (req, res) => {
         schedule.push(
           ...pet.services.map(service => {
             return {
-              _id: service._id,
-              serviceId: service.serviceId,
-              date: service.date,
-              petId: pet._id,
-              userId: user._id,
+              service: service,
+              pet: pet,
+              user: user,
             };
           }),
         );
       });
     });
     schedule.sort((a, b) => {
-      return a.date > b.date;
+      return a.service.date > b.service.date;
     });
     return res.status(200).json(schedule);
   } catch (err) {

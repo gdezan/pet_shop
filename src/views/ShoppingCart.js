@@ -1,15 +1,16 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
-import { Link } from "@reach/router";
-import SweetAlert from "sweetalert2-react";
+import { navigate } from "@reach/router";
+import Swal from "sweetalert2";
 
 import Divider from "base-components/Divider";
+import Button from "base-components/Button";
 import CartList from "components/CartList";
 import { CartContext } from "components/CartContext";
+import { formatters } from "Utils";
 
 const ShoppingCart = () => {
   const [total, setTotal] = useState(0);
-  const [pay, setPay] = useState(false);
   const { cartItems, setCartItems } = useContext(CartContext);
 
   const updateTotal = () => {
@@ -18,19 +19,17 @@ const ShoppingCart = () => {
 
     for (let i = 0; i < cartItems.length; ++i) {
       item = cartItems[i];
-      total +=
-        item.quantity *
-        (item.discountedPrice
-          ? parseFloat(item.discountedPrice.replace(/^R\$\s/g, ""))
-          : parseFloat(item.price.replace(/^R\$\s/g, "")));
+      total += item.quantity * (item.discountedPrice || item.price);
     }
     setTotal(total);
   };
 
   const handlePay = () => {
-    setPay(true);
-    localStorage.removeItem("cartItems");
-    setCartItems([]);
+    Swal.fire("Compra completa", "Seu pagamento foi efetivado!", "success").then(() => {
+      navigate("/");
+      localStorage.removeItem("cartItems");
+      setCartItems([]);
+    });
   };
 
   return (
@@ -39,16 +38,8 @@ const ShoppingCart = () => {
       <Divider title="Produtos" />
       <CartList updateTotal={updateTotal} />
       <Divider title="Pagamento" />
-      <Text>Total: {total.toFixed(2)}</Text>
-      <Button to="/" onClick={() => handlePay()}>
-        PAGAR
-      </Button>
-      <SweetAlert
-        show={pay}
-        title="Pagamento concluído"
-        text="Seu pagamento foi concluído com sucesso!"
-        onConfirm={() => setPay(false)}
-      />
+      <Text>Total: {formatters.brl(total)}</Text>
+      <Button onClick={() => handlePay()}>PAGAR</Button>
     </Wrapper>
   );
 };
@@ -75,34 +66,9 @@ const Title = styled.h1`
   margin: 0 0 10px;
 `;
 
-const Text = styled.p`
+const Text = styled.div`
   text-align: left;
-  width: 100%;
-  margin: 0;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-`;
-
-const Button = styled(Link)`
-  cursor: pointer;
-  padding: 10px;
-  margin: 10px;
-  text-decoration: none;
-  color: white;
-  font-family: "Raleway", sans-serif;
-  transition: 0.15s all;
-  background-color: ${props => props.theme.accent};
-  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.3);
-  border-radius: 8px;
-
-  &:hover {
-    filter: brightness(1.1);
-    transform: translateY(-2px);
-    box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.3);
-  }
-
-  &:active {
-    filter: brightness(0.9);
-  }
+  width: 90%;
+  margin: 15px 0 30px;
+  font-size: 20px;
 `;

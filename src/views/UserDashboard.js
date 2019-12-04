@@ -5,7 +5,6 @@ import Divider from "base-components/Divider";
 
 import UserOptions from "components/UserOptions";
 import PetList from "components/PetList";
-import Scheduler from "components/Scheduler";
 import { UserContext } from "components/UserContext";
 
 import device from "assets/device";
@@ -49,8 +48,6 @@ const UserDashboard = () => {
       <Details client={client} />
       <Divider title="Opções" />
       <UserOptions />
-      {/* <Divider title="Agendar um serviço" />
-      <Scheduler /> */}
       <Divider title="Meus pets" />
       <PetList pets={user.pets} />
     </Wrapper>

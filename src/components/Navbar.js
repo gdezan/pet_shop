@@ -13,6 +13,7 @@ import Button from "base-components/Button";
 import LoginModal from "components/LoginModal";
 import ShoppingCartModal from "components/ShoppingCartModal";
 import { UserContext } from "components/UserContext";
+import { CartContext } from "components/CartContext";
 
 const pages = [
   { name: "Home", path: "/" },
@@ -27,6 +28,7 @@ const Navbar = props => {
   const [shoppingCartOpen, setShoppingCartOpen] = useState(false);
   const [sideMenuOpen, setSideMenu] = useState(false);
   const { user, setUser } = useContext(UserContext);
+  const { cartItems } = useContext(CartContext);
 
   useEffect(() => {
     const handleResize = () => {
@@ -72,6 +74,8 @@ const Navbar = props => {
     ));
   };
 
+  const itemCount = cartItems.reduce((acc, it) => acc + it.quantity, 0);
+
   if (isMobile) {
     return (
       <>
@@ -116,7 +120,6 @@ const Navbar = props => {
       </>
     );
   }
-
   return (
     <>
       <Nav>
@@ -134,6 +137,7 @@ const Navbar = props => {
               </StyledLink>
               <LoginButton onClick={logout}>Logout</LoginButton>
               <ShoppingCartButton onClick={() => setShoppingCartOpen(!shoppingCartOpen)}>
+                {itemCount > 0 && <ItemCount>{itemCount}</ItemCount>}
                 <FontAwesomeIcon icon={faShoppingCart}></FontAwesomeIcon>
               </ShoppingCartButton>
             </>
@@ -289,4 +293,15 @@ const UserLink = styled(Link)`
   text-decoration: none;
   font-family: "Raleway", sans-serif;
   padding: 20px 100px 20px 20px;
+`;
+
+const ItemCount = styled.div`
+  position: absolute;
+  right: 31px;
+  top: 29px;
+  width: 23px;
+  height: 23px;
+  background-color: red;
+  border-radius: 50%;
+  line-height: 23px;
 `;

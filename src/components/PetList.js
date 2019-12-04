@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock } from "@fortawesome/free-regular-svg-icons";
 
 import device from "assets/device";
+import { formatters } from "Utils";
 
 const Pet = ({ name, img, breed, age, services }) => {
   return (
@@ -14,19 +15,22 @@ const Pet = ({ name, img, breed, age, services }) => {
         <PetName>{name}</PetName>
         <Text>Raça: {breed}</Text>
         <Text>Idade: {age} anos</Text>
-        {services && services.length && (
+        {services && services.length ? (
           <>
             <Text>
               <FontAwesomeIcon icon={faClock} /> Serviços agendados:
             </Text>
             <ServicesWrapper>
               {services.map(s => (
-                <Service key={s.id}>
-                  {s.service} - {format(new Date(s.datetime), "dd/MM/yyyy - HH:mm")} ({s.price})
+                <Service key={s._id}>
+                  {s.service} - {format(new Date(s.date), "dd/MM/yyyy - HH:mm")} (
+                  {formatters.brl(s.price)})
                 </Service>
               ))}
             </ServicesWrapper>
           </>
+        ) : (
+          ""
         )}
       </Details>
     </PetWrapper>
@@ -45,7 +49,7 @@ const PetList = ({ pets }) => {
               img={pet.imagePath}
               age={pet.age}
               breed={pet.breed}
-              services={pet.scheduled_services}
+              services={pet.services}
             />
           ))}
         </>
@@ -87,7 +91,7 @@ const Details = styled.div`
 
 const Image = styled.img`
   max-width: 150px;
-  height: auto;
+  max-height: 150px;
   object-fit: cover;
   border: 1px solid #ddd;
   border-radius: 4px;

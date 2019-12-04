@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
+import device from "assets/device";
 
 const TextField = props => {
   const [active, setActive] = useState(props.locked && props.focused);
@@ -94,6 +95,11 @@ const Field = styled.div`
     css`
       background-color: rgba(0, 0, 0, 0.05);
     `};
+
+  @media ${device.mobile} {
+    margin: 6px 0;
+    height: 38px;
+  }
 `;
 
 const Input = styled.input.attrs(props => ({ type: props.type }))`
@@ -137,6 +143,11 @@ const Input = styled.input.attrs(props => ({ type: props.type }))`
         opacity: 0;
       }
     `};
+
+  @media ${device.mobile} {
+    font-size: 12px;
+    padding: 0 12px;
+  }
 `;
 
 const Label = styled.label`
@@ -171,4 +182,9 @@ const Prepend = styled.div`
   border: 2px solid #ccc;
   padding: 5px;
   width: 40px;
+  @media ${device.mobile} {
+    font-size: 12px;
+    padding: 2px;
+    width: 35px;
+  }
 `;

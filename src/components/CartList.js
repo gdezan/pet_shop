@@ -1,13 +1,16 @@
 import React, { useEffect, useContext } from "react";
 import styled from "styled-components";
 
-import device from "assets/device";
 import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CartContext } from "components/CartContext";
+import { formatters } from "Utils";
+import device from "assets/device";
 
 const Product = ({ product }) => {
   const { cartItems, setCartItems } = useContext(CartContext);
+  const { name, price, imagePath, discountedPrice } = product;
+  const image = imagePath && require(`../${imagePath}`);
 
   const handleClick = op => {
     let localData = localStorage.getItem("cartItems");
@@ -35,12 +38,12 @@ const Product = ({ product }) => {
 
   return (
     <ProductWrapper>
-      <Image src={product.img} alt="Pet image" />
+      <Image src={image} alt="Product image" />
       <Details>
-        <ProductName>{product.name}</ProductName>
-        <Text>Preço: {product.discountedPrice ? product.discountedPrice : product.price}</Text>
+        <ProductName>{name}</ProductName>
+        <Text>Preço: {formatters.brl(discountedPrice || price)}</Text>
         <QuantityWrapper>
-          Quantidade:
+          <Text>Quantidade:</Text>
           <MinusButton onClick={() => handleClick("-")}>
             <FontAwesomeIcon icon={faMinusCircle} />
           </MinusButton>
@@ -66,7 +69,7 @@ const CartList = ({ updateTotal }) => {
       {cartItems.length ? (
         <CartListWrapper>
           {cartItems.map(product => (
-            <Product product={product} />
+            <Product key={product._id} product={product} />
           ))}
         </CartListWrapper>
       ) : (
@@ -82,21 +85,6 @@ const CartListWrapper = styled.div`
   width: 100%;
   box-sizing: border-box;
   padding: 10px 10px;
-
-  @media ${device.laptop} {
-    display: grid;
-    grid-template-columns: 50% 50%;
-  }
-
-  @media ${device.tablet} {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  @media ${device.mobile} {
-  }
 `;
 
 const ProductWrapper = styled.div`
@@ -106,43 +94,75 @@ const ProductWrapper = styled.div`
   margin: 0 10px 20px;
   border: 1px solid #aaa;
   border-radius: 5px;
+  align-items: center;
+
+  @media ${device.tablet} {
+    flex-direction: column;
+  }
 `;
 
 const Details = styled.div`
   margin-left: 30px;
+  @media ${device.tablet} {
+    margin: 0;
+  }
 `;
 
 const Image = styled.img`
-  width: 20%;
+  width: 150px;
+  height: 150px;
   object-fit: cover;
   border: 1px solid #ddd;
   border-radius: 4px;
   padding: 5px;
+
+  @media ${device.tablet} {
+    width: 100px;
+    height: 100px;
+  }
+
+  @media ${device.mobile} {
+    width: 80px;
+    height: 80px;
+  }
 `;
 
-const ProductName = styled.h2``;
+const ProductName = styled.h3` @media {device.tablet} {
+  font-size: 15px;
+}`;
 const Text = styled.p`
   text-align: left;
-  width: 100%;
   margin: 0;
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  font-size: 18px;
+
+  @media ${device.tablet} {
+    font-size: 15px;
+  }
 `;
 
 const QuantityWrapper = styled.div`
   width: 100%;
   display: flex;
-  justify-content: space-around;
-  aligns-items: center;
+  justify-content: flex-start;
+  align-items: center;
   margin: 5px 0;
 `;
 
 const PlusButton = styled.button`
   cursor: pointer;
-  font-size: 10px;
-  margin: 0 3px;
+  font-size: 12px;
   outline: none;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  color: #5cb85c;
+  margin-left: 10px;
 `;
 
-const MinusButton = styled(PlusButton)``;
+const MinusButton = styled(PlusButton)`
+  color: #d9534f;
+  margin-right: 10px;
+`;

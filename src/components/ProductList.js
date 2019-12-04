@@ -1,17 +1,42 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import styled, { css } from "styled-components";
 
 import ProductButton from "components/ProductButton";
 import device from "assets/device";
+import TextField from "base-components/TextField";
+import { UserContext } from "components/UserContext";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const ProductList = ({ products, category, promotions, title }) => {
+  const [search, setSearch] = useState("");
+  const { user } = useContext(UserContext);
+
   return (
     <Wrapper promotions={promotions}>
       <Title promotions={promotions}>{title}</Title>
+      {!promotions && (
+        <SearchWrapper>
+          <Icon icon={faSearch} />
+          <TextField
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            label="Pesquisar produto"
+            lightBg
+          />
+        </SearchWrapper>
+      )}
       <ProductsWrapper promotions={promotions}>
-        {products.map(product => {
-          return <ProductButton key={product._id} product={product} />;
-        })}
+        {products
+          .filter(product => {
+            const inSearch =
+              search === "" || product.name.toLowerCase().includes(search.toLowerCase());
+            return inSearch;
+          })
+          .map(product => {
+            return <ProductButton key={product._id} product={product} user={user} />;
+          })}
       </ProductsWrapper>
     </Wrapper>
   );
@@ -40,10 +65,6 @@ const ProductsWrapper = styled.div`
   @media ${device.laptop} {
     grid-template-columns: 1fr 1fr;
   }
-
-  @media ${device.tablet} {
-    grid-template-columns: 1fr 1fr;
-  }
 `;
 
 const Title = styled.h2`
@@ -56,4 +77,17 @@ const Title = styled.h2`
     css`
       color: white;
     `}
+`;
+
+const SearchWrapper = styled.div`
+  width: 80%;
+  display: flex;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Icon = styled(FontAwesomeIcon)`
+  font-size: 22px;
+  margin-right: 15px;
 `;

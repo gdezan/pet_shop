@@ -2,41 +2,32 @@
 
 ## Desenvolvimento
 
-Para iniciar o ambiente de desenvolvimento é necessária a instalação do _PostgresQL_ e a criação de
-uma base de dados no mesmo.
+Para iniciar o ambiente de desenvolvimento, um arquivo `.env` deve ser criado na raíz do projeto e
+deve conter as seguintes informações:
 
-Em sequiga, um arquivo `.env` deve ser criado na raíz do projeto e deve conter as seguintes informações:
+Os campos `<username>` e `<password>` devem ser substituidos pelo seu usuário no MongoDB Atlas com acesso ao cluster.
 
 ```
-DATABASE_NAME=[nome da sua base de dados]
-DATABASE_USER=[nome do seu usuário no postgresql]
-DATABASE_PASSWORD=[sua senha no postgresql]
-HOST:127.0.0.1
+DATABASE_NAME=pet_shop
+DB_CONNECTION=mongodb+srv://<username>:<password>@petshop-znlkk.mongodb.net/pet_shop?retryWrites=true&w=majority
+HOST=127.0.0.1
 API_PORT=5000
 PORT=3000
 ```
 
-Agora, com o terminal aberto da raíz do projeto, as seguintes instalações devem ser feitas:
+Agora, com o terminal aberto na raíz do projeto, você deve instalar as depedências do projeto:
 
 ```
-npm i --no-save
-npm i -g sequelize-cli
+npm install
 ```
 
-Em seguida, devemos ir para a pasta `api` para inicializar as migrações:
-
-```
-cd api/
-sequelize db:migrate
-```
-
-De volta na raíz do projeto, podemos iniciar os serviços de front-end e back-end:
+Para iniciar o servidor:
 
 ```
 npm run server
 ```
 
-Em um terminal diferente:
+E agora, em um terminal diferente, iniciando o front-end:
 
 ```
 npm start
